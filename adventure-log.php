@@ -20,7 +20,7 @@
  */
 /**
  * Adventure Log tracks your daily writing and sets a minimum goal.
- * Copyright (C) 2016  AARON SNOWBERGER (email: JEKKILEKKI@GMAIL.COM)
+ * Copyright (C) 2018  AARON SNOWBERGER (email: JEKKILEKKI@GMAIL.COM)
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,12 +39,14 @@
 
 function adventure_log_scripts() {
   if ( ! is_admin() && is_single() ) {
-    wp_enqueue_script( 'adventure_log_script', plugin_dir_url( __FILE__ ) . 'js/frontend.ajax.js', array( 'jquery' ), '20180330', true );
-    wp_localize_script( 'adventure_log_script', 'WPsettings', array(
-      'root'        => esc_url_raw( rest_url() ),
-      'nonce'       => wp_create_nonce( 'adventure' ),
-      'current_ID'  => get_the_ID()
-    ));
+    if ( is_user_logged_in() && current_user_can( 'edit_posts' ) ) {
+      wp_enqueue_script( 'adventure_log_script', plugin_dir_url( __FILE__ ) . 'js/frontend.ajax.js', array( 'jquery' ), '20180330', true );
+      wp_localize_script( 'adventure_log_script', 'WPsettings', array(
+        'root'        => esc_url_raw( rest_url() ),
+        'nonce'       => wp_create_nonce( 'adventure' ),
+        'current_ID'  => get_the_ID()
+      ));
+    }
   }
 }
 add_action( 'wp_enqueue_scripts', 'adventure_log_scripts' );

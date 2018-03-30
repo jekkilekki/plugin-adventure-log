@@ -13,20 +13,68 @@
   const $POST_CONTENT = $( '.entry-content' );
   let $EDITING = false;
 
-  // $POST_CONTENT.after( '<button class="save-button save-content" style="display: hidden">Save</button>' );
+  function runAjaxSave2( new_title, new_content ) {
+    $.ajax({
+      url: WPsettings.root + 'wp/v2/posts/' + WPsettings.current_ID,
+      method: 'POST',
+      beforeSend: function(xhr) {
+        // xhr.setRequestHeader( 'X-WP-Nonce', WPsettings.nonce );
+        xhr.setRequestHeader( 'Authorization', 'Basic YWFyb246Zmx1ZmZoMzRk' );
+      },
+      data: {
+        'title': new_title,
+        // 'content': new_content
+      },
+
+    });
+  }
+
+  function runAjaxSave( new_title ) {
+    $.ajax({
+      url: WPsettings.root + 'wp/v2/posts/' + WPsettings.current_ID,
+      method: 'POST',
+      crossDomain: true,
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader( 'X-WP-Nonce', WPsettings.nonce );
+        // xhr.setRequestHeader( 'Authorization', 'Basic YWFyb246Zmx1ZmZoMzRk' );
+      },
+      data: {
+        'title': new_title
+      },
+      success: function( response, txtStatus, xhr ) {
+        console.log( response );
+        console.log( xhr.status );
+      },
+      fail: function( response, txtStatus, xhr ) {
+        console.log( response );
+        console.log( xhr.status );
+      }
+    }).done( function( response ) {
+      console.log( response );
+    });
+  }
+
 
   $( '.post-edit-link' ).click( function(e) {
+
     // Prevent WordPress from opening the backend editor
     e.preventDefault();
 
-    // if editing post, save it
+    let $original_title = $POST_TITLE.text();
+    let $original_content = $POST_CONTENT.html();
+
+    // if editing post, SAVE it
     if ( $EDITING ) {
 
-      // $( '#title-input' ).toggle();
-      // $( '#content-input' ).toggle();
+      let $new_title = $POST_TITLE.text();
+      let $new_content = $POST_CONTENT.html();
 
-      // $POST_TITLE.toggle();
-      // $POST_CONTENT.toggle();
+      // Check to be sure we edited something before running the Ajax call
+      if ( $new_title != $original_title || $new_content != $original_content ) {
+        if( confirm( 'Post edited. Save?' ) ) {
+          runAjaxSave( $new_title/*, $new_content */ );
+        }
+      }
 
       $POST_TITLE.prop( 'contenteditable', 'false' );
       $POST_TITLE.css( 'border', '1px solid transparent' );
@@ -39,21 +87,9 @@
 
     }
 
-    // else, edit it
+    // else, EDIT it
     // https: //developer.mozilla.org/en-US/docs/Web/Guide/HTML/Editable_content
     else {
-
-      let $original_title = $POST_TITLE.text();
-      let $original_content = $POST_CONTENT.text();
-
-      // $POST_TITLE.toggle();
-      // $POST_CONTENT.toggle();
-
-      // $POST_TITLE.after( '<input id="title-input" type="text">' );
-      // $POST_CONTENT.after( '<textarea id="content-input"></textarea>' );
-
-      // document.querySelector( '#title-input' ).value = $original_title;
-      // document.querySelector( '#content-input' ).value = $original_content;
 
       $POST_TITLE.prop( 'contenteditable', 'true' );
       $POST_TITLE.css( 'border', '1px dashed black' );
