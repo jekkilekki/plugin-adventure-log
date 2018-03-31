@@ -4,62 +4,55 @@
   // Root URL
   // Nonce value
   // Current Post / Page ID
+  console.info( "REST API root: ", WP_API_settings.root );
+  console.info( "Nonce value: ", WP_API_settings.nonce );
+  console.info( "Post ID: ", WP_API_settings.current_ID );
 
-  console.info( "REST API root: ", WPsettings.root );
-  console.info( "Nonce value: ", WPsettings.nonce );
-  console.info( "Post ID: ", WPsettings.current_ID );
-
+  // Create constants for Post title and Post content we can reference later
   const $POST_TITLE = $( '.entry-title' );
   const $POST_CONTENT = $( '.entry-content' );
+
+  // Default 'editing' is FALSE until the button is clicked
   let $EDITING = false;
 
-  function runAjaxSave2( new_title, new_content ) {
+  /**
+   * POSTs the new Post title and/or new Post content to the WP REST API to save it to the database
+   * @see https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/
+   * 
+   * @param text new_title 
+   * @param html new_content 
+   */
+  function runAjaxSave( new_title, new_content ) {
     $.ajax({
-      url: WPsettings.root + 'wp/v2/posts/' + WPsettings.current_ID,
+      url: WP_API_settings.root + 'wp/v2/posts/' + WP_API_settings.current_ID,
       method: 'POST',
       beforeSend: function(xhr) {
-        // xhr.setRequestHeader( 'X-WP-Nonce', WPsettings.nonce );
-        xhr.setRequestHeader( 'Authorization', 'Basic YWFyb246Zmx1ZmZoMzRk' );
+        xhr.setRequestHeader( 'X-WP-Nonce', WP_API_settings.nonce );
       },
       data: {
+        // '_nonce': WP_API_settings.nonce,
         'title': new_title,
-        // 'content': new_content
-      },
-
-    });
-  }
-
-  function runAjaxSave( new_title ) {
-    $.ajax({
-      url: WPsettings.root + 'wp/v2/posts/' + WPsettings.current_ID,
-      method: 'POST',
-      crossDomain: true,
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader( 'X-WP-Nonce', WPsettings.nonce );
-        // xhr.setRequestHeader( 'Authorization', 'Basic YWFyb246Zmx1ZmZoMzRk' );
-      },
-      data: {
-        'title': new_title
-      },
-      success: function( response, txtStatus, xhr ) {
-        console.log( response );
-        console.log( xhr.status );
-      },
-      fail: function( response, txtStatus, xhr ) {
-        console.log( response );
-        console.log( xhr.status );
+        'content': new_content
       }
-    }).done( function( response ) {
+    }).success( function( response ) {
+      console.log( response );
+    }).fail( function( response ) {
       console.log( response );
     });
   }
 
-
+  /**
+   * Handler for when the Post edit button is clicked
+   * 
+   * So far, this is the button class in TwentySeventeen
+   * needs checking (or a new button) to handle more themes
+   */
   $( '.post-edit-link' ).click( function(e) {
 
     // Prevent WordPress from opening the backend editor
     e.preventDefault();
 
+    // Grab original Post title text and Post content HTML
     let $original_title = $POST_TITLE.text();
     let $original_content = $POST_CONTENT.html();
 
@@ -69,20 +62,19 @@
       let $new_title = $POST_TITLE.text();
       let $new_content = $POST_CONTENT.html();
 
-      // Check to be sure we edited something before running the Ajax call
-      if ( $new_title != $original_title || $new_content != $original_content ) {
-        if( confirm( 'Post edited. Save?' ) ) {
-          runAjaxSave( $new_title/*, $new_content */ );
-        }
-      }
+      // Save new data to the database
+      runAjaxSave( $new_title, $new_content );
 
+      // Reset Post title and Post content areas to non-editable
       $POST_TITLE.prop( 'contenteditable', 'false' );
       $POST_TITLE.css( 'border', '1px solid transparent' );
       $POST_CONTENT.prop( 'contenteditable', 'false' );
       $POST_CONTENT.css( 'border', '1px solid transparent' );
 
+      // Change the "Save" button text back to "Edit"
       $(this).text( 'Edit' );
 
+      // Reset the editing flag to FALSE
       $EDITING = false;
 
     }
@@ -91,6 +83,7 @@
     // https: //developer.mozilla.org/en-US/docs/Web/Guide/HTML/Editable_content
     else {
 
+      // Set Post title box to be editable, and provide some handy CSS to let us know
       $POST_TITLE.prop( 'contenteditable', 'true' );
       $POST_TITLE.css( 'border', '1px dashed black' );
       $POST_TITLE.focus( function() {
@@ -100,6 +93,7 @@
         $POST_TITLE.css( 'border', '1px dashed black' );
       })
 
+      // Set Post content box to be editable, and provide some handy CSS to let us know
       $POST_CONTENT.prop( 'contenteditable', 'true' );
       $POST_CONTENT.css( 'border', '1px dashed black' );
       $POST_CONTENT.focus( function() {
@@ -109,8 +103,10 @@
         $POST_CONTENT.css( 'border', '1px dashed black' );
       });
 
+      // Change the "Edit" button text to "Save"
       $(this).text( 'Save' );
 
+      // Set the editing flag to TRUE
       $EDITING = true;
 
     }
