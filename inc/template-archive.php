@@ -16,41 +16,52 @@ get_header(); ?>
 
 	<?php if ( have_posts() ) : ?>
 		<header class="page-header">
+
 			<?php
-        $todays_date = date( 'F j, Y' );
+        $todays_date = getdate();
+        $todays_date_string = $todays_date[ 'month' ] . ' ' . $todays_date[ 'mday' ] . ', ' . $todays_date[ 'year' ];
+        
         echo '<h1 class="page-title">' . date( 'F Y' ) . '</h1>';
         echo '<div class="taxonomy-description">Keep track of your writing this month. What kind of streak are you on?</div>';
-				// the_archive_title( '<h1 class="page-title">', '</h1>' );
-				// the_archive_description( '<div class="taxonomy-description">', '</div>' );
-			?>
+        
+        $days_this_month = date( 't' );
+        $this_month = $todays_date[ 'month' ];
+        $this_year = $todays_date[ 'year' ];
+
+        echo '<ul class="alog-date-boxes">';
+        for( $i = 1; $i <= $days_this_month; $i++ ) {
+          echo '<a href="#"><li class="alog-day"><span class="screen-reader-text">' . 
+            $this_month . ' ' . $i . ', ' . $this_year .
+            '</span>' . $i . '</li></a>';
+        }
+        echo '</ul>';
+      ?>
+      
 		</header><!-- .page-header -->
 	<?php endif; ?>
 
 	<div id="primary" class="content-area">
 		<main id="main" class="site-main" role="main">
 
-		<?php
-    $days_this_month = date( 't' );
-    $this_month = date( 'F' );
-    $this_year = date( 'Y' );
-
-    echo '<ul class="alog-date-boxes">';
-    for( $i = 1; $i <= $days_this_month; $i++ ) {
-      echo '<li class="alog-day"><span class="screen-reader-text">' . 
-        $this_month . ' ' . $i . ', ' . $this_year .
-        '</span>' . $i . '</li>';
-    }
-    echo '</ul>';
+    <?php
+      $args = array(
+        'date_query' => array(
+          array(
+            'year'  => $todays_date[ 'year' ],
+            'month' => $todays_date[ 'mon' ],
+            'day'   => $todays_date[ 'mday' ],
+          ),
+        ),
+        'ignore_sticky_posts' => 1,
+      );
+      $custom_query = new WP_Query( $args );
     ?>
 
-    <h1 class="alog-entry-title entry-title" contenteditable="true"><?php echo $todays_date; ?></h1>
-    <div class="alog-entry-content entry-content" contenteditable="true"></div>
-
     <?php
-		if ( have_posts() ) : ?>
+		if ( $custom_query->have_posts() ) : ?>
 			<?php
 			/* Start the Loop */
-			while ( have_posts() ) : the_post();
+			while ( $custom_query->have_posts() ) : $custom_query->the_post();
 
 				/*
 				 * Include the Post-Format-specific template for the content.
@@ -67,11 +78,15 @@ get_header(); ?>
 				'before_page_number' => '<span class="meta-nav screen-reader-text">' . __( 'Page', 'twentyseventeen' ) . ' </span>',
 			) );
 
-		else :
+		else : ?>
 
-			get_template_part( 'template-parts/post/content', 'none' );
+			<h1 class="alog-entry-title entry-title" contenteditable="true"><?php echo $todays_date_string; ?></h1>
+      <div class="alog-entry-content entry-content" contenteditable="true"></div>
 
-		endif; ?>
+    <?php
+    endif; ?>
+    
+    <?php wp_reset_postdata(); ?>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->
