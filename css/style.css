@@ -1,0 +1,26 @@
+.alog-date-boxes {
+  list-style: none;
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.alog-day {
+  width: 30px;
+  border: 3px solid;
+  text-align: center;
+  margin: 3px;
+}
+
+.alog-entry-title,
+.alog-entry-content {
+  border: 1px dashed black;
+}
+
+.alog-entry-title.active,
+.alog-entry-content.active {
+  border: 1px solid gainsboro;
+}
+
+.alog-entry-content {
+  height: 100vh;
+}

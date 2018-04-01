@@ -42,7 +42,7 @@
  * Register Adventure Log Post Type.
  */
 require_once plugin_dir_path( __FILE__ ) . 'inc/posttypes.php';
-register_activation_hook( __FILE__, 'adventure_log_rewrite_flush_init' );
+register_activation_hook( __FILE__, 'adventure_log_flush_rewrite_init' );
 
 /**
  * Register Adventurer Role.
@@ -60,7 +60,7 @@ register_deactivation_hook( __FILE__, 'adventure_log_remove_capabilities' );
 function adventure_log_scripts() {
 
   // This should only happen on non-admin, single posts or pages
-  if ( ! is_admin() && is_single() ) {
+  if ( ! is_admin() && ( is_single() || is_archive() ) ) {
 
     // Make sure only logged in and authorized users (can edit their own posts) can use this function
     if ( is_user_logged_in() && current_user_can( 'edit_logs' ) ) {
@@ -73,9 +73,49 @@ function adventure_log_scripts() {
         'current_ID'  => get_the_ID()
       ));
 
+      // Enqueue our stylesheet for frontend editing
+      wp_enqueue_style( 'adventure_log_style', plugins_url( 'css/style.css', __FILE__ ) );
+
     } // END if ( is_user_logged_in() ... )
 
   } // END if ( ! is_admin() ... )
 
 } // END adventure_log_scripts()
 add_action( 'wp_enqueue_scripts', 'adventure_log_scripts' );
+
+/**
+ * Redirect user after successful login.
+ * 
+ * @see https://developer.wordpress.org/reference/hooks/login_redirect/
+ * 
+ * @param string $redirect_to URL to redirect to.
+ * @param string $request URL the user is coming from.
+ * @param object $user Logged user's data.
+ * @return string
+ */
+function adventure_login_redirect( $redirect_to, $request, $user ) {
+  // is there a user to check?
+  if ( isset( $user->roles ) && is_array( $user->roles ) ) {
+    // check for subscribers 
+    if ( in_array( 'adventurer', $user->roles ) ) {
+      // redirect to the homepage
+      $redirect_to = home_url() . '/alog/';
+    }
+  }
+  return $redirect_to;
+}
+add_filter( 'login_redirect', 'adventure_login_redirect', 10, 3 );
+
+/**
+ * Create a custom archive page for Adventure Logs
+ * @see https://codex.wordpress.org/Plugin_API/Filter_Reference/archive_template
+ */
+function adventure_log_archive_page( $template ) {
+  global $post;
+
+  if ( is_post_type_archive( 'alog' ) ) {
+    $template = dirname( __FILE__ ) . '/inc/template-archive.php';
+  }
+  return $template;
+}
+add_filter( 'archive_template', 'adventure_log_archive_page' );

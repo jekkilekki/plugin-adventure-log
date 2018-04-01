@@ -24,7 +24,7 @@
    */
   function runAjaxSave( new_title, new_content ) {
     $.ajax({
-      url: WP_API_settings.root + 'wp/v2/posts/' + WP_API_settings.current_ID,
+      url: WP_API_settings.root + 'wp/v2/alog/' + WP_API_settings.current_ID,
       method: 'POST',
       beforeSend: function(xhr) {
         xhr.setRequestHeader( 'X-WP-Nonce', WP_API_settings.nonce );

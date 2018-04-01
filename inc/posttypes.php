@@ -39,19 +39,19 @@ function adventure_log_cpt_init() {
       'show_ui'            => true,
       'show_in_menu'       => true,
       'query_var'          => true,
-      'rewrite'            => array( 'slug' => 'log' ),
-      'capability_type'    => 'log',
+      'rewrite'            => array( 'slug' => 'alog' ),
+      'capability_type'    => 'alog',
       'has_archive'        => true,
       'hierarchical'       => false,
       'show_in_rest'       => true,
-      'rest_base'          => 'logs',
+      'rest_base'          => 'alog',
       'menu_position'      => null,
       'menu_icon'          => 'dashicons-clipboard',
       'supports'           => array( 'title', 'editor' ),
       'map_meta_cap'       => true
   );
 
-  register_post_type( 'log', $args );
+  register_post_type( 'alog', $args );
 }
 
 add_action( 'init', 'adventure_log_cpt_init' );
