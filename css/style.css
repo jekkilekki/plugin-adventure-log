@@ -1,10 +1,12 @@
-.alog-date-boxes {
+ul.alog-date-boxes {
   list-style: none;
   display: inline-flex;
   flex-wrap: wrap;
+  margin-top: 0.5rem;
+  margin-bottom:0.5rem;
 }
 
-.alog-day {
+li.alog-day {
   width: 30px;
   border: 3px solid;
   text-align: center;
