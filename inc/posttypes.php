@@ -74,8 +74,8 @@ function adventure_log_flush_rewrite_init() {
  */
 function adventure_log_rewrite_rules( $wp_rewrite ) {
   // Hardcode in the CPT
-  // $rules = adventure_log_generate_date_archives( 'alog', $wp_rewrite );
-  // $wp_rewrite->rules = $rules + $wp_rewrite->rules;
+  $rules = adventure_log_generate_date_archives( 'alog', $wp_rewrite );
+  $wp_rewrite->rules = $rules + $wp_rewrite->rules;
   return $wp_rewrite;
 }
 add_action( 'generate_rewrite_rules', 'adventure_log_rewrite_rules' );
@@ -99,7 +99,7 @@ function adventure_log_generate_date_archives( $cpt, $wp_rewrite ) {
 
   if ( $slug_archive === true ) {
     // Get custom slug from post type object if specified
-    $slug_archive = $post_type->rewrite[ 'slug' ];
+    $slug_archive = $post_type->name;
   }
 
   $dates = array(
@@ -117,21 +117,21 @@ function adventure_log_generate_date_archives( $cpt, $wp_rewrite ) {
     )
   );
 
-  foreach ( $dates as $date ) {
+  foreach ( $dates as $data ) {
     $query = 'index.php?post_type=' . $cpt;
-    $rule = $slug_archive . '/' . $date[ 'rule' ];
+    $rule = $slug_archive . '/' . $data[ 'rule' ];
 
     $i = 1;
-    foreach ( $date[ 'vars' ] as $var ) {
+    foreach ( $data[ 'vars' ] as $var ) {
       $query .= '&' . $var . '=' . $wp_rewrite->preg_index($i);
       $i++;
-    
+    }
 
     $rules[ $rule . "/?$" ] = $query;
     $rules[ $rule . "/feed/(feed|rdf|rss|rss2|atom)/?$" ] = $query . "&feed=" . $wp_rewrite->preg_index($i);
     $rules[ $rule . "/(feed|rdf|rss|rss2|atom)/?$" ] = $query . "&feed=" . $wp_rewrite->preg_index($i);
     $rules[ $rule . "/page/([0-9]{1,})/?$" ] = $query . "&paged=" . $wp_rewrite->preg_index($i);
-  }}
+  }
 
   return $rules;
 }

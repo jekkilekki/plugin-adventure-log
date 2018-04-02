@@ -17,16 +17,20 @@ get_header(); ?>
 	<?php // if ( have_posts() ) : ?>
 		<header class="page-header">
 
-			<?php
-        $todays_date = getdate();
-        $todays_date_string = $todays_date[ 'month' ] . ' ' . $todays_date[ 'mday' ] . ', ' . $todays_date[ 'year' ];
-        
-        echo '<h1 class="page-title">' . date( 'F Y' ) . '</h1>';
-        echo '<div class="taxonomy-description">Keep track of your writing this month. What kind of streak are you on?</div>';
-        
+      <?php
+      // Get all values for today's date and set variable
+        $wp_timestamp = current_time( 'timestamp' );
+        $today = date( $wp_timestamp );
+        $year = date( 'Y', $wp_timestamp );
+        $monnum = date( 'n', $wp_timestamp );
+        $month = date( 'F', $wp_timestamp );
+        $day = date( 'j', $wp_timestamp );
         $days_this_month = date( 't' );
-        $this_month = $todays_date[ 'month' ];
-        $this_year = $todays_date[ 'year' ];
+
+        $todays_date_string = $month . ' ' . $day . ', ' . $year;
+        
+        echo '<h1 class="page-title">' . $month . ' ' . $year . '</h1>';
+        echo '<div class="taxonomy-description">Keep track of your writing this month. What kind of streak are you on?</div>';
 
         echo '<ul class="alog-date-boxes">';
         for( $i = 1; $i <= $days_this_month; $i++ ) {
@@ -34,8 +38,8 @@ get_header(); ?>
           $args = array(
             'post_type' => 'alog',
             'date_query' => array(
-              'year'  => $todays_date[ 'year' ],
-              'month' => $todays_date[ 'mon' ],
+              'year'  => $year,
+              'month' => $monnum,
               'day'   => $i,
             ),
             'ignore_sticky_posts' => 1
@@ -46,7 +50,7 @@ get_header(); ?>
           if ( $query->have_posts ) : while ( $query->the_post() ) : $query->the_post();
 
             echo '<a href="' . esc_url( get_permalink( $post->ID ) ) . '"><li class="alog-day alog-complete"><span class="screen-reader-text">' . 
-              $this_month . ' ' . $i . ', ' . $this_year .
+              $month . ' ' . $i . ', ' . $year .
               '</span>' . $i . '</li></a>';
 
             endwhile;
@@ -54,7 +58,7 @@ get_header(); ?>
           else : 
 
             echo '<a href="#"><li class="alog-day"><span class="screen-reader-text">' . 
-              $this_month . ' ' . $i . ', ' . $this_year .
+              $month . ' ' . $i . ', ' . $year .
               '</span>' . $i . '</li></a>';
 
           endif;
@@ -76,9 +80,9 @@ get_header(); ?>
       'post_type'  => 'alog',
       'date_query' => array(
         array(
-          'year'  => $todays_date[ 'year' ],
-          'month' => $todays_date[ 'mon' ],
-          'day'   => $todays_date[ 'mday' ],
+          'year'  => $year,
+          'month' => $monnum,
+          'day'   => $day,
         ),
       ),
       'ignore_sticky_posts' => 1,
@@ -95,7 +99,7 @@ get_header(); ?>
 				 * If you want to override this in a child theme, then include a file
 				 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
 				 */
-				get_template_part( 'template-parts/post/content', get_post_format() );
+				get_template_part( 'template-parts/post/content' );
 
 			endwhile;
 
@@ -109,6 +113,8 @@ get_header(); ?>
 
 			<h1 class="alog-entry-title entry-title" contenteditable="true"><?php echo $todays_date_string; ?></h1>
       <div class="alog-entry-content entry-content" contenteditable="true"></div>
+
+      <a class="edit-post-link button">Save</a>
 
     <?php
     endif; ?>
