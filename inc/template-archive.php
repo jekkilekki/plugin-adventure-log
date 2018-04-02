@@ -14,7 +14,7 @@ get_header(); ?>
 
 <div class="wrap">
 
-	<?php if ( have_posts() ) : ?>
+	<?php // if ( have_posts() ) : ?>
 		<header class="page-header">
 
 			<?php
@@ -30,38 +30,65 @@ get_header(); ?>
 
         echo '<ul class="alog-date-boxes">';
         for( $i = 1; $i <= $days_this_month; $i++ ) {
-          echo '<a href="#"><li class="alog-day"><span class="screen-reader-text">' . 
-            $this_month . ' ' . $i . ', ' . $this_year .
-            '</span>' . $i . '</li></a>';
+
+          $args = array(
+            'post_type' => 'alog',
+            'date_query' => array(
+              'year'  => $todays_date[ 'year' ],
+              'month' => $todays_date[ 'mon' ],
+              'day'   => $i,
+            ),
+            'ignore_sticky_posts' => 1
+          );
+  
+          $query = new WP_Query( $args );
+
+          if ( $query->have_posts ) : while ( $query->the_post() ) : $query->the_post();
+
+            echo '<a href="' . esc_url( get_permalink( $post->ID ) ) . '"><li class="alog-day alog-complete"><span class="screen-reader-text">' . 
+              $this_month . ' ' . $i . ', ' . $this_year .
+              '</span>' . $i . '</li></a>';
+
+            endwhile;
+
+          else : 
+
+            echo '<a href="#"><li class="alog-day"><span class="screen-reader-text">' . 
+              $this_month . ' ' . $i . ', ' . $this_year .
+              '</span>' . $i . '</li></a>';
+
+          endif;
+
+          wp_reset_postdata();
+
         }
         echo '</ul>';
       ?>
       
 		</header><!-- .page-header -->
-	<?php endif; ?>
+	<?php // endif; ?>
 
 	<div id="primary" class="content-area">
 		<main id="main" class="site-main" role="main">
 
     <?php
-      $args = array(
-        'date_query' => array(
-          array(
-            'year'  => $todays_date[ 'year' ],
-            'month' => $todays_date[ 'mon' ],
-            'day'   => $todays_date[ 'mday' ],
-          ),
+    $args = array(
+      'post_type'  => 'alog',
+      'date_query' => array(
+        array(
+          'year'  => $todays_date[ 'year' ],
+          'month' => $todays_date[ 'mon' ],
+          'day'   => $todays_date[ 'mday' ],
         ),
-        'ignore_sticky_posts' => 1,
-      );
-      $custom_query = new WP_Query( $args );
-    ?>
+      ),
+      'ignore_sticky_posts' => 1,
+    );
+    $query = new WP_Query( $args );
 
-    <?php
-		if ( $custom_query->have_posts() ) : ?>
+		if ( $query->have_posts() ) : ?>
 			<?php
 			/* Start the Loop */
-			while ( $custom_query->have_posts() ) : $custom_query->the_post();
+			while ( $query->have_posts() ) : $query->the_post();
 
 				/*
 				 * Include the Post-Format-specific template for the content.

@@ -13,6 +13,10 @@ li.alog-day {
   margin: 3px;
 }
 
+li.alog-complete {
+  background: green;
+}
+
 .alog-entry-title,
 .alog-entry-content {
   border: 1px dashed black;
@@ -24,5 +28,5 @@ li.alog-day {
 }
 
 .alog-entry-content {
-  height: 100vh;
+  height: 50vh;
 }

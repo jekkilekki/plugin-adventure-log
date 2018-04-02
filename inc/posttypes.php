@@ -42,12 +42,14 @@ function adventure_log_cpt_init() {
       'rewrite'            => array( 'slug' => 'alog' ),
       'capability_type'    => 'alog',
       'has_archive'        => true,
+      'taxonomies'         => array( 'post_tag' ),
       'hierarchical'       => false,
       'show_in_rest'       => true,
       'rest_base'          => 'alog',
       'menu_position'      => null,
       'menu_icon'          => 'dashicons-clipboard',
-      'supports'           => array( 'title', 'editor' ),
+      'supports'           => array( 'title', 'editor', 'thumbnail',  ),
+      'delete_with_user'   => true,
       'map_meta_cap'       => true
   );
 
