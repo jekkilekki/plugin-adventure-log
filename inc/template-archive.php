@@ -89,18 +89,27 @@ get_header(); ?>
     );
     $query = new WP_Query( $args );
 
-		if ( $query->have_posts() ) : ?>
+		if ( have_posts() ) : ?>
 			<?php
 			/* Start the Loop */
-			while ( $query->have_posts() ) : $query->the_post();
+			while ( have_posts() ) : the_post();
 
 				/*
 				 * Include the Post-Format-specific template for the content.
 				 * If you want to override this in a child theme, then include a file
 				 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
 				 */
-				get_template_part( 'template-parts/post/content' );
+        get_template_part( 'template-parts/post/content' );
 
+        ?>
+        
+        <footer class="entry-footer">
+        <span class="edit-link">
+          <a class="post-edit-link add-log-button">Edit</a>
+        </span>
+      </footer>
+
+      <?php
 			endwhile;
 
 			the_posts_pagination( array(
@@ -114,12 +123,16 @@ get_header(); ?>
 			<h1 class="alog-entry-title entry-title" contenteditable="true"><?php echo $todays_date_string; ?></h1>
       <div class="alog-entry-content entry-content" contenteditable="true"></div>
 
-      <a class="edit-post-link button">Save</a>
+      <footer class="entry-footer">
+        <span class="edit-link">
+          <a class="post-edit-link add-log-button">Save</a>
+        </span>
+      </footer>
 
     <?php
     endif; ?>
     
-    <?php wp_reset_postdata(); ?>
+    <?php // wp_reset_postdata(); ?>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->
