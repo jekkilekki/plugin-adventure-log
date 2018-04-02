@@ -14,6 +14,9 @@
 
   // Default 'editing' is FALSE until the button is clicked
   let $EDITING = false;
+  if ( WP_API_settings.current_ID == '' ) {
+    $EDITING = true;
+  } 
 
   /**
    * POSTs the new Post title and/or new Post content to the WP REST API to save it to the database
