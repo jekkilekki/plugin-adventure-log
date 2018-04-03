@@ -18,7 +18,7 @@ get_header(); ?>
 		<header class="page-header">
 
       <?php
-      // Get all values for today's date and set variable
+        // Get all values for today's date and set variable
         $wp_timestamp = current_time( 'timestamp' );
         $today = date( $wp_timestamp );
         $year = date( 'Y', $wp_timestamp );

@@ -63,7 +63,7 @@ function adventure_log_scripts() {
   if ( ! is_admin() && ( is_single() || is_archive() ) ) {
 
     // Make sure only logged in and authorized users (can edit their own posts) can use this function
-    if ( is_user_logged_in() && current_user_can( 'edit_logs' ) ) {
+    if ( is_user_logged_in() && current_user_can( 'edit_alogs' ) ) {
 
       // Enqueue and localize our script (pass our REST url, nonce, and current Post ID to JS)
       wp_enqueue_script( 'adventure_log_script', plugin_dir_url( __FILE__ ) . 'js/frontend.ajax.js', array( 'jquery' ), '20180330', true );
@@ -98,8 +98,15 @@ function adventure_login_redirect( $redirect_to, $request, $user ) {
   if ( isset( $user->roles ) && is_array( $user->roles ) ) {
     // check for subscribers 
     if ( in_array( 'adventurer', $user->roles ) ) {
-      // redirect to the homepage
-      $redirect_to = home_url() . '/alog/';
+      $wp_timestamp = current_time( 'timestamp' );
+      $today = date( $wp_timestamp );
+      $year = date( 'Y', $wp_timestamp );
+      $monnum = date( 'n', $wp_timestamp );
+      $month = date( 'F', $wp_timestamp );
+      $day = date( 'j', $wp_timestamp );
+      $days_this_month = date( 't' );
+      // redirect to the archive page
+      $redirect_to = home_url() . '/alog/' . $year . '/' . $monnum . '/' . $day . '/';
     }
   }
   return $redirect_to;

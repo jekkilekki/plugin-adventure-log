@@ -11,6 +11,11 @@
   // Create constants for Post title and Post content we can reference later
   const $POST_TITLE = $( '.entry-title' );
   const $POST_CONTENT = $( '.entry-content' );
+  
+  // Create a $POST_ID variable to keep track of the current post ID
+  // If we're on a post, it'll be set to the Post ID passed in from PHP.
+  // If we're creating a NEW post, it'll be empty, but reset to the ID from the JSON in our Ajax response.
+  let $POST_ID = WP_API_settings.current_ID;
 
   // Default 'editing' is FALSE until the button is clicked
   let $EDITING = false;
@@ -27,7 +32,7 @@
    */
   function runAjaxSave( new_title, new_content ) {
     $.ajax({
-      url: WP_API_settings.root + 'wp/v2/alog/' + WP_API_settings.current_ID,
+      url: WP_API_settings.root + 'wp/v2/alog/' + $POST_ID,
       method: 'POST',
       beforeSend: function(xhr) {
         xhr.setRequestHeader( 'X-WP-Nonce', WP_API_settings.nonce );
@@ -38,7 +43,9 @@
         'content': new_content
       }
     }).success( function( response ) {
-      console.log( response );
+      // console.log( response );
+      console.log( response.id );
+        $POST_ID = response.id;
     }).fail( function( response ) {
       console.log( response );
     });
