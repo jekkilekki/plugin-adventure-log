@@ -26,13 +26,25 @@ get_header(); ?>
         $month = date( 'F', $wp_timestamp );
         $day = date( 'j', $wp_timestamp );
         $days_this_month = date( 't' );
-
-        $todays_date_string = $month . ' ' . $day . ', ' . $year;
+      ?>
         
-        echo '<h1 class="page-title">' . $month . ' ' . $year . '</h1>';
-        echo '<div class="taxonomy-description">Keep track of your writing this month. What kind of streak are you on?</div>';
+      <h1 class="page-title">
+        <a href="<?php echo esc_url( home_url() . '/alog/' . $year . '/' . $monnum ); ?>"><?php echo $month; ?></a>
+        <a href="<?php echo esc_url( home_url() . '/alog/' . $year ); ?>"><?php echo $year; ?></a>
+      </h1>
+      <div class="taxonomy-description"><?php _e( 'Keep track of your writing this month. What kind of streak are you on?', 'adventure-log' ); ?></div>
 
-        echo '<ul class="alog-date-boxes">';
+      <ul class="yearly-date-boxes">
+        <?php
+          for ( $i = 1; $i <= 365; $i++ ) {
+
+          }
+        ?>
+      </ul>
+
+      <ul class="alog-date-boxes">
+
+      <?php
         for( $i = 1; $i <= $days_this_month; $i++ ) {
 
           $args = array(
@@ -118,9 +130,20 @@ get_header(); ?>
 				'before_page_number' => '<span class="meta-nav screen-reader-text">' . __( 'Page', 'twentyseventeen' ) . ' </span>',
 			) );
 
-		else : ?>
+    else : 
+      
+    $todays_date_string = $month . ' ' . $day . ', ' . $year;
+    $todays_date_url = $_SERVER[REQUEST_URI];
+    $url_date = explode( "/", $todays_date_url );
+    $url_year = $url_date[3];
+    $url_month = $url_date[4];
+    $url_day = $url_date[5];
 
-			<h1 class="alog-entry-title entry-title" contenteditable="true"><?php echo $todays_date_string; ?></h1>
+    ?>
+
+			<h1 class="alog-entry-title entry-title" contenteditable="true">
+        <?php echo $url_month . ' ' . $url_day . ', ' . $url_year; ?>
+      </h1>
       <div class="alog-entry-content entry-content" contenteditable="true"></div>
 
       <footer class="entry-footer">

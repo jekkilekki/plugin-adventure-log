@@ -11,7 +11,7 @@
   // Create constants for Post title and Post content we can reference later
   const $POST_TITLE = $( '.entry-title' );
   const $POST_CONTENT = $( '.entry-content' );
-  
+
   // Create a $POST_ID variable to keep track of the current post ID
   // If we're on a post, it'll be set to the Post ID passed in from PHP.
   // If we're creating a NEW post, it'll be empty, but reset to the ID from the JSON in our Ajax response.
@@ -40,7 +40,8 @@
       data: {
         // '_nonce': WP_API_settings.nonce,
         'title': new_title,
-        'content': new_content
+        'content': new_content,
+        'status': 'publish'
       }
     }).success( function( response ) {
       // console.log( response );

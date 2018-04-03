@@ -76,6 +76,13 @@ function adventure_log_scripts() {
       // Enqueue our stylesheet for frontend editing
       wp_enqueue_style( 'adventure_log_style', plugins_url( 'css/style.css', __FILE__ ) );
 
+      // Enqueue D3 for our calendar
+      // wp_enqueue_script( 'adventure_log_d3', '//d3js.org/d3.v4.min.js' );
+      // wp_enqueue_script( 'adventure_log_d3_calendar', plugin_dir_url( __FILE__ ) . 'js/calendar.d3.js', array( 'adventure_log_d3' ), '20180403', true );
+      // wp_localize_script( 'adventure_log_d3_calendar', 'alog_calendar', array(
+      //   'data'  => adventure_logs_last_year()
+      // ));
+
     } // END if ( is_user_logged_in() ... )
 
   } // END if ( ! is_admin() ... )
@@ -126,3 +133,24 @@ function adventure_log_archive_page( $template ) {
   return $template;
 }
 add_filter( 'archive_template', 'adventure_log_archive_page' );
+
+function adventure_logs_last_year() {
+  $dates = array();
+
+  $args = array(
+    'post_type' => 'alog',
+    'date_query'  => array(
+        'column'  => 'post_date_gmt',
+        'after'   => '1 year ago'
+      )
+  );
+
+  $query = new WP_Query( $args );
+  if ( $query->have_posts() ) {
+    while ( $query->have_posts() ) {
+      $dates[] = $query->the_post();
+    }
+  }
+
+  return $dates;
+}
