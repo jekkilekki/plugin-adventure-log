@@ -10,6 +10,25 @@
  * @version 1.0
  */
 
+// Get today's date from the archive URL (allows navigation to ANY date)
+$todays_date_url = $_SERVER[ 'REQUEST_URI' ];
+$url_date = explode( "/", $todays_date_url );
+
+// Retrieve from the end of the array, in order: day, month, year
+// Day
+array_pop( $url_date ); 
+$url_day = end( $url_date );
+
+// Month
+array_pop( $url_date );
+$url_monnum = end( $url_date );
+$date_obj = DateTime::createFromFormat( '!m', $url_monnum );
+$url_month = $date_obj->format( 'F' );
+
+// Year
+array_pop( $url_date );
+$url_year = end( $url_date );
+
 get_header(); ?>
 
 <div class="wrap">
@@ -19,7 +38,10 @@ get_header(); ?>
 
       <?php
         // Get all values for today's date and set variable
-        $wp_timestamp = current_time( 'timestamp' );
+        // Grabs the current timestamp according to WordPress's set UTC offset
+        $wp_timestamp = current_time( 'timestamp' ); 
+
+        // Then, passes WordPress's UTC offset timestamp into PHP's date function
         $today = date( $wp_timestamp );
         $year = date( 'Y', $wp_timestamp );
         $monnum = date( 'n', $wp_timestamp );
@@ -47,6 +69,16 @@ get_header(); ?>
       <?php
         for( $i = 1; $i <= $days_this_month; $i++ ) {
 
+          $classname = 'alog-day';
+
+          if ( $year == $url_year && $monnum == $url_monnum && $i == $url_day ) {
+            $classname .= ' alog-current';
+          } elseif ( $i == $day ) {
+            $classname .= ' alog-today';
+          } elseif ( $i > $day ) {
+            $classname .= ' alog-future';
+          }
+
           $args = array(
             'post_type' => 'alog',
             'date_query' => array(
@@ -59,20 +91,26 @@ get_header(); ?>
   
           $query = new WP_Query( $args );
 
-          if ( $query->have_posts ) : while ( $query->the_post() ) : $query->the_post();
+          if ( $query->have_posts ) : 
+            $classname .= ' alog-complete';
 
-            echo '<a href="' . esc_url( get_permalink( $post->ID ) ) . '"><li class="alog-day alog-complete"><span class="screen-reader-text">' . 
+            while ( $query->the_post() ) : $query->the_post();
+
+            echo '<a href="' . esc_url( get_permalink( $post->ID ) ) . '"><li class="' . $classname . '"><span class="screen-reader-text">' . 
               $month . ' ' . $i . ', ' . $year .
               '</span>' . $i . '</li></a>';
 
             endwhile;
 
           else : 
+          ?>
 
-            echo '<a href="#"><li class="alog-day"><span class="screen-reader-text">' . 
-              $month . ' ' . $i . ', ' . $year .
-              '</span>' . $i . '</li></a>';
+            <a href="<?php echo esc_url( home_url() . '/alog/' . $url_year . '/' . $url_monnum . '/' . $i . '/' ); ?>">
+              <li class="<?php echo $classname; ?>">
+                <span class="screen-reader-text"><?php echo $url_month . ' ' . $i . ', ' . $url_year; ?></span><?php echo $i; ?></li>
+            </a>
 
+          <?php
           endif;
 
           wp_reset_postdata();
@@ -88,20 +126,23 @@ get_header(); ?>
 		<main id="main" class="site-main" role="main">
 
     <?php
-    $args = array(
-      'post_type'  => 'alog',
-      'date_query' => array(
-        array(
-          'year'  => $year,
-          'month' => $monnum,
-          'day'   => $day,
-        ),
-      ),
-      'ignore_sticky_posts' => 1,
-    );
-    $query = new WP_Query( $args );
+    // $args = array(
+    //   'post_type'  => 'alog',
+    //   'date_query' => array(
+    //     array(
+    //       'year'  => $year,
+    //       'month' => $monnum,
+    //       'day'   => $day,
+    //     ),
+    //   ),
+    //   'ignore_sticky_posts' => 1,
+    // );
+    // $query = new WP_Query( $args );
 
-		if ( have_posts() ) : ?>
+    if ( have_posts() ) : ?>
+    
+      <div><a href="<?php echo esc_url( home_url() . '/alog/' . $year . '/' . $monnum . '/' . $day . '/' ); ?>">Create New</a></div>
+
 			<?php
 			/* Start the Loop */
 			while ( have_posts() ) : the_post();
@@ -131,28 +172,25 @@ get_header(); ?>
 			) );
 
     else : 
+      if ( ! is_today() ) : ?>
+        <div class="alog-entry-content entry-content">Sorry, you have no writing for this date.</div>
       
-    $todays_date_string = $month . ' ' . $day . ', ' . $year;
-    $todays_date_url = $_SERVER[REQUEST_URI];
-    $url_date = explode( "/", $todays_date_url );
-    $url_year = $url_date[3];
-    $url_month = $url_date[4];
-    $url_day = $url_date[5];
+      <?php 
+      else: ?>
 
-    ?>
+        <h1 class="alog-entry-title entry-title" contenteditable="true">
+          <?php echo $url_month . ' ' . $url_day . ', ' . $url_year; ?>
+        </h1>
+        <div class="alog-entry-content entry-content" contenteditable="true"></div>
 
-			<h1 class="alog-entry-title entry-title" contenteditable="true">
-        <?php echo $url_month . ' ' . $url_day . ', ' . $url_year; ?>
-      </h1>
-      <div class="alog-entry-content entry-content" contenteditable="true"></div>
-
-      <footer class="entry-footer">
-        <span class="edit-link">
-          <a class="post-edit-link add-log-button">Save</a>
-        </span>
-      </footer>
+        <footer class="entry-footer">
+          <span class="edit-link">
+            <a class="post-edit-link add-log-button">Save</a>
+          </span>
+        </footer>
 
     <?php
+      endif; 
     endif; ?>
     
     <?php // wp_reset_postdata(); ?>

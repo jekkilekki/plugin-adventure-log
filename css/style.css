@@ -13,8 +13,24 @@ li.alog-day {
   margin: 3px;
 }
 
+li.alog-today {
+  border-color: green;
+  color: green;
+  background: rgba( 0, 255, 0, 0.3 );
+}
+
+li.alog-current {
+  border-color: orange;
+  color: orange;
+  background: rgba( 255, 175, 0, 0.3 );
+}
+
 li.alog-complete {
   background: green;
+}
+
+li.alog-future {
+  opacity: 0.5;
 }
 
 .alog-entry-title,

@@ -39,6 +39,11 @@
  */
 
 /**
+ * Include our functions file.
+ */
+require_once plugin_dir_path( __FILE__ ) . 'inc/functions.php';
+
+/**
  * Register Adventure Log Post Type.
  */
 require_once plugin_dir_path( __FILE__ ) . 'inc/posttypes.php';
