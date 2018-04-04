@@ -10,49 +10,30 @@
  * @version 1.0
  */
 
-// Get today's date from the archive URL (allows navigation to ANY date)
-$todays_date_url = $_SERVER[ 'REQUEST_URI' ];
-$url_date = explode( "/", $todays_date_url );
+// Get our date variables for the rest of the page
+$today = get_wp_current_date(); 
+$date = get_url_date_array();
 
-// Retrieve from the end of the array, in order: day, month, year
-// Day
-array_pop( $url_date ); 
-$url_day = end( $url_date );
+// Get timestamps for our dates and times to compare later
+$todays_timestamp = current_time( 'timestamp' );
+$urls_timestamp = get_url_timestamp();
 
-// Month
-array_pop( $url_date );
-$url_monnum = end( $url_date );
-$date_obj = DateTime::createFromFormat( '!m', $url_monnum );
-$url_month = $date_obj->format( 'F' );
+echo "Today's timestamp: " . $todays_timestamp;
+echo "<br>URL's timestamp: " . $urls_timestamp;
 
-// Year
-array_pop( $url_date );
-$url_year = end( $url_date );
+if ( $date == null ) {
+  $date = $today;
+}
 
 get_header(); ?>
 
 <div class="wrap">
-
-	<?php // if ( have_posts() ) : ?>
 		<header class="page-header">
-
-      <?php
-        // Get all values for today's date and set variable
-        // Grabs the current timestamp according to WordPress's set UTC offset
-        $wp_timestamp = current_time( 'timestamp' ); 
-
-        // Then, passes WordPress's UTC offset timestamp into PHP's date function
-        $today = date( $wp_timestamp );
-        $year = date( 'Y', $wp_timestamp );
-        $monnum = date( 'n', $wp_timestamp );
-        $month = date( 'F', $wp_timestamp );
-        $day = date( 'j', $wp_timestamp );
-        $days_this_month = date( 't' );
-      ?>
         
       <h1 class="page-title">
-        <a href="<?php echo esc_url( home_url() . '/alog/' . $year . '/' . $monnum ); ?>"><?php echo $month; ?></a>
-        <a href="<?php echo esc_url( home_url() . '/alog/' . $year ); ?>"><?php echo $year; ?></a>
+        <a href="<?php echo esc_url( home_url() . '/alog/' ); ?>">Home</a> | 
+        <a href="<?php echo esc_url( home_url() . '/alog/' . $date['year'] . '/' . $date['monnum'] ); ?>"><?php echo $date['month']; ?></a>
+        <a href="<?php echo esc_url( home_url() . '/alog/' . $date['year'] ); ?>"><?php echo $date['year']; ?></a>
       </h1>
       <div class="taxonomy-description"><?php _e( 'Keep track of your writing this month. What kind of streak are you on?', 'adventure-log' ); ?></div>
 
@@ -64,57 +45,33 @@ get_header(); ?>
         ?>
       </ul>
 
+      <div>
+        <i class="fa fa-edit"></i>
+        <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>">Write New Log</a>
+      </div>
+
       <ul class="alog-date-boxes">
 
       <?php
-        for( $i = 1; $i <= $days_this_month; $i++ ) {
+        for( $i = 1; $i <= $date['days_this_month']; $i++ ) {
 
           $classname = 'alog-day';
 
-          if ( $year == $url_year && $monnum == $url_monnum && $i == $url_day ) {
+          if ( $todays_timestamp == $urls_timestamp ) {
             $classname .= ' alog-current';
-          } elseif ( $i == $day ) {
+          } elseif ( $i == $date['day'] ) {
             $classname .= ' alog-today';
-          } elseif ( $i > $day ) {
+          } elseif ( $i > $date['day'] ) {
             $classname .= ' alog-future';
           }
-
-          $args = array(
-            'post_type' => 'alog',
-            'date_query' => array(
-              'year'  => $year,
-              'month' => $monnum,
-              'day'   => $i,
-            ),
-            'ignore_sticky_posts' => 1
-          );
-  
-          $query = new WP_Query( $args );
-
-          if ( $query->have_posts ) : 
-            $classname .= ' alog-complete';
-
-            while ( $query->the_post() ) : $query->the_post();
-
-            echo '<a href="' . esc_url( get_permalink( $post->ID ) ) . '"><li class="' . $classname . '"><span class="screen-reader-text">' . 
-              $month . ' ' . $i . ', ' . $year .
-              '</span>' . $i . '</li></a>';
-
-            endwhile;
-
-          else : 
           ?>
-
-            <a href="<?php echo esc_url( home_url() . '/alog/' . $url_year . '/' . $url_monnum . '/' . $i . '/' ); ?>">
+            
+            <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $date['year'], $date['monnum'], $i ) ); ?>">
               <li class="<?php echo $classname; ?>">
-                <span class="screen-reader-text"><?php echo $url_month . ' ' . $i . ', ' . $url_year; ?></span><?php echo $i; ?></li>
+                <span class="screen-reader-text"><?php echo get_url_date_string( $date['year'], $date['monnum'], $i ); ?></span><?php echo $i; ?></li>
             </a>
 
           <?php
-          endif;
-
-          wp_reset_postdata();
-
         }
         echo '</ul>';
       ?>
@@ -126,24 +83,8 @@ get_header(); ?>
 		<main id="main" class="site-main" role="main">
 
     <?php
-    // $args = array(
-    //   'post_type'  => 'alog',
-    //   'date_query' => array(
-    //     array(
-    //       'year'  => $year,
-    //       'month' => $monnum,
-    //       'day'   => $day,
-    //     ),
-    //   ),
-    //   'ignore_sticky_posts' => 1,
-    // );
-    // $query = new WP_Query( $args );
+    if ( have_posts() ) : 
 
-    if ( have_posts() ) : ?>
-    
-      <div><a href="<?php echo esc_url( home_url() . '/alog/' . $year . '/' . $monnum . '/' . $day . '/' ); ?>">Create New</a></div>
-
-			<?php
 			/* Start the Loop */
 			while ( have_posts() ) : the_post();
 
@@ -173,15 +114,14 @@ get_header(); ?>
 
     else : 
       if ( ! is_today() ) : ?>
+        <h1 class="alog-entry-title entry-title"><?php echo get_url_date_string(); ?></h1>
         <div class="alog-entry-content entry-content">Sorry, you have no writing for this date.</div>
       
       <?php 
       else: ?>
 
-        <h1 class="alog-entry-title entry-title" contenteditable="true">
-          <?php echo $url_month . ' ' . $url_day . ', ' . $url_year; ?>
-        </h1>
-        <div class="alog-entry-content entry-content" contenteditable="true"></div>
+        <h1 class="alog-entry-title entry-title alog-entry-editable" contenteditable="true"><?php echo get_url_date_string(); ?></h1>
+        <div class="alog-entry-content entry-content alog-entry-editable" contenteditable="true"></div>
 
         <footer class="entry-footer">
           <span class="edit-link">
@@ -189,11 +129,10 @@ get_header(); ?>
           </span>
         </footer>
 
-    <?php
+      <?php
       endif; 
+
     endif; ?>
-    
-    <?php // wp_reset_postdata(); ?>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->

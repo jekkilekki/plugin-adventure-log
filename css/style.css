@@ -33,13 +33,11 @@ li.alog-future {
   opacity: 0.5;
 }
 
-.alog-entry-title,
-.alog-entry-content {
+.alog-entry-editable {
   border: 1px dashed black;
 }
 
-.alog-entry-title.active,
-.alog-entry-content.active {
+.alog-entry-editable.active {
   border: 1px solid gainsboro;
 }
 
