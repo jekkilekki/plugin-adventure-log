@@ -12,6 +12,24 @@
   const $POST_TITLE = $( '.entry-title' );
   const $POST_CONTENT = $( '.entry-content' );
 
+  // Add some styling for our editor fields
+  $POST_TITLE.focus( function() {
+    $POST_TITLE.css( 'border', '1px solid gainsboro' );
+  });
+  $POST_CONTENT.focus( function() {
+    $POST_CONTENT.css( 'border', '1px solid gainsboro' );
+  });
+  $POST_TITLE.focusout( function() {
+    $POST_TITLE.css( 'border', '1px dashed black' );
+  });
+  $POST_CONTENT.focusout( function() {
+    $POST_CONTENT.css( 'border', '1px dashed black' );
+  });
+
+  if ( $POST_CONTENT == '' ) {
+    $POST_CONTENT.css( 'height', '50vh' );
+  }
+
   // Create a $POST_ID variable to keep track of the current post ID
   // If we're on a post, it'll be set to the Post ID passed in from PHP.
   // If we're creating a NEW post, it'll be empty, but reset to the ID from the JSON in our Ajax response.
@@ -97,22 +115,10 @@
       // Set Post title box to be editable, and provide some handy CSS to let us know
       $POST_TITLE.prop( 'contenteditable', 'true' );
       $POST_TITLE.css( 'border', '1px dashed black' );
-      $POST_TITLE.focus( function() {
-        $POST_TITLE.css( 'border', '1px solid gainsboro' );
-      });
-      $POST_TITLE.focusout( function() {
-        $POST_TITLE.css( 'border', '1px dashed black' );
-      })
 
       // Set Post content box to be editable, and provide some handy CSS to let us know
       $POST_CONTENT.prop( 'contenteditable', 'true' );
       $POST_CONTENT.css( 'border', '1px dashed black' );
-      $POST_CONTENT.focus( function() {
-        $POST_CONTENT.css( 'border', '1px solid gainsboro' );
-      });
-      $POST_CONTENT.focusout( function() {
-        $POST_CONTENT.css( 'border', '1px dashed black' );
-      });
 
       // Change the "Edit" button text to "Save"
       $(this).text( 'Save' );

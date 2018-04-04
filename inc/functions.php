@@ -7,8 +7,6 @@ function get_url_date_array() {
   // Get today's date from the archive URL (allows navigation to ANY date)
   $full_url = $_SERVER[ 'REQUEST_URI' ];
 
-  echo $full_url . '<br>';
-
   // Get rid of the first part of the URL to focus only on the date part
   $date_url = explode( '/alog/', $full_url );
 
@@ -26,34 +24,61 @@ function get_url_date_array() {
     return $date_array;
   }
 
+  // Break apart remaining URI into separate numbers
   $date = explode( '/', $date_url[1] );
 
-  echo '<pre>';
-  var_dump( $date );
-  echo '</pre>';
+  // We should ALWAYS have a $year after that first check above
+  $date_array['year'] = $date[0];
+
+  // If trying to navigate into the future, redirect to alog homepage
+  // @TODO: So far month and day checking aren't working, though future year works
+  if ( $date[0] > $today['year'] ||
+        ( $date[0] > $today['year'] && $date[1] > $today['monnum'] ) || 
+        ( $date[0] > $today['year'] && $date[1] > $today['monnum'] && $date[2] > $today['day'] ) ) {
+    wp_redirect( esc_url( home_url() . '/alog/' ) );
+  }
 
   // Error handling
-  if ( count( $date) > 1 ) {
-    $date_array['year'] = $date[0];
+  if ( $date[1] == '' ) {
     $date_array['monnum'] = 1;
+    $date_array['month'] = get_month_name(1);
+    $date_array['days_this_month'] = get_days_this_month( 1, $date[0] );;
     $date_array['day'] = 1;
+    return $date_array;
+  } elseif ( $date[2] == '' ) {
+    $date_array['monnum'] = $date[1];
+    $date_array['month'] = get_month_name($date[1]);
+    $date_array['days_this_month'] = get_days_this_month( $date[1], $date[0] );
+    $date_array['day'] = 1;
+    return $date_array;
+  } else {
+    $date_array['monnum'] = $date[1];
+    $date_array['month'] = get_month_name($date[1]);
+    $date_array['days_this_month'] = get_days_this_month( $date[1], $date[0] );
+    $date_array['day'] = $date[2];
     return $date_array;
   }
 
-  // Month Name ("March" etc) 
-  // $date_obj = DateTime::createFromFormat( '!m', $mon_num );
-  // $mon_name = $date_obj->format( 'F' );
+  // $url_date_array = array(
+  //   'days_this_month' => date( 't', mktime( 0,0,0,$mon_num,$day,$year ) ),
+  //   'day'     => $day,
+  //   'monnum'  => $mon_num,
+  //   'month'   => $mon_name,
+  //   'year'    => $year
+  // );
 
-  $url_date_array = array(
-    'days_this_month' => date( 't', mktime(0,0,0,$mon_num,$day,$year) ),
-    'day'     => $day,
-    'monnum'  => $mon_num,
-    'month'   => $mon_name,
-    'year'    => $year
-  );
-
-  return $url_date_array; // [day, month_num, month_name, year]
+  // return $url_date_array; // [day, month_num, month_name, year]
 }
+
+function get_month_name( $num ) {
+  // Month Name ("March" etc) 
+  $date_obj = DateTime::createFromFormat( '!m', $num );
+  return $date_obj->format( 'F' );
+}
+
+function get_days_this_month( $month, $year ) {
+  return date( 't', mktime(0,0,0,$month,1,$year) );
+} 
 
 /**
  * Function that returns the English readable Date string based on the current URI
@@ -145,10 +170,14 @@ function get_wp_current_date() {
  * 
  * @return bool $is_today whether or not the URI is for today
  */
-function is_today() {
-  $url_date = get_url_date_array();
-
-  // Do some more logic before getting here.
+function is_today( $today_array, $given_date_array, $given_day = '' ) {
+  // Can't be today if the $given_day is different
+  if ( $given_day != '' && $given_day != $today_array['day'] ) {
+    return false;
+  }
+  if ( empty( array_diff( $today_array, $given_date_array ) ) ) {
+    return true;
+  }
   return false;
 }
 

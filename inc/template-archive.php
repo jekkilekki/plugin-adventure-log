@@ -14,21 +14,26 @@
 $today = get_wp_current_date(); 
 $date = get_url_date_array();
 
+// echo '<pre>';
+// var_dump( $today );
+// echo '</pre>';
+
+// echo '<pre>';
+// var_dump( $date );
+// echo '</pre>';
+
 // Get timestamps for our dates and times to compare later
 $todays_timestamp = current_time( 'timestamp' );
 $urls_timestamp = get_url_timestamp();
 
-echo "Today's timestamp: " . $todays_timestamp;
-echo "<br>URL's timestamp: " . $urls_timestamp;
-
-if ( $date == null ) {
-  $date = $today;
-}
+// if ( $date == null ) {
+//   $date = $today;
+// }
 
 get_header(); ?>
 
 <div class="wrap">
-		<header class="page-header">
+		<header class="page-header alog-header">
         
       <h1 class="page-title">
         <a href="<?php echo esc_url( home_url() . '/alog/' ); ?>">Home</a> | 
@@ -57,11 +62,13 @@ get_header(); ?>
 
           $classname = 'alog-day';
 
-          if ( $todays_timestamp == $urls_timestamp ) {
-            $classname .= ' alog-current';
-          } elseif ( $i == $date['day'] ) {
+          if ( is_today( $today, $date, $i ) ) {
             $classname .= ' alog-today';
-          } elseif ( $i > $date['day'] ) {
+          } 
+          if ( $i == $date['day'] ) {
+            $classname .= ' alog-current';
+          } 
+          if ( $i > $today['day'] ) {
             $classname .= ' alog-future';
           }
           ?>
@@ -113,7 +120,11 @@ get_header(); ?>
 			) );
 
     else : 
-      if ( ! is_today() ) : ?>
+
+      // echo "Today's timestamp: " . $todays_timestamp;
+      // echo "<br>URL's timestamp: " . $urls_timestamp;
+
+      if ( ! is_today( $today, $date ) ) : ?>
         <h1 class="alog-entry-title entry-title"><?php echo get_url_date_string(); ?></h1>
         <div class="alog-entry-content entry-content">Sorry, you have no writing for this date.</div>
       
