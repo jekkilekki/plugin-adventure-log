@@ -101,6 +101,9 @@ get_header(); ?>
 				 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
 				 */
         get_template_part( 'template-parts/post/content' );
+        // if ( '' === locate_template( 'templates/alog-single.php', true, false ) )
+    // include( 'templates/alog-single.php' );
+    ccm_get_template_part('templates/alog','single');
 
         ?>
         

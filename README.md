@@ -1,0 +1,59 @@
+# Adventure Log
+
+## WordPress Plugin
+
+### Description
+
+After using [https://750words.com](750words.com) for a few days, I found I really enjoyed it, but I wanted to customize it a little more than that site allowed. So, I decided to create my own version that I could plugin to a WordPress site.
+
+Additionally, I read [https://nerdfitness.com](Steve Kamb's) [https://levelupyourlife.com]("Level Up Your Life") and many of the things he wrote really resonated with me. I decided that instead of calling this plugin something _boring_ like "Journal", I'd make it a bit more _awesome_ by naming it "Adventure Log". A few other considerations I had were:
+
+* Adventure Log
+* Captain's Log
+* Quest Log
+
+Some of these may still be take the place of "Adventure Log" in the future (or be added to the main functionality),but for now, we're using "ALog" because it's that much better than "Blog" - one letter earlier in the alphabet.
+
+### Features
+
+The following are features of the plugin.
+
+1. Front-end editing in WordPress
+2. Creates a new User role and Custom Post Type to keep things separate from the main WP blog content
+3. Ability to keep "Adventurers" (new User role) out of the back-end of WordPress and only allow front-end editing
+4. Ability to add Tags to your Logs for easier searching
+5. Ability to add a Featured Image to your Logs
+6. Redirects Users to the Main Alog page after login
+
+#### Admin Settings Page
+
+1. Daily target word limit (default: 500)
+2. Allow editing of Posts after the deadline (default: no)
+3. Allow additional Posts on each date (default: no)
+4. Allow creation of future Posts (default: no)
+5. Allow public facing Posts (default: yes)
+6. Override individual User settings
+
+#### Front-end Settings Page
+
+1. Change Adventurer (WP) profile information
+2. Change (personal) target word limit
+3. Change (personal) editing after the fact option
+4. Most of the Admin options...
+
+### Pages
+
+The following is a list of the pages that are created and used by this plugin:
+
+See this page for help: 
+* [https://www.ibenic.com/include-or-override-wordpress-templates/](https://www.ibenic.com/include-or-override-wordpress-templates/)
+* [https://gist.github.com/ashokmhrj/b5f6e28f15dc84601954](https://gist.github.com/ashokmhrj/b5f6e28f15dc84601954)
+
+* `/alog/` - Adventure Log Home (opens a "new" editor and/or displays the archive for that month)
+* `/alog/2018/` - Year archive - with a one-year calendar
+* `/alog/2018/4/` - Month archive - with a one-month calendar
+* `/alog/2018/4/5/` - Day archive - 
+* `/alog/2018/4/5/a/` - Single Log page - typical WP content
+* `/alog/settings/` - Settings page - Ajax form, posting to REST API
+* `/alog/new/` - New editor page - with today's date
+

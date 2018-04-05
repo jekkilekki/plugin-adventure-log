@@ -42,6 +42,7 @@
  * Include our functions file.
  */
 require_once plugin_dir_path( __FILE__ ) . 'inc/functions.php';
+require_once plugin_dir_path( __FILE__ ) . 'inc/template-functions.php';
 
 /**
  * Register Adventure Log Post Type.
@@ -159,3 +160,23 @@ function adventure_logs_last_year() {
 
   return $dates;
 }
+
+
+define( 'ALOG_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+ 
+require ALOG_PLUGIN_DIR . 'inc/class-gamajo-template-loader.php';
+require ALOG_PLUGIN_DIR . 'inc/class-alog-template-loader.php';
+ 
+function alog_sample_shortcode() {
+ 
+	$templates = new Alog_Template_Loader;
+ 
+  // Templates will be loaded here
+  ob_start();
+	$templates->get_template_part( 'alog', 'single' );
+	// $templates->get_template_part( 'alog', 'archive' );
+	// $templates->get_template_part( 'content', 'alog' );
+	return ob_get_clean();
+ 
+}
+add_shortcode( 'alog-single', 'alog_shortcode' );

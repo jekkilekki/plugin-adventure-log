@@ -8,9 +8,14 @@
   console.info( "Nonce value: ", WP_API_settings.nonce );
   console.info( "Post ID: ", WP_API_settings.current_ID );
 
+  // Create a $POST_ID variable to keep track of the current post ID
+  // If we're on a post, it'll be set to the Post ID passed in from PHP.
+  // If we're creating a NEW post, it'll be empty, but reset to the ID from the JSON in our Ajax response.
+  let $POST_ID = WP_API_settings.current_ID;
+
   // Create constants for Post title and Post content we can reference later
-  const $POST_TITLE = $( '.entry-title' );
-  const $POST_CONTENT = $( '.entry-content' );
+  const $POST_TITLE = $( '.post-' + $POST_ID + ' .entry-title' );
+  const $POST_CONTENT = $( '.post-' + $POST_ID + ' .entry-content');
 
   // Add some styling for our editor fields
   $POST_TITLE.focus( function() {
@@ -29,11 +34,6 @@
   if ( $POST_CONTENT == '' ) {
     $POST_CONTENT.css( 'height', '50vh' );
   }
-
-  // Create a $POST_ID variable to keep track of the current post ID
-  // If we're on a post, it'll be set to the Post ID passed in from PHP.
-  // If we're creating a NEW post, it'll be empty, but reset to the ID from the JSON in our Ajax response.
-  let $POST_ID = WP_API_settings.current_ID;
 
   // Default 'editing' is FALSE until the button is clicked
   let $EDITING = false;
