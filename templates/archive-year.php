@@ -1,13 +1,11 @@
 <?php
 /**
- * The template for displaying archive pages
+ * The template for displaying YEARLY archive pages
  *
  * @link https://codex.wordpress.org/Template_Hierarchy
  *
- * @package WordPress
- * @subpackage Twenty_Seventeen
- * @since 1.0
- * @version 1.0
+ * @since 1.0.0
+ * @version 1.0.0
  */
 
 // Get our date variables for the rest of the page
@@ -35,7 +33,7 @@ get_header(); ?>
 <div class="wrap">
 		<header class="page-header alog-header">
         
-      <h1 class="page-title">
+      <h1 class="page-title">YEARLY | 
         <a href="<?php echo esc_url( home_url() . '/alog/' ); ?>">Home</a> | 
         <a href="<?php echo esc_url( home_url() . '/alog/' . $date['year'] . '/' . $date['monnum'] ); ?>"><?php echo $date['month']; ?></a>
         <a href="<?php echo esc_url( home_url() . '/alog/' . $date['year'] ); ?>"><?php echo $date['year']; ?></a>
@@ -93,7 +91,17 @@ get_header(); ?>
     if ( have_posts() ) : 
 
 			/* Start the Loop */
-			while ( have_posts() ) : the_post();
+      while ( have_posts() ) : the_post();
+      
+        if ( is_day() ) {
+          echo '<h3>Daily archive: ' . get_the_date( 'F j, Y') . '</h3>';
+        } elseif ( is_month() ) {
+          echo '<h3>Monthly archive: ' . get_the_date( 'F Y' ) . '</h3>';
+        } elseif ( is_year() ) {
+          echo '<h3>Yearly archive: ' . get_the_date( 'Y' ) . '</h3>';
+        } else {
+          echo '<h3>Looks like our function is wrong.</h3>';
+        } 
 
 				/*
 				 * Include the Post-Format-specific template for the content.
@@ -101,9 +109,6 @@ get_header(); ?>
 				 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
 				 */
         get_template_part( 'template-parts/post/content' );
-        // if ( '' === locate_template( 'templates/alog-single.php', true, false ) )
-    // include( 'templates/alog-single.php' );
-    ccm_get_template_part('templates/alog','single');
 
         ?>
         

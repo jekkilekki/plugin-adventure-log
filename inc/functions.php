@@ -185,10 +185,12 @@ function adventure_log_date_url( $year, $month, $day ) {
   return '/alog/' . $year . '/' . $month . '/' . $day . '/';
 }
 
-function adventure_log_get_month() {
-
-}
-
-function adventure_log_get_mon() {
-  
+/**
+ * Alog Word Count
+ */
+function alog_word_count() {
+  return sprintf(
+    __( '%s words', 'adventure-log' ),
+    str_word_count( strip_tags( get_post_field( 'post_content', get_the_ID() ) ) )
+  );
 }

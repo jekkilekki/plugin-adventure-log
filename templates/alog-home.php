@@ -1,4 +1,0 @@
-<?php
-/**
- * Alog home page.
- */

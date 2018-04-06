@@ -58,7 +58,7 @@ if ( ! defined( 'ALOG_PLUGIN_DIR_PATH' ) ) {
  * Include our functions file.
  */
 require_once plugin_dir_path( __FILE__ ) . 'inc/functions.php';
-require_once plugin_dir_path( __FILE__ ) . 'inc/template-functions.php';
+// require_once plugin_dir_path( __FILE__ ) . 'inc/template-functions.php';
 
 /**
  * Set default options.
@@ -104,6 +104,9 @@ function adventure_log_scripts() {
       // Enqueue our stylesheet for frontend editing
       wp_enqueue_style( 'adventure_log_style', plugins_url( 'css/style.css', __FILE__ ) );
 
+      // Enqueue RPG Awesome icon font
+      wp_enqueue_style( 'adventure_log_fonts', plugins_url( 'fonts/rpg-awesome.css', __FILE__ ) );
+      
       // Enqueue D3 for our calendar
       // wp_enqueue_script( 'adventure_log_d3', '//d3js.org/d3.v4.min.js' );
       // wp_enqueue_script( 'adventure_log_d3_calendar', plugin_dir_url( __FILE__ ) . 'js/calendar.d3.js', array( 'adventure_log_d3' ), '20180403', true );
@@ -132,7 +135,7 @@ function adventure_login_redirect( $redirect_to, $request, $user ) {
   // is there a user to check?
   if ( isset( $user->roles ) && is_array( $user->roles ) ) {
     // check for subscribers 
-    if ( in_array( 'adventurer', $user->roles ) ) {
+    if ( ! is_admin() && in_array( 'adventurer', $user->roles ) ) {
       $wp_timestamp = current_time( 'timestamp' );
       $today = date( $wp_timestamp );
       $year = date( 'Y', $wp_timestamp );
@@ -156,7 +159,15 @@ function adventure_log_archive_page( $template ) {
   global $post;
 
   if ( is_post_type_archive( 'alog' ) ) {
-    $template = dirname( __FILE__ ) . '/inc/template-archive.php';
+    if ( is_day() ) {
+      $template = dirname( __FILE__ ) . '/templates/archive-day.php';
+    } elseif ( is_month() ) {
+      $template = dirname( __FILE__ ) . '/templates/archive-month.php';
+    } elseif ( is_year() ) {
+      $template = dirname( __FILE__ ) . '/templates/archive-year.php';
+    } else {
+      $template = dirname( __FILE__ ) . '/templates/home.php';
+    }
   }
   return $template;
 }
@@ -182,23 +193,3 @@ function adventure_logs_last_year() {
 
   return $dates;
 }
-
-
-define( 'ALOG_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
- 
-require ALOG_PLUGIN_DIR . 'inc/class-gamajo-template-loader.php';
-require ALOG_PLUGIN_DIR . 'inc/class-alog-template-loader.php';
- 
-function alog_sample_shortcode() {
- 
-	$templates = new Alog_Template_Loader;
- 
-  // Templates will be loaded here
-  ob_start();
-	$templates->get_template_part( 'alog', 'single' );
-	// $templates->get_template_part( 'alog', 'archive' );
-	// $templates->get_template_part( 'content', 'alog' );
-	return ob_get_clean();
- 
-}
-add_shortcode( 'alog-single', 'alog_shortcode' );
