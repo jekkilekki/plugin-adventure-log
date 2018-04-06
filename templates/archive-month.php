@@ -53,35 +53,7 @@ get_header(); ?>
         <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>">Write New Log</a>
       </div>
 
-      <ul class="alog-date-boxes">
-
-      <?php
-        for( $i = 1; $i <= $date['days_this_month']; $i++ ) {
-
-          $classname = 'alog-day';
-
-          if ( is_today( $today, $date, $i ) ) {
-            $classname .= ' alog-today';
-          } 
-          if ( $i == $date['day'] ) {
-            $classname .= ' alog-current';
-          } 
-          if ( $i > $today['day'] ) {
-            $classname .= ' alog-future';
-          }
-          ?>
-            
-            <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $date['year'], $date['monnum'], $i ) ); ?>">
-              <li class="<?php echo $classname; ?>">
-                <span class="screen-reader-text"><?php echo get_url_date_string( $date['year'], $date['monnum'], $i ); ?></span><?php echo $i; ?></li>
-            </a>
-
-          <?php
-        }
-        echo '</ul>';
-
-        alog_get_calendar( array( 'alog' ) );
-      ?>
+      <?php alog_get_calendar( array( 'alog' ) ); ?>
       
 		</header><!-- .page-header -->
 	<?php // endif; ?>
@@ -94,16 +66,6 @@ get_header(); ?>
 
 			/* Start the Loop */
       while ( have_posts() ) : the_post();
-      
-        if ( is_day() ) {
-          echo '<h3>Daily archive: ' . get_the_date( 'F j, Y') . '</h3>';
-        } elseif ( is_month() ) {
-          echo '<h3>Monthly archive: ' . get_the_date( 'F Y' ) . '</h3>';
-        } elseif ( is_year() ) {
-          echo '<h3>Yearly archive: ' . get_the_date( 'Y' ) . '</h3>';
-        } else {
-          echo '<h3>Looks like our function is wrong.</h3>';
-        } 
 
 				/*
 				 * Include the Post-Format-specific template for the content.
