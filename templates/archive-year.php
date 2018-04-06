@@ -42,10 +42,29 @@ get_header(); ?>
 
       <ul class="yearly-date-boxes">
         <?php
-          for ( $i = 1; $i <= 365; $i++ ) {
+        $timestamp = strtotime( '31st December ' . $date['year'] );
+          for ( $i = 1; $i <= date( 'z', $timestamp ) + 1; $i++ ) {
+            $classname = 'alog-day-sm';
 
+            if ( $today['year'] === $date['year'] ) {
+              $todays_timestamp = mktime( 0,0,0, $today['monnum'], $today['day'], $today['year'] );
+              $todays_num = date( 'z', $todays_timestamp ) + 1;
+            }
+
+            if ( $todays_timestamp != '' && $todays_num === $i ) {
+              $classname .= ' alog-today';
+            }
+            if ( $todays_num != '' && $i > $todays_num ) {
+              $classname .= ' alog-future';
+            }
+            ?>
+            <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $date['year'], $date['monnum'], $i ) ); ?>">
+              <li class="<?php echo $classname; ?>">
+                <span class="screen-reader-text"><?php echo get_url_date_string( $date['year'], $date['monnum'], $i ); ?></span></li>
+            </a>
+            <?php
           }
-        ?>
+        ?>   
       </ul>
 
       <div>
@@ -53,34 +72,6 @@ get_header(); ?>
         <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>">Write New Log</a>
       </div>
 
-      <ul class="alog-date-boxes">
-
-      <?php
-        for( $i = 1; $i <= $date['days_this_month']; $i++ ) {
-
-          $classname = 'alog-day';
-
-          if ( is_today( $today, $date, $i ) ) {
-            $classname .= ' alog-today';
-          } 
-          if ( $i == $date['day'] ) {
-            $classname .= ' alog-current';
-          } 
-          if ( $i > $today['day'] ) {
-            $classname .= ' alog-future';
-          }
-          ?>
-            
-            <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $date['year'], $date['monnum'], $i ) ); ?>">
-              <li class="<?php echo $classname; ?>">
-                <span class="screen-reader-text"><?php echo get_url_date_string( $date['year'], $date['monnum'], $i ); ?></span><?php echo $i; ?></li>
-            </a>
-
-          <?php
-        }
-        echo '</ul>';
-      ?>
-      
 		</header><!-- .page-header -->
 	<?php // endif; ?>
 

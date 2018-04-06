@@ -79,6 +79,8 @@ get_header(); ?>
           <?php
         }
         echo '</ul>';
+
+        alog_get_calendar( array( 'alog' ) );
       ?>
       
 		</header><!-- .page-header -->

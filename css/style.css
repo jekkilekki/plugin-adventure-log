@@ -2,7 +2,8 @@
   
 }
 
-ul.alog-date-boxes {
+ul.alog-date-boxes,
+ul.yearly-date-boxes {
   list-style: none;
   display: inline-flex;
   flex-wrap: wrap;
@@ -18,6 +19,15 @@ li.alog-day {
   border: 3px solid;
   text-align: center;
   margin: 3px;
+}
+
+li.alog-day-sm {
+  width: 15px;
+  height: 15px;
+  border: 1px solid;
+  margin: 1px;
+  background: rgba( 0,0,0,0.2 );
+  /* border-radius: 2px; */
 }
 
 li.alog-today {
@@ -38,6 +48,10 @@ li.alog-complete {
 
 li.alog-future {
   opacity: 0.5;
+}
+
+li.alog-day-sm.alog-future {
+  background: none;
 }
 
 .alog-entry-editable {
