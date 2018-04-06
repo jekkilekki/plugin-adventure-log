@@ -61,6 +61,12 @@ require_once plugin_dir_path( __FILE__ ) . 'inc/functions.php';
 require_once plugin_dir_path( __FILE__ ) . 'inc/template-functions.php';
 
 /**
+ * Set default options.
+ */
+require_once plugin_dir_path( __FILE__ ) . 'inc/settings.php';
+register_activation_hook( __FILE__, 'alog_set_default_options' );
+
+/**
  * Register Adventure Log Post Type.
  */
 require_once plugin_dir_path( __FILE__ ) . 'inc/posttypes.php';

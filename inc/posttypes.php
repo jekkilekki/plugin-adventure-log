@@ -42,7 +42,7 @@ function adventure_log_cpt_init() {
       'rewrite'            => array( 'slug' => 'alog' ),
       'capability_type'    => 'alog',
       'has_archive'        => true,
-      'taxonomies'         => array( 'post_tag' ),
+      // 'taxonomies'         => array( 'post_tag' ),
       'hierarchical'       => false,
       'show_in_rest'       => true,
       'rest_base'          => 'alog',
@@ -54,8 +54,64 @@ function adventure_log_cpt_init() {
   );
 
   register_post_type( 'alog', $args );
-}
 
+  /**
+ * Add additional CPTs and make them show up in ALog menu
+ * @TODO https://gist.github.com/tommcfarlin/5459391
+ * 
+ * Add Quests CPT.
+ * 
+ * This will be displayed in our Adventure Log - as a submenu item.
+ */
+  $labels = array(
+      'name'                  => _x( 'Quests', 'Post type general name', 'adventure-log' ),
+      'singular_name'         => _x( 'Quest', 'Post type singular name', 'adventure-log' ),
+      'menu_name'             => _x( 'Quests', 'Admin Menu text', 'adventure-log' ),
+      'name_admin_bar'        => _x( 'Quest', 'Add New on Toolbar', 'adventure-log' ),
+      'add_new'               => __( 'Add New', 'adventure-log' ),
+      'add_new_item'          => __( 'Add New Quest', 'adventure-log' ),
+      'new_item'              => __( 'New Quest', 'adventure-log' ),
+      'edit_item'             => __( 'Edit Quest', 'adventure-log' ),
+      'view_item'             => __( 'View Quest', 'adventure-log' ),
+      'all_items'             => __( 'My Quests', 'adventure-log' ),
+      'search_items'          => __( 'Search Quests', 'adventure-log' ),
+      'parent_item_colon'     => __( 'Parent Quests:', 'adventure-log' ),
+      'not_found'             => __( 'No Quests found.', 'adventure-log' ),
+      'not_found_in_trash'    => __( 'No Quests found in Trash.', 'adventure-log' ),
+      'featured_image'        => _x( 'Quest Cover Image', 'Overrides the “Featured Image” phrase for this post type. Added in 4.3', 'adventure-log' ),
+      'set_featured_image'    => _x( 'Set cover image', 'Overrides the “Set featured image” phrase for this post type. Added in 4.3', 'adventure-log' ),
+      'remove_featured_image' => _x( 'Remove cover image', 'Overrides the “Remove featured image” phrase for this post type. Added in 4.3', 'adventure-log' ),
+      'use_featured_image'    => _x( 'Use as cover image', 'Overrides the “Use as featured image” phrase for this post type. Added in 4.3', 'adventure-log' ),
+      'archives'              => _x( 'Quest archives', 'The post type archive label used in nav menus. Default “Post Archives”. Added in 4.4', 'adventure-log' ),
+      'insert_into_item'      => _x( 'Insert into Quest', 'Overrides the “Insert into post”/”Insert into page” phrase (used when inserting media into a post). Added in 4.4', 'adventure-log' ),
+      'uploaded_to_this_item' => _x( 'Uploaded to this Quest', 'Overrides the “Uploaded to this post”/”Uploaded to this page” phrase (used when viewing media attached to a post). Added in 4.4', 'adventure-log' ),
+      'filter_items_list'     => _x( 'Filter Quests list', 'Screen reader text for the filter links heading on the post type listing screen. Default “Filter posts list”/”Filter pages list”. Added in 4.4', 'adventure-log' ),
+      'items_list_navigation' => _x( 'Quests list navigation', 'Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4', 'adventure-log' ),
+      'items_list'            => _x( 'Quests list', 'Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4', 'adventure-log' ),
+  );
+
+  $args = array(
+      'labels'             => $labels,
+      'public'             => true,
+      'publicly_queryable' => true,
+      'show_ui'            => true,
+      'show_in_menu'       => 'edit.php?post_type=alog',
+      'query_var'          => true,
+      'rewrite'            => array( 'slug' => 'quests' ),
+      'capability_type'    => 'alog',
+      'has_archive'        => true,
+      // 'taxonomies'         => array( 'post_tag' ),
+      'hierarchical'       => false,
+      'show_in_rest'       => true,
+      'rest_base'          => 'alog',
+      'menu_position'      => null,
+      'menu_icon'          => 'dashicons-clipboard',
+      'supports'           => array( 'title', 'editor', 'thumbnail',  ),
+      'delete_with_user'   => true,
+      'map_meta_cap'       => true
+  );
+
+}
 add_action( 'init', 'adventure_log_cpt_init' );
 
 /**

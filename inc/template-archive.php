@@ -107,11 +107,11 @@ get_header(); ?>
 
         ?>
         
-        <footer class="entry-footer">
+        <!-- <footer class="entry-footer">
         <span class="edit-link">
           <a class="post-edit-link add-log-button">Edit</a>
         </span>
-      </footer>
+      </footer> -->
 
       <?php
 			endwhile;
