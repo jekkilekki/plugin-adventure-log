@@ -36,6 +36,7 @@ function get_url_date_array() {
         ( $date[0] > $today['year'] && $date[1] > $today['monnum'] ) || 
         ( $date[0] > $today['year'] && $date[1] > $today['monnum'] && $date[2] > $today['day'] ) ) {
     wp_redirect( esc_url( home_url() . '/alog/' ) );
+    exit;
   }
 
   // Error handling
