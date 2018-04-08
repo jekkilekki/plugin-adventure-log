@@ -13,6 +13,7 @@
 // Get our date variables for the rest of the page
 $today = get_wp_current_date(); 
 $date = get_url_date_array();
+$options = alog_get_options();
 
 // echo '<pre>';
 // var_dump( $today );
@@ -68,6 +69,15 @@ get_header(); ?>
 				 * If you want to override this in a child theme, then include a file
 				 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
 				 */
+        $target_word_count = $options[ 'target_word_count' ];
+        $post_word_count = alog_word_count_numeric();
+        $classname = '';
+
+        if ( $post_word_count > $target_word_count ) $classname = 'log-success';
+        elseif ( $post_word_count > $target_word_count / 2 ) $classname = 'log-half';
+
+        echo "<p class='$classname'>" . alog_word_count() . "</p>";
+
         get_template_part( 'template-parts/post/content' );
 
         ?>

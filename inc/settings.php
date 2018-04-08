@@ -56,7 +56,8 @@ add_action( 'admin_menu', 'alog_settings_menu' ); // number indicates menu prior
 function alog_settings_menu() {
 
   // Create Submenu item in Adventure Logs CPT
-  add_submenu_page(
+  global $settings_page;
+  $settings_page = add_submenu_page(
       'edit.php?post_type=alog',                        // $parent_slug
       'Adventure Log Settings',  // $page_title
       'Settings',                // $menu_title
@@ -64,6 +65,10 @@ function alog_settings_menu() {
       'alog_settings',                                  // $menu_slug
       'alog_build_settings_page'                        // $function (page builder callback)
   );
+
+  if ( $settings_page ) {
+    add_action( 'load-' . $settings_page, 'alog_help_tabs' );
+  }
 
   // Create a Submenu item to an external page.
   global $submenu;
@@ -78,6 +83,35 @@ function alog_settings_menu() {
   //                   'alog_settings',
   //                   'alog_build_settings_page'
   //                 );
+}
+
+function alog_help_tabs() {
+  $screen = get_current_screen();
+  $screen->add_help_tab( array(
+            'id'      => 'alog-plugin-help-instructions',
+            'title'   => __( 'Instructions', 'adventure-log' ),
+            'callback'=> 'alog_plugin_help_instructions'
+  ) );
+
+  $screen->add_help_tab( array(
+    'id'      => 'alog-plugin-help-faq',
+    'title'   => __( 'FAQ', 'adventure-log' ),
+    'callback'=> 'alog_plugin_help_faq'
+  ) );
+
+  $screen->set_help_sidebar( '<p>This is the sidebar content.</p>' );
+}
+
+function alog_plugin_help_instructions() {
+  ?>
+    <p>These instructions teach how to use the plugin.</p>
+  <?php
+}
+
+function alog_plugin_help_faq() {
+  ?>
+    <p>This is the FAQ section for the plugin.</p>
+  <?php
 }
 
 add_action( 'admin_init', 'alog_admin_init' );
@@ -182,10 +216,11 @@ function alog_build_settings_page() {
     // var_dump( $options );
     // echo '</pre>';
     ?>
-    <!-- <h2 class="nav-tab-wrapper">
-      <a href="#" class="nav-tab nav-tab-active">Tab 1</a>
-      <a href="#" class="nav-tab">Tab 2</a>
-    </h2> -->
+    <h2 class="nav-tab-wrapper">
+      <a href="#" class="nav-tab nav-tab-active">Writing</a>
+      <a href="#" class="nav-tab">Widgets</a>
+      <a href="#" class="nav-tab">Badges</a>
+    </h2>
 
     <form method="post" action="admin-post.php">
       <input type="hidden" name="action" value="save_alog_options" />

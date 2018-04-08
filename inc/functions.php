@@ -196,8 +196,15 @@ function get_alog_month_link( $year, $month ) {
 function alog_word_count() {
   return sprintf(
     __( '%s words', 'adventure-log' ),
-    str_word_count( strip_tags( get_post_field( 'post_content', get_the_ID() ) ) )
+    alog_word_count_numeric()
   );
+}
+
+/**
+ * Alog Word Count (Number)
+ */
+function alog_word_count_numeric() {
+  return str_word_count( strip_tags( get_post_field( 'post_content', get_the_ID() ) ) );
 }
 
 /**

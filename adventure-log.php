@@ -121,6 +121,17 @@ function adventure_log_scripts() {
 } // END adventure_log_scripts()
 add_action( 'wp_enqueue_scripts', 'adventure_log_scripts' );
 
+function adventure_log_admin_scripts( $hook ) {
+  global $post, $settings_page;
+
+  if ( $hook == 'post-new.php' || $hook == 'post.php' || $hook == 'edit.php'
+      || $hook === $settings_page ) {
+      // Enqueue RPG Awesome icon font
+      wp_enqueue_style( 'adventure_log_admin_fonts', plugins_url( 'fonts/rpg-awesome.css', __FILE__ ) );
+  }
+}
+add_action( 'admin_enqueue_scripts', 'adventure_log_admin_scripts' );
+
 /**
  * Redirect user after successful login.
  * 
