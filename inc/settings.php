@@ -7,6 +7,22 @@ function alog_set_default_options() {
   alog_get_options();
 }
 
+function alog_reset_default_options() {
+  // Get current options
+  $options = get_option( 'alog_options', array() );
+
+  // Default plugin options
+  $options[ 'override_user_settings' ] = false;
+  $options[ 'target_word_count' ] = 500;
+  $options[ 'allow_editing' ] = false;
+  $options[ 'allow_multiple_posts_per_day' ] = false;
+  $options[ 'allow_future_posts' ] = false;
+  $options[ 'allow_past_posts' ] = false;
+  $options[ 'post_visibility' ] = 'private';
+
+  update_option( 'alog_options', $options );
+}
+
 function alog_get_options() {
   // Get current options
   $options = get_option( 'alog_options', array() );
@@ -83,14 +99,18 @@ function alog_process_options() {
   $options = alog_get_options();
 
   // Cycle through all text and radio values and store their options
-  foreach( array( 'alog_wordcount' ) as $option_name ) {
+  foreach( array( 'target_word_count' ) as $option_name ) {
     if ( isset( $_POST[ $option_name ] ) ) {
       $options[ $option_name ] = sanitize_text_field( $_POST[ $option_name ] );
     }
   }
 
   // Cycle through all checkbox values and set the options to true or false
-  foreach( array( 'alog_override', 'alog_editing', 'alog_multiple', 'alog_future', 'alog_past' ) as $option_name ) {
+  foreach( array( 'override_user_settings', 
+                  'allow_editing', 
+                  'allow_multiple_posts_per_day', 
+                  'allow_future_posts', 
+                  'allow_past_posts' ) as $option_name ) {
     if ( isset( $_POST[ $option_name ] ) ) {
       $options[ $option_name ] = true;
     } else {
@@ -99,21 +119,36 @@ function alog_process_options() {
   }
 
   // Post Visibility radio button
-  if ( isset( $_POST[ 'alog_visibility' ] ) && 
-       array_key_exists( $_POST[ 'alog_visibility' ], array( 'public', 'private' ) ) ) {
-    $options[ 'alog_visibility' ] = $_POST[ 'alog_visibility' ];
+  echo '<h1><pre>' . $_POST[ 'post_visibility' ] . '</pre></h1>';
+  if ( isset( $_POST[ 'post_visibility' ] ) && 
+       array_key_exists( $_POST[ 'post_visibility' ], array( 'public', 'private' ) ) ) {
+    $options[ 'post_visibility' ] = 'public';
   } else {
-    $options[ 'alog_visibility' ] = 'private'; // The default option
+    $options[ 'post_visibility' ] = 'private'; // The default option
   }
 
   // Store updated options array to DB
   update_option( 'alog_options', $options );
 
+  // Temporarily delete extra options
+  foreach( array( 'alog_wordcount', 'alog_override', 'alog_editing', 'alog_multiple', 'alog_future', 'alog_past', 'alog_visibility' ) as $option_name ) {
+    delete_option( $options[ $option_name ] );
+  }
+
+  // Determine which message to send
+  $message = '';
+  if ( isset( $_POST[ 'reset_defaults' ] ) ) {
+    alog_reset_default_options();
+    $message = '2';
+  } else {
+    $message = '1';
+  }
+
   // Redirect to the configuration form
   wp_redirect( add_query_arg( 
                   array( 'page' => 'alog_settings',
                          'post_type' => 'alog',  
-                         'message' => '1' ), 
+                         'message' => $message ), 
                   admin_url( 'edit.php' ) ) );
   exit;
 }
@@ -129,14 +164,24 @@ function alog_build_settings_page() {
   <div id="alog-main-options" class="wrap">
     <h1><i class="ra ra-sword"></i><?php _e( 'Adventure Log Settings', 'adventure-log' ); ?></h1>
     
-    <?php if ( isset( $_GET[ 'message' ] ) && $_GET[ 'message' ] == '1' ) : ?>
+    <?php 
+    if ( isset( $_GET[ 'message' ] ) ) :
+          if ( $_GET[ 'message' ] == '1' ) : $message = 'Settings Saved'; 
+          elseif ( $_GET[ 'message' ] == '2' ) : $message = "Default plugin settings restored";
+          endif;  
+          ?>
       <div id='message' class='updated fade'>
-        <p><strong>Settings Saved</strong></p>
+        <p><strong><?php echo $message; ?></strong></p>
       </div>
     <?php endif; ?>
     
     <p><?php _e( 'Adjust sitewide default user settings. These can also override personal user settings if desired.', 'adventure-log' ); ?></p>
   
+    <?php
+    // echo '<pre>';
+    // var_dump( $options );
+    // echo '</pre>';
+    ?>
     <!-- <h2 class="nav-tab-wrapper">
       <a href="#" class="nav-tab nav-tab-active">Tab 1</a>
       <a href="#" class="nav-tab">Tab 2</a>
@@ -157,17 +202,17 @@ function alog_build_settings_page() {
             </th>
             <td>
             <label>
-              <input type="checkbox" id="alog_override" name="alog_override" value="<?php echo $options[ 'override_user_settings' ] ? 1 : 0; ?>" />
+              <input type="checkbox" id="override_user_settings" name="override_user_settings" <?php echo $options[ 'override_user_settings' ] === true ? 'checked' : ''; ?> />
               Override individual user settings
             </label>
             </td>
           </tr>
           <tr valign="top">
             <th scope="row">
-              <label for="alog_wordcount">Daily Word Count Target</label>
+              <label for="target_word_count">Daily Word Count Target</label>
             </th>
             <td>
-              <input type="text" id="alog_wordcount" name="alog_wordcount" value="<?php echo esc_attr( $options[ 'target_word_count' ] ); ?>" />
+              <input type="text" id="target_word_count" name="target_word_count" value="<?php echo esc_attr( $options[ 'target_word_count' ] ); ?>" />
             </td>
           </tr>
           <tr valign="top">
@@ -177,22 +222,22 @@ function alog_build_settings_page() {
             <td>
               <fieldset>
                 <label>
-                  <input type="checkbox" id="alog_editing" name="alog_editing" value="<?php echo $options[ 'allow_editing' ] ? 1 : 0; ?>" />
+                  <input type="checkbox" id="allow_editing" name="allow_editing" <?php echo $options[ 'allow_editing' ] === true ? 'checked' : ''; ?> />
                   Allow editing
                 </label>
                 <br>
                 <label>
-                  <input type="checkbox" id="alog_multiple" name="alog_multiple" value="<?php echo $options[ 'allow_multiple_posts_per_day' ] ? 1 : 0; ?>" />
+                  <input type="checkbox" id="allow_multiple_posts_per_day" name="allow_multiple_posts_per_day" <?php echo $options[ 'allow_multiple_posts_per_day' ] === true ? 'checked' : ''; ?> />
                   Allow multiple Logs per day
                 </label>
                 <br>
                 <label>
-                  <input type="checkbox" id="alog_future" name="alog_future" value="<?php echo $options[ 'allow_future_posts' ] ? 1 : 0; ?>" />
+                  <input type="checkbox" id="allow_future_posts" name="allow_future_posts" <?php echo $options[ 'allow_future_posts' ] === true ? 'checked' : ''; ?> />
                   Allow writing Future Logs
                 </label>
                 <br>
                 <label>
-                  <input type="checkbox" id="alog_past" name="alog_past" value="<?php echo $options[ 'allow_past_posts' ] ? 1 : 0; ?>" />
+                  <input type="checkbox" id="allow_past_posts" name="allow_past_posts" <?php echo $options[ 'allow_past_posts' ] === true ? 'checked' : ''; ?> />
                   Allow writing Past Logs
                 </label>
               </fieldset>
@@ -208,15 +253,26 @@ function alog_build_settings_page() {
                   <span>Log Visibility</span>
                 </legend>
                 <label>
-                  <input type="radio" name="alog_visibility" value="Public" checked="<?php echo $options[ 'post_visiblity' ] === 'public' ? 'checked' : ''; ?>">
+                  <input type="radio" name="post_visibility" value="public" checked="<?php echo $options[ 'post_visiblity' ] === 'public' ? 'checked' : ''; ?>">
                   <span>Public</span>
                 </label>
                 <br>
                 <label>
-                  <input type="radio" name="alog_visibility" value="Private" checked="<?php echo $options[ 'post_visiblity' ] === 'public' ? '' : 'checked'; ?>">
+                  <input type="radio" name="post_visibility" value="private" checked="<?php echo $options[ 'post_visiblity' ] === 'private' ? 'checked' : ''; ?>">
                   <span>Private</span>
                 </label>
               </fieldset>
+            </td>
+          </tr>
+          <tr valign="top">
+            <th scope="row">
+              <label>Defaults</label>
+            </th>
+            <td>
+            <label>
+              <input type="checkbox" id="reset_defaults" name="reset_defaults" />
+              Reset plugin defaults
+            </label>
             </td>
           </tr>
         </tbody>
