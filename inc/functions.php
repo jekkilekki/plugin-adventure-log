@@ -455,3 +455,19 @@ function alog_get_calendar_filter( $content ) {
   return $output;
 }
 add_filter( 'get_calendar', 'alog_get_calendar_filter', 10, 2 );
+
+/**
+ * Register a Custom Sidebar
+ */
+function alog_custom_sidebar() {
+  register_sidebar( array(
+    'name'          => __( 'Adventure Log Sidebar', 'adventure-log' ),
+    'id'            => 'sidebar-alog',
+    'description'   => __( 'Add a variety of Adventurous Widgets to your Adventure Log sidebar. These will not show up on any other page of your site.', 'adventure-log' ),
+    'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+    'after_widget'  => '</aside>',
+    'before_title'  => '<h1 class="widget-title">',
+    'after_title'   => '</h1>'
+  ) );
+}
+add_action( 'widgets_init', 'alog_custom_sidebar' );

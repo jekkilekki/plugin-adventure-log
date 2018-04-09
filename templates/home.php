@@ -76,10 +76,9 @@ get_header(); ?>
         if ( $post_word_count > $target_word_count ) $classname = 'log-success';
         elseif ( $post_word_count > $target_word_count / 2 ) $classname = 'log-half';
 
-        echo "<p class='$classname'>" . alog_word_count() . "</p>";
-
+        echo "<small class='$classname'>" . alog_word_count() . "</small>";
+        echo "<hr>";
         get_template_part( 'template-parts/post/content' );
-
         ?>
         
         <!-- <footer class="entry-footer">
@@ -125,7 +124,7 @@ get_header(); ?>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->
-	<?php get_sidebar(); ?>
+	<?php get_sidebar( 'alog' ); ?>
 </div><!-- .wrap -->
 
 <?php get_footer();
