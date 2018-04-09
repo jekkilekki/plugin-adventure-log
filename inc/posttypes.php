@@ -191,3 +191,30 @@ function adventure_log_generate_date_archives( $cpt, $wp_rewrite ) {
 
   return $rules;
 }
+
+/**
+ * Add a new Single Post view to our CPT
+ */
+add_filter( 'template_include', 'alog_single_template', 1 );
+function alog_single_template( $template_path ) {
+  if ( 'alog' == get_post_type() ) {
+    if ( is_single() ) {
+      // checks the theme first, otherwise adds a content filter
+      if ( $theme_file = locate_template( array( 'single-alog.php' ) ) ) {
+        $template_path = $theme_file;
+      } else {
+        add_filter( 'the_content', 'alog_display_single', 20 );
+      }
+    }
+  }
+  return $template_path;
+}
+
+function alog_display_single( $content ) {
+  if ( ! empty( get_the_ID() ) ) {
+    $content = alog_get_calendar( array( 'alog' ) );
+
+    $content .= get_the_content( get_the_ID() );
+  }
+  return $content;
+}

@@ -4,6 +4,9 @@
 
 #alog-calendar {
   position: relative;
+  margin: 1rem -3rem;
+  padding: 1rem 3rem;
+  background: #f7f7f7;
 }
 
 #alog-calendar-prev,
@@ -21,13 +24,41 @@
   text-align: right;
 }
 
+#alog-calendar .page-title.points {
+  position: absolute;
+  top: 1rem;
+  right: 3rem;
+}
+
+#alog-calendar .taxonomy-description.quote {
+
+}
+
+.alog-nav-header {
+  position: relative;
+}
+
+.alog-nav-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+ul.alog-nav {
+  list-style: none;
+}
+ul.alog-nav li {
+  display: inline;
+  margin-left: 10px;
+}
+
 ul.alog-date-boxes,
 ul.yearly-date-boxes {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
   margin-top: 0.5rem;
-  margin-bottom:0.5rem;
+  margin-bottom: 0.5rem;
   /* background: #f3f3f3;
   padding: 1rem 5rem;
   margin: 1rem -5rem 1rem; */
@@ -37,7 +68,7 @@ ul.alog-date-boxes li,
 li.alog-day {
   width: 25px;
   height: 30px;
-  padding-top: 3px;
+  line-height: 2;
   border: 3px solid;
   text-align: center;
   margin: 2px;
@@ -78,6 +109,18 @@ li.alog-future {
 
 li.alog-day-sm.alog-future {
   background: none;
+}
+
+small.log-half {
+  background: rgba(255, 175, 0, 0.3);
+  padding: 1px 3px;
+  border-radius: 3px;
+}
+
+small.log-success {
+    background: rgba(0, 255, 0, 0.3);
+    padding: 1px 3px;
+    border-radius: 3px;
 }
 
 .alog-entry-editable {

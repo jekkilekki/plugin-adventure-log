@@ -186,6 +186,10 @@ function adventure_log_date_url( $year, $month, $day ) {
   return '/alog/' . $year . '/' . $month . '/' . $day . '/';
 }
 
+function get_alog_day_link( $year, $month, $day ) {
+  return esc_url( home_url() . "/alog/$year/$month/$day/" );
+}
+
 function get_alog_month_link( $year, $month ) {
   return esc_url( home_url() . "/alog/$year/$month/" );
 }
@@ -392,6 +396,7 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true ) {
   //   $calendar_output .= "\n\t\t" . '<td colspan="' . esc_attr( $pad ) . '" class="pad">&nbsp;</td>';
 
   $daysinmonth = intval( date( 't' , $unixmonth ) );
+  $points = 0;
 
   for ( $day = 1 ; $day <= $daysinmonth ; ++$day ) {
     // if ( isset( $newrow ) && $newrow )
@@ -405,10 +410,12 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true ) {
     else
       $calendar_output .= '<li>';
 
-    if ( in_array( $day , $daywithpost ) ) // any posts today?
-        $calendar_output .= '<a class="alog-has-post" href="' . get_day_link( $thisyear , $thismonth , $day ) . "\" title=\"" . esc_attr( $ak_titles_for_day[$day] ) . "\">$day</a>";
-    else
+    if ( in_array( $day , $daywithpost ) ) : // any posts today?
+        $calendar_output .= '<a class="alog-has-post" href="' . get_alog_day_link( $thisyear , $thismonth , $day ) . "\" title=\"" . esc_attr( $ak_titles_for_day[$day] ) . "\">$day</a>";
+        $points++;
+    else :
       $calendar_output .= $day;
+    endif;
     $calendar_output .= '</li>';
 
     // if ( 6 == calendar_week_mod( date( 'w' , mktime( 0 , 0 , 0 , $thismonth , $day , $thisyear ) ) - $week_begins ) )
@@ -421,6 +428,9 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true ) {
   //   $calendar_output .= "\n\t\t" . '<td class="pad" colspan="' . esc_attr( $pad ) . '">&nbsp;</td>';
 
   $calendar_output .= '</ul>';
+
+  if ( is_user_logged_in() ) 
+    $calendar_output .= '<p class="page-title points">' . $points . ' points</p>';
 
   if ( $previous ) {
     $calendar_output .= '<button id="alog-calendar-prev"><a href="' . get_alog_month_link( $previous->year, $previous->month ) . '" title="' . sprintf( __( 'View posts for %1$s %2$s' ), $wp_locale->get_month( $previous->month ), date( 'Y', mktime( 0,0,0, $previous->month, 1, $previous->year ) ) ) . '">&laquo; ' . $wp_locale->get_month_abbrev( $wp_locale->get_month( $previous->month ) ) . '</a></button>';
@@ -436,6 +446,8 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true ) {
   // else {
   //   $calendar_output .= '<button id="alog-calendar-next" class="pad">&nbsp;</td>';
   // }
+
+  $calendar_output .= '</div><!-- #alog-calendar -->';
 
   $cache[$key] = $calendar_output;
   wp_cache_set( 'get_calendar' , $cache, 'calendar' );

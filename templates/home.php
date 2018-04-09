@@ -35,22 +35,43 @@ get_header(); ?>
 
 <div class="wrap">
 		<header class="page-header alog-header">
-        
-      <h1 class="page-title"><i class="ra ra-sword ra-lg"></i>
-        <a href="<?php echo esc_url( home_url() . '/alog/' ); ?>">Home</a> | 
-        <a href="<?php echo esc_url( home_url() . '/alog/' . $date['year'] . '/' . $date['monnum'] ); ?>"><?php echo $date['month']; ?></a>
-        <a href="<?php echo esc_url( home_url() . '/alog/' . $date['year'] ); ?>"><?php echo $date['year']; ?></a>
-      </h1>
-      <div class="taxonomy-description"><?php _e( 'Keep track of your writing this month. What kind of streak are you on?', 'adventure-log' ); ?></div>
+      
+      <div class="alog-nav-header">
+        <h1 class="page-title"><i class="ra ra-sword ra-lg"></i>
+          <a href="<?php echo esc_url( home_url() . '/alog/' ); ?>">Adventure Log</a> 
+        </h1>
 
-      <div>
-        <i class="fa fa-edit"></i>
-        <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>">Write New Log</a>
+        
+        <nav class="alog-nav-container">
+          <ul class="alog-nav">
+          <?php if ( is_user_logged_in() ) : ?>
+            <li>
+              <a href="#"><i class="ra ra-cog"></i> <small class="screen-reader-text"><?php _e( 'Adventure Log Settings', 'adventure-log' ); ?></small></a>
+            </li>
+            <li>
+              <a href="<?php echo esc_url( wp_logout_url( home_url() . '/alog/' ) ); ?>"><i class="ra ra-cancel"></i> <small class=""><?php _e( 'Sign out', 'adventure-log' ); ?></small></a>
+            </li>
+          <?php else: ?>
+            <li>
+              <a href="<?php echo esc_url( wp_login_url() ); ?>"><i class="ra ra-key"></i> <small>Sign in</small></a>
+            </li>
+          <?php endif; ?>
+          </ul>
+        </nav>
+      
+
       </div>
 
-      <ul class="alog-date-boxes">
+      <div class="taxonomy-description"><?php _e( 'Keep track of your writing this month. What kind of streak are you on?', 'adventure-log' ); ?></div>
 
       <?php alog_get_calendar( array( 'alog' ) ); ?>
+
+      <?php if ( is_user_logged_in() ): ?>
+        <div class="button post-edit-link">
+          <i class="ra ra-quill-ink"></i>
+          <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>">Write New Log</a>
+        </div>  
+      <?php endif; ?>   
       
 		</header><!-- .page-header -->
 	<?php // endif; ?>
@@ -69,7 +90,8 @@ get_header(); ?>
 				 * If you want to override this in a child theme, then include a file
 				 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
 				 */
-        $target_word_count = $options[ 'target_word_count' ];
+        // $target_word_count = $options[ 'target_word_count' ];
+        $target_word_count = 14; // test
         $post_word_count = alog_word_count_numeric();
         $classname = '';
 
@@ -124,7 +146,8 @@ get_header(); ?>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->
-	<?php get_sidebar( 'alog' ); ?>
+  <?php // get_sidebar( 'alog' ); ?>
+  <?php load_template( dirname( __FILE__ ) . '/sidebar-alog.php' ); ?>
 </div><!-- .wrap -->
 
 <?php get_footer();

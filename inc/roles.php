@@ -66,3 +66,14 @@ function adventure_log_remove_capabilities() {
   }
 
 }
+
+/**
+ * Remove Admin Bar from Adventurer's Frontend view
+ */
+add_action( 'after_setup_theme', 'alog_no_admin_bar' );
+function alog_no_admin_bar() {
+  $user = wp_get_current_user();
+  if ( in_array( 'adventurer', (array) $user->roles ) ) {
+    show_admin_bar( false );
+  }
+}
