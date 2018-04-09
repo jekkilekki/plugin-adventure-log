@@ -96,7 +96,9 @@ function alog_admin_init_settings_api() {
                         'alog_checkbox', // $callback
                         'alog_settings_api', // $page
                         'alog_main_section', // $section
-                        array( 'name' => 'reset_defaults' ) ); // $args = array()
+                        array( 'name' => 'reset_defaults',
+                               'description' => __( 'Only check this box if you want to reset everything to the defaults.', 'adventure-log' ) ) 
+                        ); // $args = array()
 }
 
 function alog_validate_options( $input ) {
@@ -122,6 +124,8 @@ function alog_validate_options( $input ) {
     $input[ 'post_visibility' ] = 'private';
   }
 
+  // Text area validation
+
   return $input;
 }
 
@@ -144,7 +148,8 @@ function alog_checkbox( $data = array() ) {
   extract( $data );
   $options = alog_get_options();
   ?>
-  <input type="checkbox" name="alog_options[<?php echo $name; ?>]" <?php checked( $options[ $name ] ); ?> />
+  <input type="checkbox" name="alog_options[<?php echo $name; ?>]" 
+    <?php checked( $options[ $name ] ); ?> /><?php echo isset( $description ) ? $description : ''; ?>
   <?php
 }
 
