@@ -218,7 +218,7 @@ function alog_word_count_numeric() {
  * alog_get_calendar() :: Extends get_calendar() by including the ALog CPT.
  * Derived from get_calendar() code in /wp-includes/general-template.php
  */
-function alog_get_calendar( $post_types = '', $initial = true, $echo = true ) {
+function alog_get_calendar( $post_types = '', $initial = true, $echo = true, $year = '' ) {
   global $wpdb, $m, $monthnum, $year, $wp_locale, $posts;
 
   if ( empty( $post_types ) || ! is_array( $post_types ) ) {

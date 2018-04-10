@@ -46,6 +46,9 @@ get_header(); ?>
           <ul class="alog-nav">
           <?php if ( is_user_logged_in() ) : ?>
             <li>
+              <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>"><i class="ra ra-quill-ink"></i> <small class="screen-reader-text"><?php _e( 'Write New Log', 'adventure-log' ); ?></small></a>
+            </li>
+            <li>
               <a href="#"><i class="ra ra-cog"></i> <small class="screen-reader-text"><?php _e( 'Adventure Log Settings', 'adventure-log' ); ?></small></a>
             </li>
             <li>
@@ -67,10 +70,10 @@ get_header(); ?>
       <?php alog_get_calendar( array( 'alog' ) ); ?>
 
       <?php if ( is_user_logged_in() ): ?>
-        <div class="button post-edit-link">
+        <!-- <div class="button post-edit-link">
           <i class="ra ra-quill-ink"></i>
-          <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>">Write New Log</a>
-        </div>  
+          <a href="<?php // echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>">Write New Log</a>
+        </div>   -->
       <?php endif; ?>   
       
 		</header><!-- .page-header -->
