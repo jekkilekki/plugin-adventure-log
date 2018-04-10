@@ -16,6 +16,7 @@
   // Create constants for Post title and Post content we can reference later
   const $POST_TITLE = $( '.post-' + $POST_ID + ' .entry-title' );
   const $POST_CONTENT = $( '.post-' + $POST_ID + ' .entry-content');
+  const $MESSAGE_BOX = $( '.post-' + $POST_ID + ' .alog-entry-message' );
 
   // Add some styling for our editor fields
   $POST_TITLE.focus( function() {
@@ -49,6 +50,8 @@
    * @param html new_content 
    */
   function runAjaxSave( new_title, new_content ) {
+    alert( "new title: " + new_title );
+    alert( "new content: " + new_content );
     $.ajax({
       url: WP_API_settings.root + 'wp/v2/alog/' + $POST_ID,
       method: 'POST',
@@ -65,6 +68,7 @@
       // console.log( response );
       console.log( response.id );
         $POST_ID = response.id;
+        $MESSAGE_BOX.text( 'Log saved.' );
     }).fail( function( response ) {
       console.log( response );
     });
@@ -89,7 +93,18 @@
     if ( $EDITING ) {
 
       let $new_title = $POST_TITLE.text();
+      if ( $new_title == '' ) {
+        var currentDate = new Date();
+        $new_title = currentDate.toDateString();
+      }
+
       let $new_content = $POST_CONTENT.html();
+      // if ( $new_content == '' ) {
+      //   $MESSAGE_BOX.text( 'No post content. Nothing saved.' );
+      //   return;
+      // } else {
+      //   $new_content = $POST_CONTENT.html();
+      // }
 
       // Save new data to the database
       runAjaxSave( $new_title, $new_content );
@@ -99,6 +114,7 @@
       $POST_TITLE.css( 'border', '1px solid transparent' );
       $POST_CONTENT.prop( 'contenteditable', 'false' );
       $POST_CONTENT.css( 'border', '1px solid transparent' );
+      // $MESSAGE_BOX.text( $MESSAGE );
 
       // Change the "Save" button text back to "Edit"
       $(this).text( 'Edit' );

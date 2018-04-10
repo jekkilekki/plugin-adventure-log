@@ -105,7 +105,7 @@ get_header(); ?>
 
         <h1 class="alog-entry-title entry-title alog-entry-editable" contenteditable="true"><?php echo get_url_date_string(); ?></h1>
         <div class="alog-entry-content entry-content alog-entry-editable" contenteditable="true"></div>
-
+        <div class="alog-entry-message"></div>
         <footer class="entry-footer">
           <span class="edit-link">
             <a class="post-edit-link add-log-button">Save</a>
