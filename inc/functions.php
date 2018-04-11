@@ -17,7 +17,7 @@ function get_url_date_array() {
       'day'     => $today['day'],
       'monnum'  => $today['monnum'],
       'month'   => $today['month'],
-      'year'    => $today['year']
+      'year'    => $today['year'],
     );
 
   if ( substr( $full_url, -6 ) == '/alog/' || substr( $full_url, -5 ) == '/alog' ) {
@@ -139,7 +139,10 @@ function get_url_day() {
 
 function get_url_timestamp() {
   $url_date = get_url_date_array();
-  return mktime(0, 0, 0, $url_date['monnum'], $url_date['day'], $url_date['year'] );
+  if ( is_int( $url_date['day'] ) )
+    return mktime(0, 0, 0, $url_date['monnum'], $url_date['day'], $url_date['year'] );
+  else
+    return current_time( 'timestamp' );
 }
 
 function get_wp_current_date() {
@@ -245,6 +248,7 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true, $ye
   if ( empty( $post_types ) || ! is_array( $post_types ) ) {
     $args = array(
       'public' => true,
+      'private' => true,
       '_builtin' => false
     );
     $output = 'names';
@@ -343,7 +347,7 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true, $ye
   /* translators: Calendar caption: 1: month name, 2: 4-digit year */
   $calendar_caption = _x( '%1$s %2$s', 'calendar caption' );
   $calendar_output = '<div id="alog-calendar" summary="' . esc_attr__( 'ALog Calendar' ) . '">
-      <h1 class="page-title">' . sprintf( $calendar_caption, $wp_locale->get_month( $thismonth ), date( 'Y', $unixmonth ) ) . '</h1>';
+      <h1 class="calendar-title">' . sprintf( $calendar_caption, $wp_locale->get_month( $thismonth ), date( 'Y', $unixmonth ) ) . '</h1>';
 
   $myweek = array();
 
@@ -424,20 +428,17 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true, $ye
     //   $calendar_output .= "\n\t</tr>\n\t<tr>\n\t\t";
     // $newrow = false;
 
-    if ( $day == gmdate( 'j' , current_time( 'timestamp' ) ) && $thismonth == gmdate( 'm' , current_time( 'timestamp' ) ) && $thisyear == gmdate( 'Y' , current_time( 'timestamp' ) ) )
+    if ( $day == gmdate( 'j' , current_time( 'timestamp' ) ) && $thismonth == gmdate( 'm' , current_time( 'timestamp' ) ) && $thisyear == gmdate( 'Y' , current_time( 'timestamp' ) ) ) :
       $calendar_output .= '<li id="today" class="alog-today">';
-    elseif ( $day > gmdate( 'j' , current_time( 'timestamp' ) ) && $thismonth == gmdate( 'm' , current_time( 'timestamp' ) ) && $thisyear == gmdate( 'Y' , current_time( 'timestamp' ) ) )
+    elseif ( $day > gmdate( 'j' , current_time( 'timestamp' ) ) && $thismonth == gmdate( 'm' , current_time( 'timestamp' ) ) && $thisyear == gmdate( 'Y' , current_time( 'timestamp' ) ) ) :
       $calendar_output .= '<li class="alog-future">';
-    else
-      $calendar_output .= '<li>';
-
-    if ( in_array( $day , $daywithpost ) ) : // any posts today?
-        $calendar_output .= '<a class="alog-has-post" href="' . get_alog_day_link( $thisyear , $thismonth , $day ) . "\" title=\"" . esc_attr( $ak_titles_for_day[$day] ) . "\">$day</a>";
+    elseif ( in_array( $day , $daywithpost ) ) : // any posts today?
+        $calendar_output .= '<li class="alog-has-post"><a class="alog-post" href="' . get_alog_day_link( $thisyear , $thismonth , $day ) . "\" title=\"" . esc_attr( $ak_titles_for_day[$day] ) . "\"></a>";
         $points++;
     else :
-      $calendar_output .= $day;
+      $calendar_output .= '<li>';
     endif;
-    $calendar_output .= '</li>';
+    $calendar_output .= $day . '</li>';
 
     // if ( 6 == calendar_week_mod( date( 'w' , mktime( 0 , 0 , 0 , $thismonth , $day , $thisyear ) ) - $week_begins ) )
     //   $newrow = true;

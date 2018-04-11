@@ -15,21 +15,9 @@ $today = get_wp_current_date();
 $date = get_url_date_array();
 $options = alog_get_options();
 
-// echo '<pre>';
-// var_dump( $today );
-// echo '</pre>';
-
-// echo '<pre>';
-// var_dump( $date );
-// echo '</pre>';
-
 // Get timestamps for our dates and times to compare later
 $todays_timestamp = current_time( 'timestamp' );
 $urls_timestamp = get_url_timestamp();
-
-// if ( $date == null ) {
-//   $date = $today;
-// }
 
 get_header(); ?>
 
@@ -65,7 +53,7 @@ get_header(); ?>
 
       </div>
 
-      <div class="taxonomy-description"><?php _e( 'Keep track of your writing this month. What kind of streak are you on?', 'adventure-log' ); ?></div>
+      <div class="taxonomy-description"><?php // _e( 'Keep track of your writing this month. What kind of streak are you on?', 'adventure-log' ); ?></div>
 
       <?php 
       if ( is_year() ) {
@@ -92,6 +80,17 @@ get_header(); ?>
 
     <?php
     if ( have_posts() ) : 
+
+      if ( is_day() && isset ( $_GET['new'] ) && $_GET['new'] == 'true' ) { ?>
+        <h1 class="alog-entry-title entry-title alog-entry-editable" contenteditable="true"><?php echo get_url_date_string(); ?></h1>
+        <div class="alog-entry-content entry-content alog-entry-editable" contenteditable="true"></div>
+
+        <footer class="entry-footer">
+          <span class="edit-link">
+            <a class="post-edit-link add-log-button">Save</a>
+          </span>
+        </footer>
+      <?php }
 
 			/* Start the Loop */
       while ( have_posts() ) : the_post();

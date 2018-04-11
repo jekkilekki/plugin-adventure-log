@@ -17,7 +17,9 @@
   let $POST_TITLE = $('.entry-title');
   if ( $POST_ID != '' ) 
     $POST_TITLE = $( '.post-' + $POST_ID + ' .entry-title' );
-  let $POST_CONTENT = $( '.post-' + $POST_ID + ' .entry-content');
+  let $POST_CONTENT = $('.entry-content');
+  if ( $POST_ID != '' )
+    $POST_CONTENT = $( '.post-' + $POST_ID + ' .entry-content');
   let $MESSAGE_BOX = $( '.post-' + $POST_ID + ' .alog-entry-message' );
 
   // Add some styling for our editor fields
