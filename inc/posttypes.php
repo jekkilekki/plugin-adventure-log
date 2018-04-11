@@ -212,9 +212,9 @@ function alog_single_template( $template_path ) {
 
 function alog_display_single( $content ) {
   if ( ! empty( get_the_ID() ) ) {
-    $content = alog_get_calendar( array( 'alog' ) );
+    // $content = alog_get_calendar( array( 'alog' ) );
 
-    $content .= get_the_content( get_the_ID() );
+    $content = get_the_content( get_the_ID() );
   }
   return $content;
 }

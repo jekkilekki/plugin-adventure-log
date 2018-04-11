@@ -1,16 +1,19 @@
 <?php
 /**
- * The template for displaying YEARLY archive pages
+ * The template for displaying archive pages
  *
  * @link https://codex.wordpress.org/Template_Hierarchy
  *
- * @since 1.0.0
- * @version 1.0.0
+ * @package WordPress
+ * @subpackage Twenty_Seventeen
+ * @since 1.0
+ * @version 1.0
  */
 
 // Get our date variables for the rest of the page
 $today = get_wp_current_date(); 
 $date = get_url_date_array();
+$options = alog_get_options();
 
 // echo '<pre>';
 // var_dump( $today );
@@ -32,46 +35,55 @@ get_header(); ?>
 
 <div class="wrap">
 		<header class="page-header alog-header">
+      
+      <div class="alog-nav-header">
+        <h1 class="page-title"><i class="ra ra-sword ra-lg"></i>
+          <a href="<?php echo esc_url( home_url() . '/alog/' ); ?>">Adventure Log</a> 
+        </h1>
+
         
-      <h1 class="page-title">YEARLY | 
-        <a href="<?php echo esc_url( home_url() . '/alog/' ); ?>">Home</a> | 
-        <a href="<?php echo esc_url( home_url() . '/alog/' . $date['year'] . '/' . $date['monnum'] ); ?>"><?php echo $date['month']; ?></a>
-        <a href="<?php echo esc_url( home_url() . '/alog/' . $date['year'] ); ?>"><?php echo $date['year']; ?></a>
-      </h1>
-      <div class="taxonomy-description"><?php _e( 'Keep track of your writing this month. What kind of streak are you on?', 'adventure-log' ); ?></div>
+        <nav class="alog-nav-container">
+          <ul class="alog-nav">
+          <?php if ( is_user_logged_in() ) : ?>
+            <li>
+              <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>"><i class="ra ra-quill-ink"></i> <small class="screen-reader-text"><?php _e( 'Write New Log', 'adventure-log' ); ?></small></a>
+            </li>
+            <li>
+              <a href="#"><i class="ra ra-cog"></i> <small class="screen-reader-text"><?php _e( 'Adventure Log Settings', 'adventure-log' ); ?></small></a>
+            </li>
+            <li>
+              <a href="<?php echo esc_url( wp_logout_url( home_url() . '/alog/' ) ); ?>"><i class="ra ra-cancel"></i> <small class=""><?php _e( 'Sign out', 'adventure-log' ); ?></small></a>
+            </li>
+          <?php else: ?>
+            <li>
+              <a href="<?php echo esc_url( wp_login_url() ); ?>"><i class="ra ra-key"></i> <small>Sign in</small></a>
+            </li>
+          <?php endif; ?>
+          </ul>
+        </nav>
+      
 
-      <ul class="yearly-date-boxes">
-        <?php
-        $timestamp = strtotime( '31st December ' . $date['year'] );
-          for ( $i = 1; $i <= date( 'z', $timestamp ) + 1; $i++ ) {
-            $classname = 'alog-day-sm';
-
-            if ( $today['year'] === $date['year'] ) {
-              $todays_timestamp = mktime( 0,0,0, $today['monnum'], $today['day'], $today['year'] );
-              $todays_num = date( 'z', $todays_timestamp ) + 1;
-            }
-
-            if ( $todays_timestamp != '' && $todays_num === $i ) {
-              $classname .= ' alog-today';
-            }
-            if ( $todays_num != '' && $i > $todays_num ) {
-              $classname .= ' alog-future';
-            }
-            ?>
-            <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $date['year'], $date['monnum'], $i ) ); ?>">
-              <li class="<?php echo $classname; ?>">
-                <span class="screen-reader-text"><?php echo get_url_date_string( $date['year'], $date['monnum'], $i ); ?></span></li>
-            </a>
-            <?php
-          }
-        ?>   
-      </ul>
-
-      <div>
-        <i class="fa fa-edit"></i>
-        <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>">Write New Log</a>
       </div>
 
+      <div class="taxonomy-description"><?php _e( 'Keep track of your writing this month. What kind of streak are you on?', 'adventure-log' ); ?></div>
+
+      <?php 
+      if ( is_year() ) {
+
+      } elseif ( is_day() || is_month() || ( is_archive() && ! is_year() ) ) {
+        alog_get_calendar( array( 'alog' ) ); 
+      } else {
+        echo 'No calendar here.';
+      }
+      ?>
+
+      <?php if ( is_user_logged_in() ): ?>
+        <!-- <div class="button post-edit-link">
+          <i class="ra ra-quill-ink"></i>
+          <a href="<?php // echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>">Write New Log</a>
+        </div>   -->
+      <?php endif; ?>   
+      
 		</header><!-- .page-header -->
 	<?php // endif; ?>
 
@@ -83,24 +95,23 @@ get_header(); ?>
 
 			/* Start the Loop */
       while ( have_posts() ) : the_post();
-      
-        if ( is_day() ) {
-          echo '<h3>Daily archive: ' . get_the_date( 'F j, Y') . '</h3>';
-        } elseif ( is_month() ) {
-          echo '<h3>Monthly archive: ' . get_the_date( 'F Y' ) . '</h3>';
-        } elseif ( is_year() ) {
-          echo '<h3>Yearly archive: ' . get_the_date( 'Y' ) . '</h3>';
-        } else {
-          echo '<h3>Looks like our function is wrong.</h3>';
-        } 
 
 				/*
 				 * Include the Post-Format-specific template for the content.
 				 * If you want to override this in a child theme, then include a file
 				 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
 				 */
-        get_template_part( 'template-parts/post/content' );
+        // $target_word_count = $options[ 'target_word_count' ];
+        $target_word_count = 14; // test
+        $post_word_count = alog_word_count_numeric();
+        $classname = '';
 
+        if ( $post_word_count > $target_word_count ) $classname = 'log-success';
+        elseif ( $post_word_count > $target_word_count / 2 ) $classname = 'log-half';
+
+        echo "<small class='$classname'>" . alog_word_count() . "</small>";
+        echo "<hr>";
+        get_template_part( 'template-parts/post/content' );
         ?>
         
         <!-- <footer class="entry-footer">
@@ -146,7 +157,8 @@ get_header(); ?>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->
-	<?php get_sidebar(); ?>
+  <?php // get_sidebar( 'alog' ); ?>
+  <?php load_template( dirname( __FILE__ ) . '/sidebar-alog.php' ); ?>
 </div><!-- .wrap -->
 
 <?php get_footer();

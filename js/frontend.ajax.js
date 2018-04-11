@@ -14,9 +14,11 @@
   let $POST_ID = WP_API_settings.current_ID;
 
   // Create constants for Post title and Post content we can reference later
-  const $POST_TITLE = $( '.post-' + $POST_ID + ' .entry-title' );
-  const $POST_CONTENT = $( '.post-' + $POST_ID + ' .entry-content');
-  const $MESSAGE_BOX = $( '.post-' + $POST_ID + ' .alog-entry-message' );
+  let $POST_TITLE = $('.entry-title');
+  if ( $POST_ID != '' ) 
+    $POST_TITLE = $( '.post-' + $POST_ID + ' .entry-title' );
+  let $POST_CONTENT = $( '.post-' + $POST_ID + ' .entry-content');
+  let $MESSAGE_BOX = $( '.post-' + $POST_ID + ' .alog-entry-message' );
 
   // Add some styling for our editor fields
   $POST_TITLE.focus( function() {

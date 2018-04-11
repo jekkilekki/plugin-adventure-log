@@ -171,37 +171,8 @@ function adventure_log_archive_page( $template ) {
   global $post;
 
   if ( is_post_type_archive( 'alog' ) ) {
-    if ( is_day() ) {
-      $template = dirname( __FILE__ ) . '/templates/archive-day.php';
-    } elseif ( is_month() ) {
-      $template = dirname( __FILE__ ) . '/templates/archive-month.php';
-    } elseif ( is_year() ) {
-      $template = dirname( __FILE__ ) . '/templates/archive-year.php';
-    } else {
-      $template = dirname( __FILE__ ) . '/templates/home.php';
-    }
+    $template = dirname( __FILE__ ) . '/templates/archive-alog.php';
   }
   return $template;
 }
 add_filter( 'archive_template', 'adventure_log_archive_page' );
-
-function adventure_logs_last_year() {
-  $dates = array();
-
-  $args = array(
-    'post_type' => 'alog',
-    'date_query'  => array(
-        'column'  => 'post_date_gmt',
-        'after'   => '1 year ago'
-      )
-  );
-
-  $query = new WP_Query( $args );
-  if ( $query->have_posts() ) {
-    while ( $query->have_posts() ) {
-      $dates[] = $query->the_post();
-    }
-  }
-
-  return $dates;
-}

@@ -211,6 +211,27 @@ function alog_word_count_numeric() {
   return str_word_count( strip_tags( get_post_field( 'post_content', get_the_ID() ) ) );
 }
 
+function adventure_logs_last_year() {
+  $dates = array();
+
+  $args = array(
+    'post_type' => 'alog',
+    'date_query'  => array(
+        'column'  => 'post_date_gmt',
+        'after'   => '1 year ago'
+      )
+  );
+
+  $query = new WP_Query( $args );
+  if ( $query->have_posts() ) {
+    while ( $query->have_posts() ) {
+      $dates[] = $query->the_post();
+    }
+  }
+
+  return $dates;
+}
+
 /**
  * Alog Calendar
  * @see https://jennifer.blog/2010/07/15/adding-custom-post-types-to-get_calendar-and-the-calendar-widget
@@ -452,9 +473,9 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true, $ye
   $cache[$key] = $calendar_output;
   wp_cache_set( 'get_calendar' , $cache, 'calendar' );
 
-  remove_filter( 'get_calendar' , 'ucc_get_calendar_filter' );
+  remove_filter( 'get_calendar' , 'alog_get_calendar_filter' );
   $output = apply_filters( 'get_calendar',  $calendar_output );
-  add_filter( 'get_calendar' , 'ucc_get_calendar_filter' );
+  add_filter( 'get_calendar' , 'alog_get_calendar_filter' );
 
   if ( $echo )
     echo $output;
@@ -462,11 +483,11 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true, $ye
     return $output;
 }
 
-function alog_get_calendar_filter( $content ) {
-  $output = alog_get_calendar( '', '', false );
-  return $output;
-}
-add_filter( 'get_calendar', 'alog_get_calendar_filter', 10, 2 );
+// function alog_get_calendar_filter( $content ) {
+//   $output = alog_get_calendar( '', '', false );
+//   return $output;
+// }
+// add_filter( 'get_calendar', 'alog_get_calendar_filter', 10, 2 );
 
 /**
  * Register a Custom Sidebar
