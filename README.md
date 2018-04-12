@@ -41,6 +41,20 @@ The following are features of the plugin.
 3. Change (personal) editing after the fact option
 4. Most of the Admin options...
 
+#### :new: Things to Track in Widgets or Post Meta
+
+Inspiration from [Full Focus Planner](http://fullfocusplanner.com/)
+
+- Top Ten (Year / Current) Goals List (editable, updates backend)
+- Daily Big 3-7 (can add new things to track, different on a daily basis)
+  - Each day pops up yesterday's list until complete as a reminder
+  - Also can create "today's" list
+- Routines (Morning, Night, can add new routines - should be accordion or dropdown to not take up too much space)
+- Daily Quotations for Inspiration
+- Weekly Review
+- Quarterly Review
+- Yearly Review
+
 ### Pages
 
 The following is a list of the pages that are created and used by this plugin:
