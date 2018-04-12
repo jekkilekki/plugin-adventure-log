@@ -98,7 +98,7 @@ get_header(); ?>
     if ( have_posts() ) : 
 
       if ( is_day() && isset ( $_GET['new'] ) && $_GET['new'] == 'true' ) { ?>
-        <p class="alog-new-log"><i class="ra ra-quill-ink"></i>Write New Log</p>
+        <p class="alog-new-log">New Log</p>
         <!-- <input type="text" placeholder="Featured Image" />
         <input type="submit" value="Upload..." /> -->
 

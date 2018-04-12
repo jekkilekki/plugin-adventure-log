@@ -83,7 +83,8 @@ function adventure_log_scripts() {
       wp_localize_script( 'adventure_log_script', 'WP_API_settings', array(
         'root'        => esc_url_raw( rest_url() ),
         'nonce'       => wp_create_nonce( 'wp_rest' ), /* nonce MUST be 'wp_rest' in order to work properly */
-        'current_ID'  => get_the_ID()
+        'current_ID'  => get_the_ID(),
+        'new_post'    => strpos( $_SERVER[ 'REQUEST_URI' ], '/?new=true' ) && is_day()
       ));
 
       // Enqueue our stylesheet for frontend editing

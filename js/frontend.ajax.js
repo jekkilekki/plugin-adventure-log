@@ -7,6 +7,7 @@
   console.info( "REST API root: ", WP_API_settings.root );
   console.info( "Nonce value: ", WP_API_settings.nonce );
   console.info( "Post ID: ", WP_API_settings.current_ID );
+  console.info( "New Post: ", WP_API_settings.new_post );
 
   // Create a $POST_ID variable to keep track of the current post ID
   // If we're on a post, it'll be set to the Post ID passed in from PHP.
@@ -14,12 +15,12 @@
   let $POST_ID = WP_API_settings.current_ID;
 
   // Create constants for Post title and Post content we can reference later
-  let $POST_TITLE = $('.entry-title');
-  if ( $POST_ID != '' ) 
-    $POST_TITLE = $( '.post-' + $POST_ID + ' .entry-title' );
-  let $POST_CONTENT = $('.entry-content');
-  if ( $POST_ID != '' )
-    $POST_CONTENT = $( '.post-' + $POST_ID + ' .entry-content');
+  let $POST_TITLE = $('.entry-title').first();
+  // if ( $POST_ID != '' ) 
+  //   $POST_TITLE = $( '.post-' + $POST_ID + ' .entry-title' );
+  let $POST_CONTENT = $('.entry-content').first();
+  // if ( $POST_ID != '' )
+  //   $POST_CONTENT = $( '.post-' + $POST_ID + ' .entry-content');
   let $MESSAGE_BOX = $( '.post-' + $POST_ID + ' .alog-entry-message' );
 
   // Add some styling for our editor fields
@@ -42,7 +43,7 @@
 
   // Default 'editing' is FALSE until the button is clicked
   let $EDITING = false;
-  if ( WP_API_settings.current_ID == '' ) {
+  if ( WP_API_settings.current_ID == '' || WP_API_settings.new_post ) {
     $EDITING = true;
   } 
 
@@ -56,8 +57,14 @@
   function runAjaxSave( new_title, new_content ) {
     alert( "new title: " + new_title );
     alert( "new content: " + new_content );
+    var restUrl = WP_API_settings.root + 'wp/v2/alog/';
+    if ( $POST_ID != '' && WP_API_settings.new_post != 1 ) {
+      restUrl = WP_API_settings.root + 'wp/v2/alog/' + $POST_ID;
+      console.info( "Rest URL: ", restUrl );
+    }
+
     $.ajax({
-      url: WP_API_settings.root + 'wp/v2/alog/' + $POST_ID,
+      url: restUrl,
       method: 'POST',
       beforeSend: function(xhr) {
         xhr.setRequestHeader( 'X-WP-Nonce', WP_API_settings.nonce );
