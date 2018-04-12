@@ -9,11 +9,15 @@
  * @since 1.0
  * @version 1.0
  */
-
 // Get our date variables for the rest of the page
 $today = get_wp_current_date(); 
 $date = get_url_date_array();
 $options = alog_get_options();
+
+if ( alog_is_home_url() && isset( $_GET['new'] ) && $_GET['new'] == true ) {
+  wp_redirect( esc_url( adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ) );
+  exit;
+}
 
 // Get timestamps for our dates and times to compare later
 $todays_timestamp = current_time( 'timestamp' );
@@ -34,7 +38,7 @@ get_header(); ?>
           <ul class="alog-nav">
           <?php if ( is_user_logged_in() ) : ?>
             <li>
-              <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>"><i class="ra ra-quill-ink"></i> <small class="screen-reader-text"><?php _e( 'Write New Log', 'adventure-log' ); ?></small></a>
+              <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>?new=true"><i class="ra ra-quill-ink"></i> <small class="screen-reader-text"><?php _e( 'Write New Log', 'adventure-log' ); ?></small></a>
             </li>
             <li>
               <a href="#"><i class="ra ra-cog"></i> <small class="screen-reader-text"><?php _e( 'Adventure Log Settings', 'adventure-log' ); ?></small></a>

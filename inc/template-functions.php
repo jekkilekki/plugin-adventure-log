@@ -13,7 +13,23 @@ function adventure_log_archive_page( $template ) {
 }
 add_filter( 'archive_template', 'adventure_log_archive_page' );
 
+/**
+ * https://wordpress.stackexchange.com/questions/208181/how-to-add-custom-template-in-plugin
+ */
+function alog_settings_page( $template ) {
+  $file_name = 'page-alog-settings.php';
 
+  if ( is_page( 'alog-settings' ) ) {
+    if ( locate_template( $file_name ) ) {
+      $template = locate_template( $file_name );
+    } else {
+      // Template not found in theme's folder, use plugin's template as a fallback
+      $template = dirname( __FILE__ ) . '/templates/' . $file_name;
+    }
+  }
+  return $template;
+}
+add_filter( 'template_include', 'alog_settings_page' );
 
 
 

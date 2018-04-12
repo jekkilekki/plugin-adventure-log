@@ -1,6 +1,20 @@
 <?php
 /**
+ * 
+ */
+
+function alog_is_home_url() {
+  // Get today's date from the archive URL (allows navigation to ANY date)
+  $full_url = $_SERVER[ 'REQUEST_URI' ];
+  if ( substr( $full_url, -6 ) == '/alog/' || substr( $full_url, -5 ) == '/alog' ) {
+    return true;
+  }
+  return false;
+}
+
+/**
  * Function to retrieve the current URI value and parse it to find the date page
+ * 
  * @return array $url_date_array
  */
 function get_url_date_array() {

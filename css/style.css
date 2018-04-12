@@ -66,8 +66,8 @@ ul.yearly-date-boxes {
   margin: 1rem -5rem 1rem; */
 }
 
-ul.alog-date-boxes li,
-li.alog-day {
+.alog-date-boxes li,
+.alog-day {
   width: 15px;
   height: 20px;
   line-height: 2;
@@ -79,7 +79,7 @@ li.alog-day {
   color: rgba( 255,255,255,0.5 );
 }
 
-li.alog-day-sm {
+.alog-day-sm {
   width: 15px;
   height: 15px;
   border: 1px solid;
@@ -101,7 +101,7 @@ li.alog-has-post {
   position: relative;
 }
 
-li.alog-has-post a {
+.alog-has-post a {
   display: block;
   width: 100%;
   height: 100%;
@@ -113,11 +113,11 @@ li.alog-current {
   background: rgba( 255, 175, 0, 0.3 );
 }
 
-li.alog-future {
+.alog-future {
   opacity: 0.5;
 }
 
-li.alog-day-sm.alog-future {
+.alog-day-sm.alog-future {
   background: none;
 }
 

@@ -73,9 +73,15 @@
       console.log( response.id );
         $POST_ID = response.id;
         $MESSAGE_BOX.text( 'Log saved.' );
+        geturl();
     }).fail( function( response ) {
       console.log( response );
     });
+  }
+
+  function geturl() {
+    var url = window.location.href;
+    alert(url.replace( '/?new=true', '/'));
   }
 
   /**

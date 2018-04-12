@@ -38,22 +38,6 @@
  * Or go to: https://www.gnu.org/licenses/gpl.html
  */
 
- /**
-  * CONSTANTS
-  */
-if ( ! defined( 'ALOG_BASE_FILE' ) ) {
-  define( 'ALOG_BASE_FILE', __FILE__ );
-}
-if ( ! defined( 'ALOG_BASE_DIR' ) ) {
-  define( 'ALOG_BASE_DIR', dirname( ALOG_BASE_FILE ) );
-}
-if ( ! defined( 'ALOG_PLUGIN_URL' ) ) {
-  define( 'ALOG_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-}
-if ( ! defined( 'ALOG_PLUGIN_DIR_PATH' ) ) {
-  define( 'ALOG_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
-}
-
 /**
  * Include our functions file.
  */
