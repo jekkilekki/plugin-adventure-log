@@ -29,13 +29,25 @@ get_header(); ?>
 		<header class="page-header alog-header">
       
       <div class="alog-nav-header">
-        <h1 class="page-title"><i class="ra ra-sword ra-lg"></i>
-          <a href="<?php echo esc_url( home_url() . '/alog/' ); ?>">Adventure Log</a> 
+        <h1 class="page-title">
+          <a href="<?php echo esc_url( home_url() . '/alog/' ); ?>"><i class="ra ra-sword ra-lg"></i> Adventure Log</a> 
         </h1>
 
+        <h1 class="page-title">
+          <?php 
+          if ( is_year() ) 
+            echo $date['year'] . ' Archive';
+          elseif ( is_month() )
+            echo $date['month'] . ' ' . $date['year'] . ' Archive';
+          elseif ( is_day() ) 
+            echo $date['month'] . ' ' . $date['day'] . ', ' . $date['year'] . ' Archive';
+          else 
+            echo 'Archives';
+          ?>
+        </h1>
         
         <nav class="alog-nav-container">
-          <ul class="alog-nav">
+          <ul class="alog-nav-menu">
           <?php if ( is_user_logged_in() ) : ?>
             <li>
               <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>?new=true"><i class="ra ra-quill-ink"></i> <small class="screen-reader-text"><?php _e( 'Write New Log', 'adventure-log' ); ?></small></a>
@@ -86,10 +98,15 @@ get_header(); ?>
     if ( have_posts() ) : 
 
       if ( is_day() && isset ( $_GET['new'] ) && $_GET['new'] == 'true' ) { ?>
+        <p class="alog-new-log"><i class="ra ra-quill-ink"></i>Write New Log</p>
+        <!-- <input type="text" placeholder="Featured Image" />
+        <input type="submit" value="Upload..." /> -->
+
         <h1 class="alog-entry-title entry-title alog-entry-editable" contenteditable="true"><?php echo get_url_date_string(); ?></h1>
         <div class="alog-entry-content entry-content alog-entry-editable" contenteditable="true"></div>
 
-        <footer class="entry-footer">
+        <footer class="alog-entry-footer entry-footer">
+          <input type="text" placeholder="Tag it &amp; bag it" />
           <span class="edit-link">
             <a class="post-edit-link add-log-button">Save</a>
           </span>
@@ -113,7 +130,7 @@ get_header(); ?>
         elseif ( $post_word_count > $target_word_count / 2 ) $classname = 'log-half';
 
         echo "<small class='$classname'>" . alog_word_count() . "</small>";
-        echo "<hr>";
+        // echo "<hr>";
         get_template_part( 'template-parts/post/content' );
         ?>
         

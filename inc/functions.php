@@ -279,6 +279,7 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true, $ye
     }
     $post_types = $my_post_types;
   }
+
   $post_types_key = implode( '', $post_types );
   $post_types = "'" . implode( "', '", $post_types ) . "'";
 
@@ -358,31 +359,20 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true, $ye
         ORDER BY post_date ASC
         LIMIT 1" );
 
+  /**
+   * Calendar Output Begins
+   */
   /* translators: Calendar caption: 1: month name, 2: 4-digit year */
   $calendar_caption = _x( '%1$s %2$s', 'calendar caption' );
-  $calendar_output = '<div id="alog-calendar" summary="' . esc_attr__( 'ALog Calendar' ) . '">
-      <h1 class="calendar-title">' . sprintf( $calendar_caption, $wp_locale->get_month( $thismonth ), date( 'Y', $unixmonth ) ) . '</h1>';
-
-  $myweek = array();
-
-  // for ( $wdcount = 0; $wdcount <= 6; $wdcount++ ) {
-  //   $myweek[] = $wp_locale->get_weekday( ( $wdcount + $week_begins ) % 7 );
-  // }
-
-  // foreach ( $myweek as $wd ) {
-  //   $day_name = (true == $initial ) ? $wp_locale->get_weekday_initial( $wd ) : $wp_locale->get_weekday_abbrev( $wd );
-  //   $wd = esc_attr( $wd );
-  //   $calendar_output .= "\n\t\t<th scope=\"col\" title=\"$wd\">$day_name</th>";
-  // }
-
-  // $calendar_output .= '
-  //     </tr>
-  //     </thead>
-      
-  //     <tfoot>
-  //     <tr>';
+  $calendar_output = '<div id="alog-calendar" summary="' . esc_attr__( 'Adventure Log Calendar', 'adventure-log' ) . '">';
   
+  // Begin calendar
   $calendar_output .= '<ul class="alog-date-boxes">';
+
+  // Previous button - if posts exist last month
+  if ( $previous ) {
+    $calendar_output .= '<li id="alog-calendar-prev"><a href="' . get_alog_month_link( $previous->year, $previous->month ) . '" title="' . sprintf( __( 'View posts for %1$s %2$s' ), $wp_locale->get_month( $previous->month ), date( 'Y', mktime( 0,0,0, $previous->month, 1, $previous->year ) ) ) . '">&laquo; ' . $wp_locale->get_month_abbrev( $wp_locale->get_month( $previous->month ) ) . '</a></li>';
+  }
 
   /**
    * Get DAYS with posts
@@ -400,13 +390,14 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true, $ye
     $daywithpost = array();
   }
 
+  // Create titles for posts (visible on hover)
   if ( strpos( $_SERVER['HTTP_USER_AGENT'] , 'MSIE' ) !== false || stripos( $_SERVER['HTTP_USER_AGENT'] , 'camino' ) !== false || stripos( $_SERVER['HTTP_USER_AGENT'] , 'safari' ) !== false )
     $ak_title_separator = "\n";
   else
     $ak_title_separator = ', ';
 
   $ak_titles_for_day = array();
-  $ak_post_titles = $wpdb->get_results( "SELECT ID, post_title, DAYOFMONTH( post_date ) as dom "
+  $ak_post_titles = $wpdb->get_results( "SELECT ID, post_title, post_content, DAYOFMONTH( post_date ) as dom "
       . "FROM $wpdb->posts "
       . "WHERE YEAR( post_date ) = '$thisyear' "
       . "AND MONTH( post_date ) = '$thismonth' "
@@ -414,75 +405,115 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true, $ye
       . "AND post_type IN ( $post_types ) AND post_status = 'publish'"
   );
 
+  $wordcount_for_day = array();
+  $options = alog_get_options();
+  $target_wordcount = $options['target_word_count'];
+
   if ( $ak_post_titles ) {
     foreach ( (array) $ak_post_titles as $ak_post_title ) {
 
-      $post_title = esc_attr( apply_filters( 'the_title' , $ak_post_title->post_title , $ak_post_title->ID ) );
+      $post_title = esc_attr( apply_filters( 'the_title', $ak_post_title->post_title, $ak_post_title->ID ) );
+      $post_content = esc_attr( apply_filters( 'the_content', $ak_post_title->post_content, $ak_post_title->ID ) );
+      $post = strip_tags( $post_content );
+      $post = explode( ' ', $post );
+      $count = count( $post );
 
-      if ( empty( $ak_titles_for_day[ 'day_' . $ak_post_title->dom ] ) )
+      $post_wordcount = str_word_count( strip_tags( esc_attr( apply_filters( 'the_content', $ak_post_title->post_content, $ak_post_title->ID ) ) ) );
+
+      if ( empty( $ak_titles_for_day[ 'day_' . $ak_post_title->dom ] ) ) :
         $ak_titles_for_day[ 'day_'.$ak_post_title->dom ] = '';
-      if ( empty( $ak_titles_for_day[ "$ak_post_title->dom" ] ) ) // first one
+      endif;
+
+      if ( empty( $ak_titles_for_day[ "$ak_post_title->dom" ] ) ) : // first one
         $ak_titles_for_day[ "$ak_post_title->dom" ] = $post_title;
-      else
+        $wordcount_for_day[ "$ak_post_title->dom" ] = (int) $count;
+      else :
         $ak_titles_for_day[ "$ak_post_title->dom" ] .= $ak_title_separator . $post_title;
-    
+        $wordcount_for_day[ "$ak_post_title->dom" ] .= (int) $count;
+      endif;
+      
     }
   }
-
-  // See how much we should pad in the beginning
-  // $pad = calendar_week_mod( date( 'w' , $unixmonth ) - $week_begins );
-  // if ( 0 != $pad )
-  //   $calendar_output .= "\n\t\t" . '<td colspan="' . esc_attr( $pad ) . '" class="pad">&nbsp;</td>';
 
   $daysinmonth = intval( date( 't' , $unixmonth ) );
   $points = 0;
 
   for ( $day = 1 ; $day <= $daysinmonth ; ++$day ) {
-    // if ( isset( $newrow ) && $newrow )
-    //   $calendar_output .= "\n\t</tr>\n\t<tr>\n\t\t";
-    // $newrow = false;
 
+    // Check if today
     if ( $day == gmdate( 'j' , current_time( 'timestamp' ) ) && $thismonth == gmdate( 'm' , current_time( 'timestamp' ) ) && $thisyear == gmdate( 'Y' , current_time( 'timestamp' ) ) ) :
       $calendar_output .= '<li id="today" class="alog-today">';
+    
+    // Check if a future date
     elseif ( $day > gmdate( 'j' , current_time( 'timestamp' ) ) && $thismonth == gmdate( 'm' , current_time( 'timestamp' ) ) && $thisyear == gmdate( 'Y' , current_time( 'timestamp' ) ) ) :
       $calendar_output .= '<li class="alog-future">';
+    
+    // Check if date has post
     elseif ( in_array( $day , $daywithpost ) ) : // any posts today?
-        $calendar_output .= '<li class="alog-has-post"><a class="alog-post" href="' . get_alog_day_link( $thisyear , $thismonth , $day ) . "\" title=\"" . esc_attr( $ak_titles_for_day[$day] ) . "\"></a>";
-        $points++;
+      $calendar_output .= '<li class="alog-has-post';
+      // Here we check our word count for the day
+      if ( $wordcount_for_day[$day] > $target_wordcount ) : // 100% done
+        $calendar_output .= ' success-100';
+        $points += 8;
+      elseif ( $wordcount_for_day[$day] > $target_wordcount * (4/5) ) : // 80% done
+        $calendar_output .= ' success-80';
+        $points += 5;
+      elseif ( $wordcount_for_day[$day] > $target_wordcount * (3/5) ) : // 60% done
+        $calendar_output .= ' success-60';
+        $points += 4;
+      elseif ( $wordcount_for_day[$day] > $target_wordcount * (2/5) ) : // 40% done
+        $calendar_output .= ' success-40';
+        $points += 3;
+      elseif ( $wordcount_for_day[$day] > $target_wordcount * (1/5) ) : // 20% done
+        $calendar_output .= ' success-20';
+        $points += 2;
+      else : // < 20% done
+        $calendar_output .= ' success-0';
+        $points += 1;
+      endif; 
+      
+      $calendar_output .= '"><a class="alog-post" href="' . get_alog_day_link( $thisyear , $thismonth , $day ) . "\" title=\"" . esc_attr( $ak_titles_for_day[$day] ) . "\"></a>";
+
+    // Or, just output the <li>
     else :
       $calendar_output .= '<li>';
     endif;
+
+    // End with the date and closing </li>
     $calendar_output .= $day . '</li>';
 
-    // if ( 6 == calendar_week_mod( date( 'w' , mktime( 0 , 0 , 0 , $thismonth , $day , $thisyear ) ) - $week_begins ) )
-    //   $newrow = true;
   }
 
-  // $pad = 7 - calendar_week_mod( date( 'w' , mktime( 0 , 0 , 0 , $thismonth , $day , $thisyear ) ) - $week_begins );
-
-  // if ( $pad != 0 && $pad != 7 )
-  //   $calendar_output .= "\n\t\t" . '<td class="pad" colspan="' . esc_attr( $pad ) . '">&nbsp;</td>';
+  // Next button
+  if ( $next ) {    
+    $calendar_output .= '<li id="alog-calendar-next"><a href="' . get_alog_month_link( $next->year , $next->month ) . '" title="' . esc_attr( sprintf( __( 'View posts for %1$s %2$s' ) , $wp_locale->get_month( $next->month ) , date( 'Y' , mktime( 0 , 0 , 0 , $next->month , 1 , $next->year ) ) ) ) . '">' . $wp_locale->get_month_abbrev( $wp_locale->get_month( $next->month ) ) . ' &raquo;</a></li>';
+  } 
 
   $calendar_output .= '</ul>';
 
-  if ( is_user_logged_in() ) 
-    $calendar_output .= '<p class="page-title points">' . $points . ' points</p>';
+  $calendar_output .= '<footer class="alog-calendar-footer">';
+  // Navigation buttons
 
-  if ( $previous ) {
-    $calendar_output .= '<button id="alog-calendar-prev"><a href="' . get_alog_month_link( $previous->year, $previous->month ) . '" title="' . sprintf( __( 'View posts for %1$s %2$s' ), $wp_locale->get_month( $previous->month ), date( 'Y', mktime( 0,0,0, $previous->month, 1, $previous->year ) ) ) . '">&laquo; ' . $wp_locale->get_month_abbrev( $wp_locale->get_month( $previous->month ) ) . '</a></button>';
-  } 
-  // else {
-  //   $calendar_output .= '<button id="alog-calendar-prev">&nbsp;</td>';
+  // Previous button - if posts exist last month
+  // if ( $previous ) {
+  //   $calendar_output .= '<button id="alog-calendar-prev"><a href="' . get_alog_month_link( $previous->year, $previous->month ) . '" title="' . sprintf( __( 'View posts for %1$s %2$s' ), $wp_locale->get_month( $previous->month ), date( 'Y', mktime( 0,0,0, $previous->month, 1, $previous->year ) ) ) . '">&laquo; ' . $wp_locale->get_month_abbrev( $wp_locale->get_month( $previous->month ) ) . '</a></button>';
   // }
-  // $calendar_output .= "\n\t\t" . '<td class="pad">&nbsp;</td>';
-  
-  if ( $next ) {    
-    $calendar_output .= '<button id="alog-calendar-next"><a href="' . get_alog_month_link( $next->year , $next->month ) . '" title="' . esc_attr( sprintf( __( 'View posts for %1$s %2$s' ) , $wp_locale->get_month( $next->month ) , date( 'Y' , mktime( 0 , 0 , 0 , $next->month , 1 , $next->year ) ) ) ) . '">' . $wp_locale->get_month_abbrev( $wp_locale->get_month( $next->month ) ) . ' &raquo;</a></button>';
-  } 
-  // else {
-  //   $calendar_output .= '<button id="alog-calendar-next" class="pad">&nbsp;</td>';
-  // }
+  // // Next button
+  // if ( $next ) {    
+  //   $calendar_output .= '<button id="alog-calendar-next"><a href="' . get_alog_month_link( $next->year , $next->month ) . '" title="' . esc_attr( sprintf( __( 'View posts for %1$s %2$s' ) , $wp_locale->get_month( $next->month ) , date( 'Y' , mktime( 0 , 0 , 0 , $next->month , 1 , $next->year ) ) ) ) . '">' . $wp_locale->get_month_abbrev( $wp_locale->get_month( $next->month ) ) . ' &raquo;</a></button>';
+  // } 
 
+  // Calendar Meta info
+  $calendar_output .= '<ul class="alog-calendar-meta"><li>';
+  // $calendar_output .= '<h3 class="alog-calendar-title">' . sprintf( $calendar_caption, $wp_locale->get_month( $thismonth ), date( 'Y', $unixmonth ) ) . '</h3></li>';
+
+  // Display points accumulated if logged in
+  if ( is_user_logged_in() ) :
+    $calendar_output .= '<li><pre><span class="alog-calendar-points">' . $points . ' points this month</span>';
+    $calendar_output .= '<span class="alog-calendar-points">' . $points . ' total points</span></pre></li>';
+  endif;
+
+  $calendar_output .= '</ul></footer><!-- .calendar-meta -->';
   $calendar_output .= '</div><!-- #alog-calendar -->';
 
   $cache[$key] = $calendar_output;

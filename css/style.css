@@ -1,66 +1,104 @@
-.calendar-title {
-  display: none;
-}
-
-#alog-calendar {
-  position: relative;
-  margin: 1rem -1rem;
-  padding: 1rem 1rem;
-  background: #f7f7f7;
-}
-
-#alog-calendar-prev,
-#alog-calendar-next {
-  background: transparent;
-  padding: 0;
-  position: absolute;
-  left: 1rem;
-  top: 1rem;
-  font-weight: normal;
-}
-
-#alog-calendar-next {
-  float: right;
-  text-align: right;
-}
-
-#alog-calendar .page-title.points {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-}
-
-#alog-calendar .taxonomy-description.quote {
-
-}
-
+/**
+ * Adventure Log Header styles
+ */
 .alog-nav-header {
   position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+
+.alog-nav-header h1 {
+  margin: 0;
+  padding: 0;
 }
 
 .alog-nav-container {
-  position: absolute;
-  top: 0;
-  right: 0;
+  
 }
 
-ul.alog-nav {
+.alog-nav-menu {
   list-style: none;
+  margin-bottom: 0.5rem;
 }
-ul.alog-nav li {
+.alog-nav-menu li {
   display: inline;
   margin-left: 10px;
 }
 
-ul.alog-date-boxes,
-ul.yearly-date-boxes {
+/**
+ * Calendar styles
+ */
+.alog-calendar-footer {
+  display: none;
+}
+.alog-calendar-meta {
   list-style: none;
-  display: inline-flex;
+  display: flex;
+  justify-content: space-between;
+}
+.alog-calendar-meta li {
+  /* display: inline-flex; */
+  font-size: 0.875rem;
+}
+.alog-calendar-meta pre {
+  font-size: 0.875rem;
+}
+.alog-calendar-meta span {
+  display: block;
+}
+
+#alog-calendar {
+  position: relative;
+  /* margin: 1rem -1rem;
+  padding: 1rem 1rem;
+  background: #f7f7f7; */
+}
+
+#alog-calendar-prev,
+#alog-calendar-next {
+  /* background: transparent; */
+  display: inline;
+  /* position: absolute;
+  left: 1rem;
+  top: 1rem; */
+  font-weight: normal;
+  font-size: 0.5rem;
+  border-radius: 0;
+  text-align: center;
+  min-width: 40px;
+  background: black;
+}
+
+#alog-calendar-prev a,
+#alog-calendar-next a {
+  color: white;
+}
+
+#alog-calendar-next {
+  /* float: right;
+  text-align: right; */
+}
+
+#alog-calendar .page-title.points {
+  /* position: absolute;
+  top: 1rem;
+  right: 1rem; */
+}
+
+.alog-date-boxes,
+.yearly-date-boxes {
+  list-style: none;
+  display: flex;
   flex-wrap: wrap;
   margin-top: 0;
   margin-bottom: 0;
-  padding-left: 3.5rem;
-  padding-right: 3.5rem;
+  /* border-left: 1px solid black; */
+  padding: 1.5rem 0;
+  border-top: 1px solid gainsboro;
+  border-bottom: 1px solid gainsboro;
+  margin-bottom: 0.5rem;
+  /* padding-left: 3.5rem;
+  padding-right: 3.5rem; */
   /* background: #f3f3f3;
   padding: 1rem 5rem;
   margin: 1rem -5rem 1rem; */
@@ -68,15 +106,18 @@ ul.yearly-date-boxes {
 
 .alog-date-boxes li,
 .alog-day {
-  width: 15px;
+  flex: 1 1 20px;
   height: 20px;
   line-height: 2;
-  /* border: 1px solid; */
-  background: black;
+  border: 1px solid black;
+  border-left: none;
   text-align: center;
-  margin: 2px;
   font-size: 0.5rem;
-  color: rgba( 255,255,255,0.5 );
+  color: rgba( 0,0,0,0.5 );
+}
+
+.alog-date-boxes li:first-child {
+  border-left: 1px solid black;
 }
 
 .alog-day-sm {
@@ -92,13 +133,14 @@ li.alog-today {
   border-color: green;
   color: green;
   background: rgba( 0, 255, 0, 0.3 );
+  border-right: 1px solid black;
 }
 
 li.alog-has-post {
   border-color: orange;
   color: orange;
   background: rgba( 255, 175, 0, 0.3 );
-  position: relative;
+  border-right: 1px solid black;
 }
 
 .alog-has-post a {
@@ -133,6 +175,12 @@ small.log-success {
     border-radius: 3px;
 }
 
+/**
+ * Post Content
+ */
+.alog-new-log {
+  margin-bottom: 0.5rem;
+}
 .alog-entry-editable {
   border: 1px dashed black;
 }
@@ -143,4 +191,8 @@ small.log-success {
 
 .alog-entry-content {
   height: 50vh;
+}
+
+.alog-entry-footer {
+  margin-bottom: 6rem;
 }
