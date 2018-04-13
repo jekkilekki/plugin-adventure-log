@@ -115,10 +115,10 @@ function alog_ajax_login_init() {
 
   // Enqueue and localize our script (pass our REST url, nonce, and current Post ID to JS)
   wp_enqueue_script( 'alog_ajax_login_script', plugin_dir_url( __FILE__ ) . 'js/login.ajax.js', array( 'jquery' ), '20180413', true );
-  wp_localize_script( 'alog_ajax_login_script', 'WP_API_settings', array(
+  wp_localize_script( 'alog_ajax_login_script', 'ajax_login_object', array(
     'ajax_url'      => esc_url( admin_url( 'admin-ajax.php' ) ),
-    'redirect_url'  => esc_url( home_url() . '/alog/' ),
-    'message'       => __( ' Sending user info, please wait...', 'adventure-log' ),
+    'redirect_url'  => esc_url( $_SERVER[ 'REQUEST_URI' ] ), // login on whatever page you're on
+    'message'       => __( 'Checking user credentials...', 'adventure-log' ),
   ));
 
   // Enable the user with no privileges to run ajax_login() in AJAX

@@ -502,7 +502,8 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true, $ye
 
     // Check if TODAY (no posts)
     elseif ( $day == gmdate( 'j' , current_time( 'timestamp' ) ) && $thismonth == gmdate( 'm' , current_time( 'timestamp' ) ) && $thisyear == gmdate( 'Y' , current_time( 'timestamp' ) ) ) :
-      $calendar_output .= '<li class="alog-today"><a href="' . get_alog_day_link( $thisyear , $thismonth , $day ) . '?new=true">' . $day . '</a></li>';
+      $logged_in = is_user_logged_in() ? '?new=true' : '';
+      $calendar_output .= '<li class="alog-today"><a href="' . get_alog_day_link( $thisyear , $thismonth , $day ) . $logged_in . '">' . $day . '</a></li>';
     
     // Or, just output the <li>
     else :

@@ -60,7 +60,7 @@ alog_get_login_form();
               <a href="#"><i class="ra ra-cog"></i> <small class="screen-reader-text"><?php _e( 'Adventure Log Settings', 'adventure-log' ); ?></small></a>
             </li>
             <li>
-              <a class="login_button alog-login-button" href="<?php echo esc_url( wp_logout_url( home_url() . '/alog/' ) ); ?>"><i class="ra ra-cancel"></i> <small class=""><?php _e( 'Logout', 'adventure-log' ); ?></small></a>
+              <a class="login_button alog-login-button" href="<?php echo esc_url( wp_logout_url( $_SERVER[ 'REQUEST_URI' ] ) ); ?>"><i class="ra ra-cancel"></i> <small class=""><?php _e( 'Logout', 'adventure-log' ); ?></small></a>
             </li>
 
           <?php else: ?>
@@ -105,25 +105,9 @@ alog_get_login_form();
     <?php
     if ( have_posts() ) : 
 
-      if ( is_day() && isset ( $_GET['new'] ) && $_GET['new'] == 'true' ) { ?>
-        <p class="alog-new-log">New Log</p>
-        <!-- <input type="text" placeholder="Featured Image" />
-        <input type="submit" value="Upload..." /> -->
-
-        <h1 class="alog-entry-title entry-title alog-entry-editable" contenteditable="true"><?php echo get_url_date_string(); ?></h1>
-        <div class="alog-entry-content entry-content alog-entry-editable" contenteditable="true"></div>
-
-        <footer class="alog-entry-footer entry-footer">
-          <input type="text" placeholder="Tag it &amp; bag it" />
-          <span class="edit-link">
-            <a class="post-edit-link add-log-button">Save</a>
-          </span>
-        </footer>
-
-        <div class="alog-stats alog-overlay-bottom">
-          <p class="alog-stats-wordcount"><span class="alog-wc-number">12</span> words</p>
-        </div>
-      <?php }
+      if ( is_day() && isset ( $_GET['new'] ) && $_GET['new'] == 'true' ) {
+        alog_new_log_section();
+      }
 
 			/* Start the Loop */
       while ( have_posts() ) : the_post();
@@ -171,18 +155,10 @@ alog_get_login_form();
         <div class="alog-entry-content entry-content">Sorry, you have no writing for this date.</div>
       
       <?php 
-      else: ?>
+      else : 
 
-        <!-- <h1 class="alog-entry-title entry-title alog-entry-editable" contenteditable="true"><?php echo get_url_date_string(); ?></h1>
-        <div class="alog-entry-content entry-content alog-entry-editable" contenteditable="true"></div>
+        alog_new_log_section();
 
-        <footer class="entry-footer">
-          <span class="edit-link">
-            <a class="post-edit-link add-log-button">Save</a>
-          </span>
-        </footer> -->
-
-      <?php
       endif; 
 
     endif; ?>

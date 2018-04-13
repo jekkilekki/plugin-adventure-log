@@ -55,8 +55,8 @@
    * @param html new_content 
    */
   function runAjaxSave( new_title, new_content ) {
-    alert( "new title: " + new_title );
-    alert( "new content: " + new_content );
+    // alert( "new title: " + new_title );
+    // alert( "new content: " + new_content );
     var restUrl = WP_API_settings.root + 'wp/v2/alog/';
     if ( $POST_ID != '' && WP_API_settings.new_post != 1 ) {
       restUrl = WP_API_settings.root + 'wp/v2/alog/' + $POST_ID;
@@ -81,6 +81,11 @@
         $POST_ID = response.id;
         $MESSAGE_BOX.text( 'Log saved.' );
         geturl();
+
+        // Hide any New Post or Edit Post stuff
+        $( '.alog-log-caption' ).text( 'Edit Log' ).hide();
+        $( '.alog-image-input' ).hide();
+        $( '.alog-tag-input' ).hide();
     }).fail( function( response ) {
       console.log( response );
     });
