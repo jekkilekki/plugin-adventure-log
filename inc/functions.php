@@ -13,6 +13,31 @@ function alog_is_home_url() {
 }
 
 /**
+ * Ajax Login Function
+ * @see http://natko.com/wordpress-ajax-login-without-a-plugin-the-right-way/
+ */
+function alog_ajax_login() {
+
+  // First, check nonce
+  check_ajax_referer( 'ajax-login-nonce', 'security' );
+
+  // Nonce is checked, get POST data and sign on
+  $info = array();
+  $info['user_login'] = $_POST['username'];
+  $info['user_password'] = $_POST['password'];
+  $info['remember'] = true;
+
+  $user_signon = wp_signon( $info, false );
+  if ( is_wp_error( $user_signon ) ) {
+    echo json_encode( array( 'loggedin' => false, 'message' => __( 'Wrong username or password.', 'adventure-log' ) ) );
+  } else {
+    echo json_encode( array( 'loggedin' => true, 'message' => __( 'Login successful, redirecting... ', 'adventure-log' ) ) );
+  }
+
+  die();
+}
+
+/**
  * Function to retrieve the current URI value and parse it to find the date page
  * 
  * @return array $url_date_array
@@ -440,17 +465,18 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true, $ye
 
   for ( $day = 1 ; $day <= $daysinmonth ; ++$day ) {
 
-    // Check if today
-    if ( $day == gmdate( 'j' , current_time( 'timestamp' ) ) && $thismonth == gmdate( 'm' , current_time( 'timestamp' ) ) && $thisyear == gmdate( 'Y' , current_time( 'timestamp' ) ) ) :
-      $calendar_output .= '<li id="today" class="alog-today">';
+    // Check if a FUTURE date
+    if ( $day > gmdate( 'j' , current_time( 'timestamp' ) ) && $thismonth == gmdate( 'm' , current_time( 'timestamp' ) ) && $thisyear == gmdate( 'Y' , current_time( 'timestamp' ) ) ) :
+      $calendar_output .= '<li class="alog-future">' . $day;
     
-    // Check if a future date
-    elseif ( $day > gmdate( 'j' , current_time( 'timestamp' ) ) && $thismonth == gmdate( 'm' , current_time( 'timestamp' ) ) && $thisyear == gmdate( 'Y' , current_time( 'timestamp' ) ) ) :
-      $calendar_output .= '<li class="alog-future">';
-    
-    // Check if date has post
+    // Check if date HAS POST
     elseif ( in_array( $day , $daywithpost ) ) : // any posts today?
       $calendar_output .= '<li class="alog-has-post';
+
+      // Check if TODAY (has posts)
+      if ( $day == gmdate( 'j' , current_time( 'timestamp' ) ) && $thismonth == gmdate( 'm' , current_time( 'timestamp' ) ) && $thisyear == gmdate( 'Y' , current_time( 'timestamp' ) ) )
+        $calendar_output .= ' alog-today';
+
       // Here we check our word count for the day
       if ( $wordcount_for_day[$day] > $target_wordcount ) : // 100% done
         $calendar_output .= ' success-100';
@@ -472,15 +498,19 @@ function alog_get_calendar( $post_types = '', $initial = true, $echo = true, $ye
         $points += 1;
       endif; 
       
-      $calendar_output .= '"><a class="alog-post" href="' . get_alog_day_link( $thisyear , $thismonth , $day ) . "\" title=\"" . esc_attr( $ak_titles_for_day[$day] ) . "\"></a>";
+      $calendar_output .= '"><a class="alog-post" href="' . get_alog_day_link( $thisyear , $thismonth , $day ) . "\" title=\"" . esc_attr( $ak_titles_for_day[$day] ) . "\">$day</a>";
 
+    // Check if TODAY (no posts)
+    elseif ( $day == gmdate( 'j' , current_time( 'timestamp' ) ) && $thismonth == gmdate( 'm' , current_time( 'timestamp' ) ) && $thisyear == gmdate( 'Y' , current_time( 'timestamp' ) ) ) :
+      $calendar_output .= '<li class="alog-today"><a href="' . get_alog_day_link( $thisyear , $thismonth , $day ) . '?new=true">' . $day . '</a></li>';
+    
     // Or, just output the <li>
     else :
-      $calendar_output .= '<li>';
+      $calendar_output .= '<li>' . $day;
     endif;
 
     // End with the date and closing </li>
-    $calendar_output .= $day . '</li>';
+    $calendar_output .= '</li>';
 
   }
 

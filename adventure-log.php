@@ -107,6 +107,28 @@ function adventure_log_scripts() {
 } // END adventure_log_scripts()
 add_action( 'wp_enqueue_scripts', 'adventure_log_scripts' );
 
+/**
+ * Ajax Login Script
+ */
+function alog_ajax_login_init() {
+
+  // Enqueue and localize our script (pass our REST url, nonce, and current Post ID to JS)
+  wp_enqueue_script( 'alog_ajax_login_script', plugin_dir_url( __FILE__ ) . 'js/login.ajax.js', array( 'jquery' ), '20180413', true );
+  wp_localize_script( 'alog_ajax_login_script', 'WP_API_settings', array(
+    'ajax_url'      => esc_url( admin_url( 'admin-ajax.php' ) ),
+    'redirect_url'  => esc_url( home_url() . '/alog/' ),
+    'message'       => __( ' Sending user info, please wait...', 'adventure-log' ),
+  ));
+
+  // Enable the user with no privileges to run ajax_login() in AJAX
+  add_action( 'wp_ajax_nopriv_ajaxlogin', 'alog_ajax_login' );
+}
+
+// Execute the action only if the user isn't logged in
+if ( ! is_user_logged_in() ) {
+  add_action( 'init', 'alog_ajax_login_init' );
+}
+
 function adventure_log_admin_scripts( $hook ) {
   global $post, $settings_page;
 

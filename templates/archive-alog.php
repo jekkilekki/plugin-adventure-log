@@ -48,7 +48,9 @@ get_header(); ?>
         
         <nav class="alog-nav-container">
           <ul class="alog-nav-menu">
+
           <?php if ( is_user_logged_in() ) : ?>
+
             <li>
               <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>?new=true"><i class="ra ra-quill-ink"></i> <small class="screen-reader-text"><?php _e( 'Write New Log', 'adventure-log' ); ?></small></a>
             </li>
@@ -56,13 +58,17 @@ get_header(); ?>
               <a href="#"><i class="ra ra-cog"></i> <small class="screen-reader-text"><?php _e( 'Adventure Log Settings', 'adventure-log' ); ?></small></a>
             </li>
             <li>
-              <a href="<?php echo esc_url( wp_logout_url( home_url() . '/alog/' ) ); ?>"><i class="ra ra-cancel"></i> <small class=""><?php _e( 'Sign out', 'adventure-log' ); ?></small></a>
+              <a class="login_button alog-login-button" href="<?php echo esc_url( wp_logout_url( home_url() . '/alog/' ) ); ?>"><i class="ra ra-cancel"></i> <small class=""><?php _e( 'Logout', 'adventure-log' ); ?></small></a>
             </li>
+
           <?php else: ?>
+
             <li>
-              <a href="<?php echo esc_url( wp_login_url() ); ?>"><i class="ra ra-key"></i> <small>Sign in</small></a>
+              <a class="login_button alog-login-button" id="alog_show_login" href="<?php // echo esc_url( wp_login_url() ); ?>"><i class="ra ra-key"></i> <small><?php _e( 'Login', 'adventure-log' ); ?></small></a>
             </li>
+
           <?php endif; ?>
+
           </ul>
         </nav>
       
@@ -111,6 +117,10 @@ get_header(); ?>
             <a class="post-edit-link add-log-button">Save</a>
           </span>
         </footer>
+
+        <div class="alog-stats alog-overlay-bottom">
+          <p class="alog-stats-wordcount"><span class="alog-wc-number">12</span> words</p>
+        </div>
       <?php }
 
 			/* Start the Loop */
@@ -161,14 +171,14 @@ get_header(); ?>
       <?php 
       else: ?>
 
-        <h1 class="alog-entry-title entry-title alog-entry-editable" contenteditable="true"><?php echo get_url_date_string(); ?></h1>
+        <!-- <h1 class="alog-entry-title entry-title alog-entry-editable" contenteditable="true"><?php echo get_url_date_string(); ?></h1>
         <div class="alog-entry-content entry-content alog-entry-editable" contenteditable="true"></div>
 
         <footer class="entry-footer">
           <span class="edit-link">
             <a class="post-edit-link add-log-button">Save</a>
           </span>
-        </footer>
+        </footer> -->
 
       <?php
       endif; 
