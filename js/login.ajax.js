@@ -3,29 +3,30 @@
   // Show the login dialog box on click
   $( 'a#alog_show_login' ).on( 'click', function(e) {
     $( 'body' ).prepend( '<div class="login_overlay"></div>' );
-    $( 'form#login' ).fadeIn(500);
-    $( 'div.login_overlay, form#login a.close' ).on( 'click', function() {
+    $( 'form#alog-login' ).fadeIn(500);
+    $( 'div.login_overlay, form#alog-login a.close' ).on( 'click', function(e) {
+      e.preventDefault();
       $( 'div.login_overlay' ).remove();
-      $( 'form#login' ).hide();
+      $( 'form#alog-login' ).hide();
     });
     e.preventDefault();
   });
 
   // Perform AJAX login on form submit
-  $( 'form#login' ).on( 'submit', function(e) {
-    $( 'form#login p.status' ).show().text( ajax_login_object.message );
+  $( 'form#alog-login' ).on( 'submit', function(e) {
+    $( 'form#alog-login p.status' ).show().text( ajax_login_object.message );
     $.ajax({
       type: 'POST',
       dataType: 'json',
       url: ajax_login_object.ajax_url,
       data: {
         'action':   'ajaxlogin', // calls wp_ajax_nopriv_ajaxlogin
-        'username': $( 'form#login #username' ).val(),
-        'password': $( 'form#login #password' ).val(),
-        'security': $( 'form#login #security' ).val()
+        'username': $( 'form#alog-login #username' ).val(),
+        'password': $( 'form#alog-login #password' ).val(),
+        'security': $( 'form#alog-login #security' ).val()
       },
       success: function( data ) {
-        $( 'form#login p.status' ).text( data.message );
+        $( 'form#alog-login p.message' ).text( data.message );
         if ( data.loggedin == true ) {
           document.location.href = ajax_login_object.redirect_url;
         }

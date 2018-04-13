@@ -42,6 +42,7 @@
  * Include our functions file.
  */
 require_once plugin_dir_path( __FILE__ ) . 'inc/functions.php';
+require_once plugin_dir_path( __FILE__ ) . 'inc/template-tags.php';
 // require_once plugin_dir_path( __FILE__ ) . 'inc/template-functions.php';
 
 /**
@@ -124,10 +125,13 @@ function alog_ajax_login_init() {
   add_action( 'wp_ajax_nopriv_ajaxlogin', 'alog_ajax_login' );
 }
 
-// Execute the action only if the user isn't logged in
-if ( ! is_user_logged_in() ) {
-  add_action( 'init', 'alog_ajax_login_init' );
-}
+// function alog_user_logged_in() {
+  // Execute the action only if the user isn't logged in
+  // if ( ! is_user_logged_in() ) {
+    add_action( 'init', 'alog_ajax_login_init' );
+  // }
+// }
+// add_action( 'init', 'alog_user_logged_in' );
 
 function adventure_log_admin_scripts( $hook ) {
   global $post, $settings_page;

@@ -23,7 +23,9 @@ if ( alog_is_home_url() && isset( $_GET['new'] ) && $_GET['new'] == true ) {
 $todays_timestamp = current_time( 'timestamp' );
 $urls_timestamp = get_url_timestamp();
 
-get_header(); ?>
+get_header(); 
+alog_get_login_form(); 
+?>
 
 <div class="wrap">
 		<header class="page-header alog-header">

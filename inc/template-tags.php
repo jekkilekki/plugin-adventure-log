@@ -2,7 +2,7 @@
 /**
  * Creates a login form
  */
-function get_login_form() {
+function alog_get_login_form() {
   ?>
     <form id="alog-login" action="login" method="POST">
       <h1><?php _e( 'Adventure Log Login', 'adventure-log' ); ?></h1>
