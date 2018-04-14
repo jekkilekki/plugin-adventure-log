@@ -310,19 +310,27 @@ small.log-success {
   margin-bottom: 0.5rem;
 }
 
-#alog-image-select {
+.alog-feature-img-buttons {
   position: absolute;
   top: 68px;
-  left: 108px;
+  left: 112px;
+}
+
+#alog-image-select {
   padding: 8px 0.75rem;
   font-size: 13px;
   border-radius: 4px;
   z-index: 995;
   font-weight: normal;
+  margin-right: 5px;
+  position: relative;
 }
 
 #alog-image-remove {
-
+  color: silver;
+  position: relative;
+  z-index: 995;
+  top: 2px;
 }
 
 #wp-alog_editor-editor-tools .wp-editor-tabs {

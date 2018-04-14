@@ -80,6 +80,8 @@ function adventure_log_scripts() {
     // if ( is_user_logged_in() && current_user_can( 'edit_alogs' ) ) {
 
       // Enqueue and localize our script (pass our REST url, nonce, and current Post ID to JS)
+      // wp_enqueue_script( 'alog_tinymce_js', includes_url( 'js/tinymce/' ) . 'wp-tinymce.php', array( 'jquery' ), '20140415', true );
+      // wp_enqueue_script( 'alog_front_tinymce', plugin_dir_url( __FILE__ ) . 'js/tinymce.frontend.js', array( 'jquery', 'alog_tinymce_js' ), '20140415', true );
       wp_enqueue_script( 'adventure_log_script', plugin_dir_url( __FILE__ ) . 'js/frontend.ajax.js', array( 'jquery' ), '20180330', true );
       wp_localize_script( 'adventure_log_script', 'WP_API_settings', array(
         'root'        => esc_url_raw( rest_url() ),

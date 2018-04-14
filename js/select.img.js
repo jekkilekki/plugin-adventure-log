@@ -7,6 +7,15 @@
 
   var alog_media_upload;
 
+  $( '#alog-image-remove' ).click( function(e) {
+    
+    e.preventDefault();
+    $( '#alog-img-id' ).val( '' ); // https://codex.wordpress.org/Javascript_Reference/wp.media
+    $( '#alog-img-preview' ).attr( 'src', '' );
+    // $( '#alog-image-select' ).hide();
+
+  });
+
   $( '#alog-image-select' ).click( function(e) {
     
     e.preventDefault();
@@ -32,8 +41,8 @@
 
       // Do something with the file here
       $( '#alog-img-id' ).val( attachment.id ); // https://codex.wordpress.org/Javascript_Reference/wp.media
-      // $( '#alog-image-select' ).hide();
       $( '#alog-img-preview' ).attr( 'src', attachment.url );
+      // $( '#alog-image-select' ).hide();
 
     });
 

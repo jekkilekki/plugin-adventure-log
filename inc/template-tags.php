@@ -96,6 +96,68 @@ function alog_post_edit() {
   <?php
 }
 
+function alog_wp_editor() {
+  $content = the_content();
+  $editor_id = 'alog_editor';
+  $settings = array(
+    'wpautop' => true,
+    'media_buttons' => true,
+    'textarea_name' => $editor_id,
+    'textarea_rows' => get_option( 'default_post_edit_rows', 10 ),
+    'tabindex' => '',
+    'editor_css' => '',
+    'editor_class' => 'alog-entry-content entry-content alog-entry-editable',
+    // 'teeny' => true,
+    'dfw' => false,
+    'tinymce' => array(
+        'toolbar1' => 'formatselect, bold, italic, forecolor, bullist, numlist, blockquote, alignleft, aligncenter, alignright, link, unlink, charmap',
+    ),
+    'quicktags' => false,
+    'drag_drop_upload' => true,
+  );
+  wp_editor( $content, $editor_id, $settings );
+}
+
+function alog_tinymce_custom() {
+  $html = '';
+
+  // Editor settings
+  $content = '';
+  $editor_id = 'alog_tinymce_prime';
+  $settings = array(
+    'media_buttons' => false,
+    'textarea_rows' => 1,
+    'quicktags' => false,
+    'tinymce' => array(
+      'toolbar1' => 'bold, italic, undo, redo',
+      'statusbar' => false,
+      'resize' => 'both',
+      'paste_as_text' => true
+    )
+  );
+
+  // Grab content to put inside a variable
+  // ob_start();
+
+  // Create editor
+  wp_editor( $content, $editor_id, $settings );
+
+  // IMPORTANT: Add required scripts, styles, and wp_editor config
+  // _WP_Editors::enqueue_scripts();
+  // _WP_Editors::editor_js();
+  // print_footer_scripts();
+
+  // $html .= ob_get_contents();
+
+  // ob_end_clean();
+
+  // Send everything to JS function
+  // wp_send_json_success( $html );
+  // wp_die();
+}
+// add_action( 'wp_ajax_insert_wp_editor_callback', 'alog_tinymce_prime' );
+// add_action( 'wp_ajax_nopriv_insert_wp_editor_callback', 'alog_tinymce_prime' );
+
 /**
  * Creates the new Log writing area
  */
@@ -109,33 +171,17 @@ function alog_new_log_section() {
 
       <header class="entry-header">
         <h1 class="alog-entry-title entry-title alog-entry-editable" contenteditable="true"><?php echo get_url_date_string(); ?></h1>
-        <input id="alog-image-select" class="button" type="button" value="<?php _e( 'Featured Image...', 'adventure-log' ); ?>" />
+        <div class="alog-feature-img-buttons">
+          <input id="alog-image-select" class="button" type="button" value="<?php _e( 'Featured Image...', 'adventure-log' ); ?>" />
+          <a id="alog-image-remove" href="" title="<?php _e( 'Remove Featured Image', 'adventure-log' ); ?>"><i class="ra ra-cancel"></i></a>
+        </div>
       </header>
     
-      <!-- <div class="alog-entry-content entry-content alog-entry-editable" contenteditable="true"></div> -->
+      <!-- <div id="alog-tinymce-prime" class="alog-entry-content entry-content alog-entry-editable" contenteditable="true"></div> -->
 
-      <?php 
-      $content = the_content();
-      $editor_id = 'alog_editor';
-      $settings = array(
-        'wpautop' => true,
-        'media_buttons' => false,
-        'textarea_name' => $editor_id,
-        'textarea_rows' => get_option( 'default_post_edit_rows', 10 ),
-        'tabindex' => '',
-        'editor_css' => '',
-        'editor_class' => 'alog-entry-content entry-content alog-entry-editable',
-        'teeny' => true,
-        'dfw' => false,
-        'tinymce' => array(
-            'toolbar1' => 'formatselect, bold, italic, forecolor, bullist, numlist, blockquote, alignleft, aligncenter, alignright, link, unlink, charmap',
-        ),
-        'quicktags' => false,
-        'drag_drop_upload' => true,
-      );
-      wp_editor( $content, $editor_id, $settings = array() );
-
-      ?>
+      <?php alog_wp_editor(); ?>
+      <!-- <hr> -->
+      <?php //alog_tinymce_custom(); ?>
 
       <footer class="alog-entry-footer entry-footer">
         <input class="alog-tag-input alog-post-edit-meta" type="text" placeholder="<?php _e( 'Tag it &amp; bag it', 'adventure-log' ); ?>" />
