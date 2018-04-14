@@ -298,6 +298,10 @@ small.log-success {
 /**
  * Post Content
  */
+.alog .entry-header {
+  position: relative;
+}
+
 .alog-post-edit-meta {
   display: none;
 }
@@ -305,6 +309,39 @@ small.log-success {
 .alog-new-log {
   margin-bottom: 0.5rem;
 }
+
+#alog-image-select {
+  position: absolute;
+  top: 68px;
+  left: 108px;
+  padding: 8px 0.75rem;
+  font-size: 13px;
+  border-radius: 4px;
+  z-index: 995;
+  font-weight: normal;
+}
+
+#alog-image-remove {
+
+}
+
+#wp-alog_editor-editor-tools .wp-editor-tabs {
+  display: none;
+}
+
+#wp-alog_editor-editor-tools #insert-media-button {
+  font-weight: normal;
+}
+
+#wp-alog_editor-editor-container .mce-statusbar .wordcount {
+  float: right;
+}
+
+#wp-alog_editor-editor-container #mceu_10,
+#wp-alog_editor-editor-container #mceu_11 {
+  display: none;
+}
+
 .alog-entry-editable {
   border: 1px dashed black;
 }

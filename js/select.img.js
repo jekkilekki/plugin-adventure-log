@@ -32,7 +32,7 @@
 
       // Do something with the file here
       $( '#alog-img-id' ).val( attachment.id ); // https://codex.wordpress.org/Javascript_Reference/wp.media
-      $( '#alog-image-select' ).hide();
+      // $( '#alog-image-select' ).hide();
       $( '#alog-img-preview' ).attr( 'src', attachment.url );
 
     });

@@ -149,6 +149,9 @@ function alog_create_tag_taxonomy() {
     'update_count_callback' => '_update_post_term_count',
     'query_var'             => true,
     'rewrite'               => array( 'slug' => 'alog/tag' ),
+    'show_in_rest'          => true,
+  	'rest_base'             => 'log_tag',
+  	'rest_controller_class' => 'WP_REST_Terms_Controller',
   );
 
   register_taxonomy( 'tag', 'alog', $args );
@@ -254,8 +257,10 @@ function alog_single_template( $template_path ) {
 function alog_display_single( $content ) {
   if ( ! empty( get_the_ID() ) ) {
     // $content = alog_get_calendar( array( 'alog' ) );
-    // alog_post_edit();
+
     $content = get_the_content( get_the_ID() );
+    // $content .= '</div>';
+    // alog_post_edit();
   }
   return $content;
 }

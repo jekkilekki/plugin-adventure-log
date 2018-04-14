@@ -9,6 +9,12 @@
   console.info( "Post ID: ", WP_API_settings.current_ID );
   console.info( "New Post: ", WP_API_settings.new_post );
 
+  // $( document ).ready( function() {
+  //   $( '#wp-alog_editor-editor-container .mce-statusbar .mce-resizehandle' ).before( '<span class="wordcount alog-wc-number"></span>' );
+  //   $( '#tinymce' ).addClass( 'entry-content' );
+  //   alert( 'Stuff : ' + $( '#tinymce' ).html() );
+  // });
+
   // Create a $POST_ID variable to keep track of the current post ID
   // If we're on a post, it'll be set to the Post ID passed in from PHP.
   // If we're creating a NEW post, it'll be empty, but reset to the ID from the JSON in our Ajax response.
@@ -24,7 +30,9 @@
   let $POST_TITLE = $('.entry-title').first();
   // if ( $POST_ID != '' ) 
   //   $POST_TITLE = $( '.post-' + $POST_ID + ' .entry-title' );
-  let $POST_CONTENT = $('.entry-content').first();
+  let $POST_CONTENT = $('.entry-content, .mce-content-body').first();
+  // let $EDITOR_CONTENT = $( '#tinymce.post-type-alog' );
+
   // if ( $POST_ID != '' )
   //   $POST_CONTENT = $( '.post-' + $POST_ID + ' .entry-content');
   let $MESSAGE_BOX = $( '.post-' + $POST_ID + ' .alog-entry-message' );
@@ -60,7 +68,7 @@
    * 
    */
   var countWords = function() {
-    var count = $POST_CONTENT.text();
+    var count = $EDITOR_CONTENT.text();
 
     if ( count.length == 0 ) {
       $( '.alog-wc-number' ).html(0);
@@ -73,19 +81,19 @@
     $( '.alog-wc-number' ).html( wordCount );
   }
 
-  $POST_CONTENT.change(countWords);
-  $POST_CONTENT.keydown(countWords);
-  $POST_CONTENT.keypress(countWords);
-  $POST_CONTENT.keyup(countWords);
-  $POST_CONTENT.blur(countWords);
-  $POST_CONTENT.focus(countWords);
+  $EDITOR_CONTENT.change(countWords);
+  // $EDITOR_CONTENT.keydown(countWords);
+  $EDITOR_CONTENT.keypress(countWords);
+  // $EDITOR_CONTENT.keyup(countWords);
+  // $EDITOR_CONTENT.blur(countWords);
+  // $EDITOR_CONTENT.focus(countWords);
 
   /**
    * Autosave functionality
    */
   var autosaveTimeout;
 
-  $POST_CONTENT.keypress( function() {
+  $EDITOR_CONTENT.keypress( function() {
     // console.info( 'Key press ID: ' + $POST_ID );
     $POST_ID = $( '#alog-post-id' ).val();
     // console.info( 'After reset: ' + $POST_ID );
@@ -97,7 +105,7 @@
     autosaveTimeout = setTimeout( function() {
       var $now = new Date();
       // Make ajax call to save data.
-      runAjaxSave( $POST_TITLE.text(), $POST_CONTENT.html(), true );
+      runAjaxSave( $POST_TITLE.text(), $EDITOR_CONTENT.html(), true );
 
       // @TODO: 1) Remove "Saved" after every time - fade out or something
       // 2) Convert time to a more "readable time" - another function maybe
