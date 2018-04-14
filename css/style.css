@@ -298,6 +298,10 @@ small.log-success {
 /**
  * Post Content
  */
+.alog-post-edit-meta {
+  display: none;
+}
+
 .alog-new-log {
   margin-bottom: 0.5rem;
 }
@@ -315,4 +319,25 @@ small.log-success {
 
 .alog-entry-footer {
   margin-bottom: 6rem;
+}
+
+.alog-stats {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: rgba(255,255,255,0.8);
+    /* border: 1px solid gainsboro; */
+    /* border-bottom: none; */
+    left: 50%;
+    transform: translateX(-50%);
+    /* font-size: 0.75rem; */
+    text-align: center;
+    /* color: gray; */
+    font-weight: 100;
+    padding: 0.5rem;
+    box-shadow: 0px 1px 3px;
+    z-index: 997;
+}
+.alog-stats p {
+  margin: 0;
 }

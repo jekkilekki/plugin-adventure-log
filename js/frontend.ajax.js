@@ -23,6 +23,8 @@
   //   $POST_CONTENT = $( '.post-' + $POST_ID + ' .entry-content');
   let $MESSAGE_BOX = $( '.post-' + $POST_ID + ' .alog-entry-message' );
 
+  let $POST_META = $( '.alog-post-edit-meta' );
+
   // Add some styling for our editor fields
   $POST_TITLE.focus( function() {
     $POST_TITLE.css( 'border', '1px solid gainsboro' );
@@ -63,29 +65,37 @@
       console.info( "Rest URL: ", restUrl );
     }
 
+    var restData = {
+      // '_nonce': WP_API_settings.nonce,
+      'title': new_title,
+      'content': new_content,
+      'status': 'publish',
+    };
+
+    if ( $( '#alog-img-id' ).val() != '' )
+      restData.featured_media = $( '#alog-img-id' ).val();
+
     $.ajax({
       url: restUrl,
       method: 'POST',
       beforeSend: function(xhr) {
         xhr.setRequestHeader( 'X-WP-Nonce', WP_API_settings.nonce );
       },
-      data: {
-        // '_nonce': WP_API_settings.nonce,
-        'title': new_title,
-        'content': new_content,
-        'status': 'publish'
-      }
+      data: restData
     }).success( function( response ) {
       // console.log( response );
       console.log( response.id );
         $POST_ID = response.id;
         $MESSAGE_BOX.text( 'Log saved.' );
-        geturl();
+        // geturl();
 
         // Hide any New Post or Edit Post stuff
         $( '.alog-log-caption' ).text( 'Edit Log' ).hide();
         $( '.alog-image-input' ).hide();
         $( '.alog-tag-input' ).hide();
+
+        // Redirect
+        location.href = geturl();
     }).fail( function( response ) {
       console.log( response );
     });
@@ -93,7 +103,7 @@
 
   function geturl() {
     var url = window.location.href;
-    alert(url.replace( '/?new=true', '/'));
+    return url.replace( '/?new=true', '/');
   }
 
   /**
@@ -136,6 +146,9 @@
       $POST_TITLE.css( 'border', '1px solid transparent' );
       $POST_CONTENT.prop( 'contenteditable', 'false' );
       $POST_CONTENT.css( 'border', '1px solid transparent' );
+
+      $POST_META.hide();
+
       // $MESSAGE_BOX.text( $MESSAGE );
 
       // Change the "Save" button text back to "Edit"
@@ -157,6 +170,8 @@
       // Set Post content box to be editable, and provide some handy CSS to let us know
       $POST_CONTENT.prop( 'contenteditable', 'true' );
       $POST_CONTENT.css( 'border', '1px dashed black' );
+
+      $POST_META.show();
 
       // Change the "Edit" button text to "Save"
       $(this).text( 'Save' );

@@ -24,26 +24,109 @@ function alog_get_login_form() {
 }
 
 /**
+ * Adventure Log Menu Bar
+ */
+function alog_nav_header( $date, $today ) {
+  ?>
+  <div class="alog-nav-header">
+    <h1 class="page-title">
+      <a href="<?php echo esc_url( home_url() . '/alog/' ); ?>"><i class="ra ra-sword ra-lg"></i> Adventure Log</a> 
+    </h1>
+
+    <h1 class="page-title">
+      <?php 
+      if ( is_year() ) 
+        echo $date['year'] . ' Archive';
+      elseif ( is_month() )
+        echo $date['month'] . ' ' . $date['year'] . ' Archive';
+      elseif ( is_day() ) 
+        echo $date['month'] . ' ' . $date['day'] . ', ' . $date['year'] . ' Archive';
+      else 
+        echo 'Archives';
+      ?>
+    </h1>
+    
+    <nav class="alog-nav-container">
+      <ul class="alog-nav-menu">
+
+      <?php if ( is_user_logged_in() ) : ?>
+
+        <li>
+          <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>?new=true"><i class="ra ra-quill-ink"></i> <small class="screen-reader-text"><?php _e( 'Write New Log', 'adventure-log' ); ?></small></a>
+        </li>
+        <li>
+          <a href="#"><i class="ra ra-cog"></i> <small class="screen-reader-text"><?php _e( 'Adventure Log Settings', 'adventure-log' ); ?></small></a>
+        </li>
+        <li>
+          <a class="login_button alog-login-button" href="<?php echo esc_url( wp_logout_url( $_SERVER[ 'REQUEST_URI' ] ) ); ?>"><i class="ra ra-cancel"></i> <small class=""><?php _e( 'Logout', 'adventure-log' ); ?></small></a>
+        </li>
+
+      <?php else: ?>
+
+        <li>
+          <a class="login_button alog-login-button" id="alog_show_login" href="<?php // echo esc_url( wp_login_url() ); ?>"><i class="ra ra-key"></i> <small><?php _e( 'Login', 'adventure-log' ); ?></small></a>
+        </li>
+
+      <?php endif; ?>
+
+      </ul>
+    </nav>
+  
+
+  </div>
+
+  <div class="taxonomy-description"><?php // _e( 'Keep track of your writing this month. What kind of streak are you on?', 'adventure-log' ); ?></div>
+
+  <?php
+}
+
+/**
+ * Word count and Image uploading HTML for Logs
+ */
+function alog_post_edit() {
+  ?>
+  <div class="alog-post-edit-meta">
+    <small class="alog-log-caption"><?php _e( 'New Log', 'adventure-log' ); ?></small>
+
+    <div class="post-thumbnail">
+      <input id="alog-img-id" type="hidden" value="" />
+      <input id="alog-image-select" class="button" type="button" value="<?php _e( 'Select Image...', 'adventure-log' ); ?>" />
+      <img id="alog-img-preview" class="wp-post-image" />
+    </div>
+  </div>
+  <?php
+}
+
+/**
  * Creates the new Log writing area
  */
 function alog_new_log_section() { 
-  ?>
-    <p class="alog-log-caption"><?php _e( 'New Log', 'adventure-log' ); ?></p>
-    <!-- <input class="alog-image-input" type="text" placeholder="Featured Image" />
-    <input type="submit" value="Upload..." /> -->
 
-    <h1 class="alog-entry-title entry-title alog-entry-editable" contenteditable="true"><?php echo get_url_date_string(); ?></h1>
-    <div class="alog-entry-content entry-content alog-entry-editable" contenteditable="true"></div>
+  if ( is_user_logged_in() ) : ?>
+    
+    <article class="alog hentry">
+      <?php alog_post_edit(); ?>
 
-    <footer class="alog-entry-footer entry-footer">
-      <input class="alog-tag-input" type="text" placeholder="<?php _e( 'Tag it &amp; bag it', 'adventure-log' ); ?>" />
-      <span class="edit-link">
-        <a class="post-edit-link add-log-button"><?php _e( 'Save', 'adventure-log' ); ?></a>
-      </span>
-    </footer>
+      <header class="entry-header">
+        <h1 class="alog-entry-title entry-title alog-entry-editable" contenteditable="true"><?php echo get_url_date_string(); ?></h1>
+      </header>
+    
+      <div class="alog-entry-content entry-content alog-entry-editable" contenteditable="true"></div>
 
-    <div class="alog-stats alog-overlay-bottom">
-      <p class="alog-stats-wordcount">Current post word count: <span class="alog-wc-number">12</span> words</p>
-    </div>
-  <?php
+      <footer class="alog-entry-footer entry-footer">
+        <input class="alog-tag-input alog-post-edit-meta" type="text" placeholder="<?php _e( 'Tag it &amp; bag it', 'adventure-log' ); ?>" />
+        <span class="edit-link">
+          <a class="post-edit-link add-log-button"><?php _e( 'Save', 'adventure-log' ); ?></a>
+        </span>
+      </footer>
+
+      <div class="alog-stats alog-stats-overlay">
+        <small class="alog-stats-wordcount">Current post word count: <span class="alog-wc-number">12</span> words</small>
+      </div>
+    </article>
+
+  <?php else : ?>
+
+  <?php endif;
+
 }

@@ -30,54 +30,7 @@ alog_get_login_form();
 <div class="wrap">
 		<header class="page-header alog-header">
       
-      <div class="alog-nav-header">
-        <h1 class="page-title">
-          <a href="<?php echo esc_url( home_url() . '/alog/' ); ?>"><i class="ra ra-sword ra-lg"></i> Adventure Log</a> 
-        </h1>
-
-        <h1 class="page-title">
-          <?php 
-          if ( is_year() ) 
-            echo $date['year'] . ' Archive';
-          elseif ( is_month() )
-            echo $date['month'] . ' ' . $date['year'] . ' Archive';
-          elseif ( is_day() ) 
-            echo $date['month'] . ' ' . $date['day'] . ', ' . $date['year'] . ' Archive';
-          else 
-            echo 'Archives';
-          ?>
-        </h1>
-        
-        <nav class="alog-nav-container">
-          <ul class="alog-nav-menu">
-
-          <?php if ( is_user_logged_in() ) : ?>
-
-            <li>
-              <a href="<?php echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>?new=true"><i class="ra ra-quill-ink"></i> <small class="screen-reader-text"><?php _e( 'Write New Log', 'adventure-log' ); ?></small></a>
-            </li>
-            <li>
-              <a href="#"><i class="ra ra-cog"></i> <small class="screen-reader-text"><?php _e( 'Adventure Log Settings', 'adventure-log' ); ?></small></a>
-            </li>
-            <li>
-              <a class="login_button alog-login-button" href="<?php echo esc_url( wp_logout_url( $_SERVER[ 'REQUEST_URI' ] ) ); ?>"><i class="ra ra-cancel"></i> <small class=""><?php _e( 'Logout', 'adventure-log' ); ?></small></a>
-            </li>
-
-          <?php else: ?>
-
-            <li>
-              <a class="login_button alog-login-button" id="alog_show_login" href="<?php // echo esc_url( wp_login_url() ); ?>"><i class="ra ra-key"></i> <small><?php _e( 'Login', 'adventure-log' ); ?></small></a>
-            </li>
-
-          <?php endif; ?>
-
-          </ul>
-        </nav>
-      
-
-      </div>
-
-      <div class="taxonomy-description"><?php // _e( 'Keep track of your writing this month. What kind of streak are you on?', 'adventure-log' ); ?></div>
+      <?php alog_nav_header( $date, $today ); ?>  
 
       <?php 
       if ( is_year() ) {
@@ -97,7 +50,8 @@ alog_get_login_form();
       <?php endif; ?>   
       
 		</header><!-- .page-header -->
-	<?php // endif; ?>
+  
+  <?php // endif; ?>
 
 	<div id="primary" class="content-area">
 		<main id="main" class="site-main" role="main">
