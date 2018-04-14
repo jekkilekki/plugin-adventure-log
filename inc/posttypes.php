@@ -56,13 +56,13 @@ function adventure_log_cpt_init() {
   register_post_type( 'alog', $args );
 
   /**
- * Add additional CPTs and make them show up in ALog menu
- * @TODO https://gist.github.com/tommcfarlin/5459391
- * 
- * Add Quests CPT.
- * 
- * This will be displayed in our Adventure Log - as a submenu item.
- */
+   * Add additional CPTs and make them show up in ALog menu
+   * @TODO https://gist.github.com/tommcfarlin/5459391
+   * 
+   * Add Quests CPT.
+   * 
+   * This will be displayed in our Adventure Log - as a submenu item.
+   */
   $labels = array(
       'name'                  => _x( 'Quests', 'Post type general name', 'adventure-log' ),
       'singular_name'         => _x( 'Quest', 'Post type singular name', 'adventure-log' ),
@@ -113,6 +113,47 @@ function adventure_log_cpt_init() {
 
 }
 add_action( 'init', 'adventure_log_cpt_init' );
+
+/**
+ * Create a Tags taxonomy for the post type "Adventure Log".
+ *
+ * @see register_post_type() for registering custom post types.
+ * @link https://developer.wordpress.org/reference/functions/register_taxonomy/
+ */
+function alog_create_tag_taxonomy() {
+  // Add new taxonomy, NOT hierarchical (like tags)
+  $labels = array(
+    'name'                       => _x( 'Log Tags', 'taxonomy general name', 'adventure-log' ),
+    'singular_name'              => _x( 'Log Tag', 'taxonomy singular name', 'adventure-log' ),
+    'search_items'               => __( 'Search Log Tags', 'adventure-log' ),
+    'popular_items'              => __( 'Popular Log Tags', 'adventure-log' ),
+    'all_items'                  => __( 'All Log Tags', 'adventure-log' ),
+    'parent_item'                => null,
+    'parent_item_colon'          => null,
+    'edit_item'                  => __( 'Edit Log Tag', 'adventure-log' ),
+    'update_item'                => __( 'Update Log Tag', 'adventure-log' ),
+    'add_new_item'               => __( 'Add New Log Tag', 'adventure-log' ),
+    'new_item_name'              => __( 'New Log Tag Name', 'adventure-log' ),
+    'separate_items_with_commas' => __( 'Separate log tags with commas', 'adventure-log' ),
+    'add_or_remove_items'        => __( 'Add or remove log tags', 'adventure-log' ),
+    'choose_from_most_used'      => __( 'Choose from the most used log tags', 'adventure-log' ),
+    'not_found'                  => __( 'No log tags found.', 'adventure-log' ),
+    'menu_name'                  => __( 'Log Tags', 'adventure-log' ),
+  );
+
+  $args = array(
+    'hierarchical'          => false,
+    'labels'                => $labels,
+    'show_ui'               => true,
+    'show_admin_column'     => true,
+    'update_count_callback' => '_update_post_term_count',
+    'query_var'             => true,
+    'rewrite'               => array( 'slug' => 'alog/tag' ),
+  );
+
+  register_taxonomy( 'tag', 'alog', $args );
+}
+add_action( 'init', 'alog_create_tag_taxonomy', 0 );
 
 /**
  * Flush rewrite rules on activation - to be able to access our CPT in REST, etc
