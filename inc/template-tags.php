@@ -105,6 +105,7 @@ function alog_new_log_section() {
   if ( is_user_logged_in() ) : ?>
     
     <article class="alog hentry">
+      <input id="alog-post-id" type="hidden" value="">
       <?php alog_post_edit(); ?>
 
       <header class="entry-header">

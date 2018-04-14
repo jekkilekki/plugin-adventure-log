@@ -9,10 +9,14 @@
   console.info( "Post ID: ", WP_API_settings.current_ID );
   console.info( "New Post: ", WP_API_settings.new_post );
 
+  if ( WP_API_settings.new_post == 1 ) {
+    $( '.alog-post-edit-meta' ).show();
+  }
+
   // Create a $POST_ID variable to keep track of the current post ID
   // If we're on a post, it'll be set to the Post ID passed in from PHP.
   // If we're creating a NEW post, it'll be empty, but reset to the ID from the JSON in our Ajax response.
-  let $POST_ID = WP_API_settings.current_ID;
+  let $POST_ID = $( '#alog-post-id' ).val();
 
   // Create constants for Post title and Post content we can reference later
   let $POST_TITLE = $('.entry-title').first();
@@ -50,17 +54,67 @@
   } 
 
   /**
+   * "Live" word count as we type in $POST_CONTENT
+   * 
+   */
+  var countWords = function() {
+    var count = $POST_CONTENT.text();
+
+    if ( count.length == 0 ) {
+      $( '.alog-wc-number' ).html(0);
+      return; 
+    }
+
+    var regex = /\s+/gi;
+    var wordCount = count.trim().replace( regex, ' ' ).split( ' ' ).length;
+
+    $( '.alog-wc-number' ).html( wordCount );
+  }
+
+  $POST_CONTENT.change(countWords);
+  $POST_CONTENT.keydown(countWords);
+  $POST_CONTENT.keypress(countWords);
+  $POST_CONTENT.keyup(countWords);
+  $POST_CONTENT.blur(countWords);
+  $POST_CONTENT.focus(countWords);
+
+  /**
+   * Autosave functionality
+   */
+  var autosaveTimeout;
+
+  $POST_CONTENT.keypress( function() {
+    console.info( 'Key press ID: ' + $POST_ID );
+    $POST_ID = $( '#alog-post-id' ).val();
+    console.info( 'After reset: ' + $POST_ID );
+
+    // If a timer was already started, clear it
+    if ( autosaveTimeout ) clearTimeout( autosaveTimeout );
+
+    // Set timer that will save a Log
+    autosaveTimeout = setTimeout( function() {
+      var $now = new Date();
+      // Make ajax call to save data.
+      runAjaxSave( $POST_TITLE.text(), $POST_CONTENT.html(), true );
+
+      // @TODO: 1) Remove "Saved" after every time - fade out or something
+      // 2) Convert time to a more "readable time" - another function maybe
+      $( '.alog-stats-wordcount' ).html( 'Saved <span class="alog-wc-number">' + $( '.alog-wc-number' ).text() + '</span> words at ' + $now.toTimeString() );
+    }, 5000 );
+  });
+
+  /**
    * POSTs the new Post title and/or new Post content to the WP REST API to save it to the database
    * @see https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/
    * 
    * @param text new_title 
    * @param html new_content 
    */
-  function runAjaxSave( new_title, new_content ) {
+  function runAjaxSave( new_title, new_content, auto_save ) {
     // alert( "new title: " + new_title );
     // alert( "new content: " + new_content );
     var restUrl = WP_API_settings.root + 'wp/v2/alog/';
-    if ( $POST_ID != '' && WP_API_settings.new_post != 1 ) {
+    if ( $POST_ID != '' ) {
       restUrl = WP_API_settings.root + 'wp/v2/alog/' + $POST_ID;
       console.info( "Rest URL: ", restUrl );
     }
@@ -69,11 +123,16 @@
       // '_nonce': WP_API_settings.nonce,
       'title': new_title,
       'content': new_content,
-      'status': 'publish',
     };
 
     if ( $( '#alog-img-id' ).val() != '' )
       restData.featured_media = $( '#alog-img-id' ).val();
+
+    if ( auto_save ) {
+      restData.status = 'draft';
+    } else {
+      restData.status = 'publish';
+    }
 
     $.ajax({
       url: restUrl,
@@ -85,17 +144,18 @@
     }).success( function( response ) {
       // console.log( response );
       console.log( response.id );
-        $POST_ID = response.id;
-        $MESSAGE_BOX.text( 'Log saved.' );
-        // geturl();
+        // $POST_ID = response.id;
+        $( '#alog-post-id' ).val( response.id );
 
-        // Hide any New Post or Edit Post stuff
-        $( '.alog-log-caption' ).text( 'Edit Log' ).hide();
-        $( '.alog-image-input' ).hide();
-        $( '.alog-tag-input' ).hide();
+        if ( auto_save != true ) {
+          // Hide any New Post or Edit Post stuff
+          $( '.alog-log-caption' ).text( 'Edit Log' ).hide();
+          $( '.alog-image-input' ).hide();
+          $( '.alog-tag-input' ).hide();
 
-        // Redirect
-        location.href = geturl();
+          // Redirect
+          location.href = geturl();
+        }
     }).fail( function( response ) {
       console.log( response );
     });
@@ -139,7 +199,7 @@
       // }
 
       // Save new data to the database
-      runAjaxSave( $new_title, $new_content );
+      runAjaxSave( $new_title, $new_content, false );
 
       // Reset Post title and Post content areas to non-editable
       $POST_TITLE.prop( 'contenteditable', 'false' );
