@@ -9,14 +9,16 @@
   console.info( "Post ID: ", WP_API_settings.current_ID );
   console.info( "New Post: ", WP_API_settings.new_post );
 
-  if ( WP_API_settings.new_post == 1 ) {
-    $( '.alog-post-edit-meta' ).show();
-  }
-
   // Create a $POST_ID variable to keep track of the current post ID
   // If we're on a post, it'll be set to the Post ID passed in from PHP.
   // If we're creating a NEW post, it'll be empty, but reset to the ID from the JSON in our Ajax response.
   let $POST_ID = $( '#alog-post-id' ).val();
+  if ( WP_API_settings.new_post == 1 ) {
+    $( '.alog-post-edit-meta' ).show();
+  } else {
+    $POST_ID = WP_API_settings.current_ID;
+    $( '#alog-post-id' ).val( WP_API_settings.current_ID );
+  }
 
   // Create constants for Post title and Post content we can reference later
   let $POST_TITLE = $('.entry-title').first();
@@ -84,9 +86,9 @@
   var autosaveTimeout;
 
   $POST_CONTENT.keypress( function() {
-    console.info( 'Key press ID: ' + $POST_ID );
+    // console.info( 'Key press ID: ' + $POST_ID );
     $POST_ID = $( '#alog-post-id' ).val();
-    console.info( 'After reset: ' + $POST_ID );
+    // console.info( 'After reset: ' + $POST_ID );
 
     // If a timer was already started, clear it
     if ( autosaveTimeout ) clearTimeout( autosaveTimeout );
