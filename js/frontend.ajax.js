@@ -68,7 +68,7 @@
    * 
    */
   var countWords = function() {
-    var count = $POST_CONTENT.text();
+    var count = $( '#alog_editor_ifr #tinymce' ).text();
 
     if ( count.length == 0 ) {
       $( '.alog-wc-number' ).html(0);
@@ -81,9 +81,9 @@
     $( '.alog-wc-number' ).html( wordCount );
   }
 
-  $POST_CONTENT.change(countWords);
+  $( '#alog_editor_ifr #tinymce' ).change(countWords);
   // $EDITOR_CONTENT.keydown(countWords);
-  $POST_CONTENT.keypress(countWords);
+  $( '#alog_editor_ifr #tinymce' ).keypress(countWords);
   // $EDITOR_CONTENT.keyup(countWords);
   // $EDITOR_CONTENT.blur(countWords);
   // $EDITOR_CONTENT.focus(countWords);
@@ -93,7 +93,7 @@
    */
   var autosaveTimeout;
 
-  $POST_CONTENT.keypress( function() {
+  $( '#alog_editor_ifr #tinymce' ).keypress( function() {
     // console.info( 'Key press ID: ' + $POST_ID );
     $POST_ID = $( '#alog-post-id' ).val();
     // console.info( 'After reset: ' + $POST_ID );
@@ -105,7 +105,7 @@
     autosaveTimeout = setTimeout( function() {
       var $now = new Date();
       // Make ajax call to save data.
-      runAjaxSave( $POST_TITLE.text(), $POST_CONTENT.html(), true );
+      runAjaxSave( $POST_TITLE.text(), ( '#alog_editor_ifr #tinymce' ).html(), true );
 
       // @TODO: 1) Remove "Saved" after every time - fade out or something
       // 2) Convert time to a more "readable time" - another function maybe

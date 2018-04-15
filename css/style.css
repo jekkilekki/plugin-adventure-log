@@ -350,6 +350,13 @@ small.log-success {
   display: none;
 }
 
+#wp-alog_editor-editor-container .mce-wordcount {
+  font-size: 12px;
+  margin: 0;
+  padding: 2px 20px;
+  opacity: 0.8;
+}
+
 .alog-entry-editable {
   border: 1px dashed black;
 }

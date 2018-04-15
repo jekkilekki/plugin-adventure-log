@@ -247,6 +247,22 @@ function alog_word_count() {
 }
 
 /**
+ * Add TinyMCE WordCount Plugin
+ * @see https://wordpress.org/support/topic/how-to-display-wp-editor-word-count/#post-7538501
+ */
+add_filter( 'mce_external_plugins', 'alog_tinymce_plugins' );
+function alog_tinymce_plugins() {
+  $plugins = array( 'wordcount' ); 
+  $plugins_array = array();
+
+  // Build the response - the key is the plugin name
+  foreach ( $plugins as $plugin ) {
+    $plugins_array[ $plugin ] = plugins_url( '../js/wordcount.min.js', __FILE__ );
+  }
+  return $plugins_array;
+}
+
+/**
  * Alog Word Count (Number)
  */
 function alog_word_count_numeric() {

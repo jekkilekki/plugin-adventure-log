@@ -110,10 +110,12 @@ function alog_wp_editor() {
     // 'teeny' => true,
     'dfw' => false,
     'tinymce' => array(
+      // 'plugins' => 'wordcount',
         'toolbar1' => 'formatselect, bold, italic, forecolor, bullist, numlist, blockquote, alignleft, aligncenter, alignright, link, unlink, charmap',
     ),
     'quicktags' => false,
     'drag_drop_upload' => true,
+    
   );
   wp_editor( $content, $editor_id, $settings );
 }
