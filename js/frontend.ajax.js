@@ -139,7 +139,7 @@
       restData.featured_media = $( '#alog-img-id' ).val();
 
     if ( auto_save ) {
-      restData.status = 'draft';
+      restData.status = 'private';
     } else {
       restData.status = 'publish';
     }
@@ -201,12 +201,9 @@
       }
 
       let $new_content = $POST_CONTENT.html();
-      // if ( $new_content == '' ) {
-      //   $MESSAGE_BOX.text( 'No post content. Nothing saved.' );
-      //   return;
-      // } else {
-      //   $new_content = $POST_CONTENT.html();
-      // }
+      if ( WP_API_settings.new_post == 1 ) {
+        $new_content = $( '#alog_editor_ifr' ).contents().find( 'body' ).html();
+      } 
 
       // Save new data to the database
       runAjaxSave( $new_title, $new_content, false );
