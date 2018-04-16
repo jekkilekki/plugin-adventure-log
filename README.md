@@ -71,3 +71,15 @@ See this page for help:
 * `/alog/settings/` - Settings page - Ajax form, posting to REST API
 * `/alog/new/` - New editor page - with today's date
 
+#### Color Choosing Tools
+
+* [https://uigradients.com/#Celestial](https://uigradients.com/#Celestial)
+* [http://colrd.com/palette/](http://colrd.com/palette/)
+* [https://www.materialui.co/colors](https://www.materialui.co/colors)
+* [https://blog.graphiq.com/finding-the-right-color-palettes-for-data-visualizations-fcd4e707a283](https://blog.graphiq.com/finding-the-right-color-palettes-for-data-visualizations-fcd4e707a283)
+* [https://adoriasoft.com/blog/mobile-app-design-14-trendy-color-schemes/](https://adoriasoft.com/blog/mobile-app-design-14-trendy-color-schemes/)
+* [https://creativemarket.com/paul-dodd/1518840-Glorious-Gradients](https://creativemarket.com/paul-dodd/1518840-Glorious-Gradients)
+* [http://eyetracking.upol.cz/color/](http://eyetracking.upol.cz/color/)
+* [http://colorbrewer2.org/#type=diverging&scheme=RdGy&n=9](http://colorbrewer2.org/#type=diverging&scheme=RdGy&n=9)
+* [https://seaborn.pydata.org/tutorial/color_palettes.html](https://seaborn.pydata.org/tutorial/color_palettes.html)
+* [https://onlinehelp.tableau.com/current/pro/desktop/en-us/formatting_create_custom_colors.html](https://onlinehelp.tableau.com/current/pro/desktop/en-us/formatting_create_custom_colors.html)
