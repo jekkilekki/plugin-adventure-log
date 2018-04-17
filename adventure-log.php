@@ -177,7 +177,7 @@ function adventure_login_redirect( $redirect_to, $request, $user ) {
 add_filter( 'login_redirect', 'adventure_login_redirect', 10, 3 );
 
 /**
- * Create a custom archive page for Adventure Logs
+ * Create a custom ARCHIVE page for Adventure Logs
  * @see https://codex.wordpress.org/Plugin_API/Filter_Reference/archive_template
  */
 function adventure_log_archive_page( $template ) {
@@ -189,3 +189,17 @@ function adventure_log_archive_page( $template ) {
   return $template;
 }
 add_filter( 'archive_template', 'adventure_log_archive_page' );
+
+/**
+ * Create a custom SINGLE page for Adventure Logs
+ * @see https://codex.wordpress.org/Plugin_API/Filter_Reference/archive_template
+ */
+function adventure_log_single_page( $template ) {
+  global $post;
+
+  if ( $post->post_type == 'alog' ) {
+    $template = dirname( __FILE__ ) . '/templates/single-alog.php';
+  }
+  return $template;
+}
+add_filter( 'single_template', 'adventure_log_single_page' );

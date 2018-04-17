@@ -71,12 +71,12 @@ function get_url_date_array() {
 
   // If trying to navigate into the future, redirect to alog homepage
   // @TODO: So far month and day checking aren't working, though future year works
-  if ( $date[0] > $today['year'] ||
-        ( $date[0] > $today['year'] && $date[1] > $today['monnum'] ) || 
-        ( $date[0] > $today['year'] && $date[1] > $today['monnum'] && $date[2] > $today['day'] ) ) {
-    wp_redirect( esc_url( home_url() . '/alog/' ) );
-    exit;
-  }
+  // if ( $date[0] > $today['year'] ||
+  //       ( $date[0] > $today['year'] && $date[1] > $today['monnum'] ) || 
+  //       ( $date[0] > $today['year'] && $date[1] > $today['monnum'] && $date[2] > $today['day'] ) ) {
+  //   wp_redirect( esc_url( home_url() . '/alog/' ) );
+  //   exit;
+  // }
 
   // Error handling
   if ( $date[1] == '' ) {
@@ -117,7 +117,7 @@ function get_month_name( $num ) {
 }
 
 function get_days_this_month( $month, $year ) {
-  return date( 't', mktime(0,0,0,$month,1,$year) );
+  return date( 't', mktime(0,0,0,(int)$month,1,(int)$year) );
 } 
 
 /**
@@ -179,7 +179,7 @@ function get_url_day() {
 function get_url_timestamp() {
   $url_date = get_url_date_array();
   if ( is_int( $url_date['day'] ) )
-    return mktime(0, 0, 0, $url_date['monnum'], $url_date['day'], $url_date['year'] );
+    return mktime(0, 0, 0, (int)$url_date['monnum'], (int)$url_date['day'], (int)$url_date['year'] );
   else
     return current_time( 'timestamp' );
 }
