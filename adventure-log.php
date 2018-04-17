@@ -87,7 +87,8 @@ function adventure_log_scripts() {
         'root'        => esc_url_raw( rest_url() ),
         'nonce'       => wp_create_nonce( 'wp_rest' ), /* nonce MUST be 'wp_rest' in order to work properly */
         'current_ID'  => get_the_ID(),
-        'new_post'    => strpos( $_SERVER[ 'REQUEST_URI' ], '/?new=true' ) && is_day()
+        'new_post'    => strpos( $_SERVER[ 'REQUEST_URI' ], '/?new=true' ) && is_day(),
+        'singular'    => is_singular()
       ));
 
       // Enqueue our stylesheet for frontend editing

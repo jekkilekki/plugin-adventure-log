@@ -35,7 +35,9 @@ function alog_nav_header( $date, $today ) {
 
     <h1 class="page-title">
       <?php 
-      if ( is_year() ) 
+      if ( is_singular() ) 
+        echo '';
+      elseif ( is_year() ) 
         echo $date['year'] . ' Archive';
       elseif ( is_month() )
         echo $date['month'] . ' ' . $date['year'] . ' Archive';
@@ -86,7 +88,9 @@ function alog_nav_header( $date, $today ) {
 function alog_post_edit() {
   ?>
   <div class="alog-post-edit-meta">
-    <small class="alog-log-caption"><?php _e( 'New Log', 'adventure-log' ); ?></small>
+    <?php if ( ! is_singular() ) : ?>
+      <small class="alog-log-caption"><?php _e( 'New Log', 'adventure-log' ); ?></small>
+    <?php endif; ?>
 
     <div class="post-thumbnail">
       <input id="alog-img-id" type="hidden" value="" />
@@ -96,8 +100,12 @@ function alog_post_edit() {
   <?php
 }
 
-function alog_wp_editor() {
-  $content = the_content();
+function alog_wp_editor( $new = true ) {
+  if ( $new ) 
+    $content = ''; 
+  else 
+    $content = the_content();
+    
   $editor_id = 'alog_editor';
   $settings = array(
     'wpautop' => true,
@@ -172,11 +180,11 @@ function alog_new_log_section() {
       <?php alog_post_edit(); ?>
 
       <header class="entry-header">
-        <h1 class="alog-entry-title entry-title alog-entry-editable" contenteditable="true"><?php echo get_url_date_string(); ?></h1>
         <div class="alog-feature-img-buttons">
           <input id="alog-image-select" class="button" type="button" value="<?php _e( 'Featured Image...', 'adventure-log' ); ?>" />
           <a id="alog-image-remove" href="" title="<?php _e( 'Remove Featured Image', 'adventure-log' ); ?>"><i class="ra ra-cancel"></i></a>
         </div>
+        <h1 class="alog-entry-title entry-title alog-entry-editable" contenteditable="true"><?php echo get_url_date_string(); ?></h1>
       </header>
     
       <!-- <div id="alog-tinymce-prime" class="alog-entry-content entry-content alog-entry-editable" contenteditable="true"></div> -->
@@ -192,13 +200,74 @@ function alog_new_log_section() {
         </span>
       </footer>
 
-      <div class="alog-stats alog-stats-overlay">
+      <!-- <div class="alog-stats alog-stats-overlay">
         <small class="alog-stats-wordcount">Current post word count: <span class="alog-wc-number">12</span> words</small>
-      </div>
+      </div> -->
     </article>
 
   <?php else : ?>
 
   <?php endif;
 
+}
+
+/**
+ * Template part for displaying Single Alog entries
+ */
+function alog_post_single() {
+  ?>
+  <article id="alog-<?php the_ID(); ?>" <?php post_class( 'alog-single' ); ?>>
+    
+    <input id="alog-post-id" type="hidden" value="">
+    <?php // alog_post_edit(); ?>
+
+    <header class="entry-header">
+      <div class="alog-feature-img-buttons alog-hidden">
+        <input id="alog-img-id" type="hidden" value="<?php get_post_thumbnail_id( the_ID() ); ?>">
+        <input id="alog-image-select" class="button" type="button" value="<?php _e( 'Featured Image...', 'adventure-log' ); ?>" />
+        <a id="alog-image-remove" href="" title="<?php _e( 'Remove Featured Image', 'adventure-log' ); ?>"><i class="ra ra-cancel"></i></a>
+      </div>
+      <?php
+      if ( 'alog' === get_post_type() ) {
+        echo '<div class="entry-meta">';
+          if ( is_single() ) {
+            twentyseventeen_posted_on();
+          } else {
+            echo twentyseventeen_time_link();
+            twentyseventeen_edit_link();
+          };
+        echo '</div><!-- .entry-meta -->';
+      };
+
+      the_title( '<h1 class="entry-title">', '</h1>' );
+      
+      ?>
+    </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      <?php
+      /* translators: %s: Name of current post */
+      the_content( sprintf(
+        __( 'Continue reading<span class="screen-reader-text"> "%s"</span>', 'twentyseventeen' ),
+        get_the_title()
+      ) );
+
+      wp_link_pages( array(
+        'before'      => '<div class="page-links">' . __( 'Pages:', 'twentyseventeen' ),
+        'after'       => '</div>',
+        'link_before' => '<span class="page-number">',
+        'link_after'  => '</span>',
+      ) );
+      ?>
+    </div><!-- .entry-content -->
+
+    <footer class="alog-entry-footer entry-footer">
+      <input class="alog-tag-input alog-post-edit-meta alog-hidden" type="text" placeholder="<?php _e( 'Tag it &amp; bag it', 'adventure-log' ); ?>" />
+      <span class="edit-link">
+        <a class="post-edit-link add-log-button"><?php _e( 'Edit', 'adventure-log' ); ?></a>
+      </span>
+    </footer>
+
+  </article><!-- #post-## -->
+  <?php
 }

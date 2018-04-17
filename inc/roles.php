@@ -86,6 +86,9 @@ add_action( 'wp_enqueue_scripts', 'alog_enqueue_img_selection_script' );
 function alog_enqueue_img_selection_script() {
   wp_enqueue_media();
   wp_enqueue_script( 'alog_upload_img_script', plugin_dir_url( __FILE__ ) . '../js/select.img.js', array( 'jquery' ), '20180414', true );
+  wp_localize_script( 'alog_upload_img_script', 'IMG_settings', array(
+    'singular'    => is_singular()
+  ));
 }
 
 // Make sure users only see their own media

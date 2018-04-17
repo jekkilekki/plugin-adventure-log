@@ -26,7 +26,7 @@ $urls_timestamp = get_url_timestamp();
 get_header(); 
 alog_get_login_form(); 
 ?>
-<h1>SINGLE TEMPLATE!!!!!</h1>
+
 <div class="wrap">
 		<header class="page-header alog-header">
       
@@ -35,7 +35,7 @@ alog_get_login_form();
       <?php 
       if ( is_year() ) {
 
-      } elseif ( is_day() || is_month() || ( is_archive() && ! is_year() ) ) {
+      } elseif ( is_singular() || is_day() || is_month() || ( is_archive() && ! is_year() ) ) {
         alog_get_calendar( array( 'alog' ) ); 
       } else {
         echo 'No calendar here.';
@@ -59,10 +59,6 @@ alog_get_login_form();
     <?php
     if ( have_posts() ) : 
 
-      if ( is_day() && isset ( $_GET['new'] ) && $_GET['new'] == 'true' ) {
-        alog_new_log_section();
-      }
-
 			/* Start the Loop */
       while ( have_posts() ) : the_post();
 
@@ -81,7 +77,8 @@ alog_get_login_form();
 
         echo "<small class='$classname'>" . alog_word_count() . "</small>";
         // echo "<hr>";
-        get_template_part( 'template-parts/post/content' );
+        // get_template_part( 'template-parts/post/content' );
+        alog_post_single();
         ?>
         
         <!-- <footer class="entry-footer">
@@ -90,30 +87,18 @@ alog_get_login_form();
         </span>
       </footer> -->
 
-      <?php
+        <?php
+        // If comments are open or we have at least one comment, load up the comment template.
+				if ( comments_open() || get_comments_number() ) :
+					comments_template();
+				endif;
+
+				the_post_navigation( array(
+					'prev_text' => '<span class="screen-reader-text">' . __( 'Previous Post', 'twentyseventeen' ) . '</span><span aria-hidden="true" class="nav-subtitle">' . __( 'Previous', 'twentyseventeen' ) . '</span> <span class="nav-title"><span class="nav-title-icon-wrapper">' . twentyseventeen_get_svg( array( 'icon' => 'arrow-left' ) ) . '</span>%title</span>',
+					'next_text' => '<span class="screen-reader-text">' . __( 'Next Post', 'twentyseventeen' ) . '</span><span aria-hidden="true" class="nav-subtitle">' . __( 'Next', 'twentyseventeen' ) . '</span> <span class="nav-title">%title<span class="nav-title-icon-wrapper">' . twentyseventeen_get_svg( array( 'icon' => 'arrow-right' ) ) . '</span></span>',
+				) );
+
 			endwhile;
-
-			the_posts_pagination( array(
-				'prev_text' => twentyseventeen_get_svg( array( 'icon' => 'arrow-left' ) ) . '<span class="screen-reader-text">' . __( 'Previous page', 'twentyseventeen' ) . '</span>',
-				'next_text' => '<span class="screen-reader-text">' . __( 'Next page', 'twentyseventeen' ) . '</span>' . twentyseventeen_get_svg( array( 'icon' => 'arrow-right' ) ),
-				'before_page_number' => '<span class="meta-nav screen-reader-text">' . __( 'Page', 'twentyseventeen' ) . ' </span>',
-			) );
-
-    else : 
-
-      // echo "Today's timestamp: " . $todays_timestamp;
-      // echo "<br>URL's timestamp: " . $urls_timestamp;
-
-      if ( ! is_today( $today, $date ) ) : ?>
-        <h1 class="alog-entry-title entry-title"><?php echo get_url_date_string(); ?></h1>
-        <div class="alog-entry-content entry-content">Sorry, you have no writing for this date.</div>
-      
-      <?php 
-      else : 
-
-        alog_new_log_section();
-
-      endif; 
 
     endif; ?>
 

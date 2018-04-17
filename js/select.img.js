@@ -5,13 +5,21 @@
  */
 (function($) {
 
+  console.info( 'Image: Singular: ', IMG_settings.singular );
+
   var alog_media_upload;
 
   $( '#alog-image-remove' ).click( function(e) {
     
     e.preventDefault();
+
+    if ( IMG_settings.singular == 1 ) {
+      $( '.single-featured-image-header img' ).attr( 'src', '' );
+      $( '.single-featured-image-header img' ).attr( 'srcset', '' );
+    } else {
+      $( '#alog-img-preview' ).attr( 'src', '' );
+    }
     $( '#alog-img-id' ).val( '' ); // https://codex.wordpress.org/Javascript_Reference/wp.media
-    $( '#alog-img-preview' ).attr( 'src', '' );
     // $( '#alog-image-select' ).hide();
 
   });
@@ -40,8 +48,13 @@
       var attachment = alog_media_upload.state().get( 'selection' ).first().toJSON();
 
       // Do something with the file here
+      if ( IMG_settings.singular == 1 ) {
+        $( '.single-featured-image-header img' ).attr( 'src', attachment.url );
+        $( '.single-featured-image-header img' ).attr( 'srcset', attachment.url );
+      } else {
+        $( '#alog-img-preview' ).attr( 'src', attachment.url );
+      }
       $( '#alog-img-id' ).val( attachment.id ); // https://codex.wordpress.org/Javascript_Reference/wp.media
-      $( '#alog-img-preview' ).attr( 'src', attachment.url );
       // $( '#alog-image-select' ).hide();
 
     });

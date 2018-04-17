@@ -316,6 +316,11 @@ small.log-success {
   left: 112px;
 }
 
+.alog-single .alog-feature-img-buttons {
+  position: static;
+  margin: 0.5rem 0;
+}
+
 #alog-image-select {
   padding: 8px 0.75rem;
   font-size: 13px;
@@ -355,6 +360,10 @@ small.log-success {
   margin: 0;
   padding: 2px 20px;
   opacity: 0.8;
+}
+
+.alog-hidden {
+  display: none!important;
 }
 
 .alog-entry-editable {

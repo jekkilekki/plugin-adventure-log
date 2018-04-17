@@ -8,6 +8,7 @@
   console.info( "Nonce value: ", WP_API_settings.nonce );
   console.info( "Post ID: ", WP_API_settings.current_ID );
   console.info( "New Post: ", WP_API_settings.new_post );
+  console.info( "Single Post: ", WP_API_settings.singular );
 
   // $( document ).ready( function() {
   //   $( '#wp-alog_editor-editor-container .mce-statusbar .mce-resizehandle' ).before( '<span class="wordcount alog-wc-number"></span>' );
@@ -157,7 +158,7 @@
         // $POST_ID = response.id;
         $( '#alog-post-id' ).val( response.id );
 
-        if ( auto_save != true ) {
+        if ( auto_save != true && WP_API_settings.singular != '1' ) {
           // Hide any New Post or Edit Post stuff
           $( '.alog-log-caption' ).text( 'Edit Log' ).hide();
           $( '.alog-image-input' ).hide();
@@ -194,6 +195,8 @@
     // if editing post, SAVE it
     if ( $EDITING ) {
 
+      $( '.alog-tag-input, .alog-feature-img-buttons' ).addClass( 'alog-hidden' );
+
       let $new_title = $POST_TITLE.text();
       if ( $new_title == '' ) {
         var currentDate = new Date();
@@ -229,6 +232,8 @@
     // else, EDIT it
     // https: //developer.mozilla.org/en-US/docs/Web/Guide/HTML/Editable_content
     else {
+
+      $( '.alog-tag-input, .alog-feature-img-buttons' ).removeClass( 'alog-hidden' );
 
       // Set Post title box to be editable, and provide some handy CSS to let us know
       $POST_TITLE.prop( 'contenteditable', 'true' );
