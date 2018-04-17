@@ -154,7 +154,7 @@ function alog_create_tag_taxonomy() {
   	'rest_controller_class' => 'WP_REST_Terms_Controller',
   );
 
-  register_taxonomy( 'tag', 'alog', $args );
+  register_taxonomy( 'log_tag', 'alog', $args );
 }
 add_action( 'init', 'alog_create_tag_taxonomy', 0 );
 

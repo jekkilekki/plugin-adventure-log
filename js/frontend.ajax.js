@@ -145,6 +145,19 @@
       restData.status = 'publish';
     }
 
+    /**
+     * Assign Log_tags Taxonomy terms
+     * @see https://github.com/WP-API/WP-API/issues/2949
+     * 1. Request the Tag ID based on the slug or name first
+     * 2. Use the (returned) ID to send info back into the REST API
+     */
+    if ( $( /* Tag input field */ ).val() != '' ) {
+      // 1. explode / split by commas - into array
+      // 2. add underscores between spaced words - to create slugs
+      // 3. if ( slug exists in REST ) use this ID
+      // 4. else create new slug / ID
+    }
+
     $.ajax({
       url: restUrl,
       method: 'POST',
