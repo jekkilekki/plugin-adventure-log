@@ -194,8 +194,8 @@ function alog_build_settings_page() {
   // Retrieve plugin options from the DB
   $options = alog_get_options();
 
-  global $alog_settings_active_tab;
-  $alog_settings_active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'welcome';
+  global $alog_settings_screen;
+  $alog_settings_screen = isset( $_GET['tab'] ) ? $_GET['tab'] : 'welcome';
   ?>
 
   <div id="alog-main-options" class="wrap">
@@ -218,11 +218,14 @@ function alog_build_settings_page() {
     // echo '<pre>';
     // var_dump( $options );
     // echo '</pre>';
+
+    // Tabbed Navigation and Settings:
+    // http://www.kvcodes.com/2016/11/create-tabs-wordpress-settings-page/
     ?>
     <h2 class="nav-tab-wrapper">
-      <a href="#" class="nav-tab nav-tab-active">Writing</a>
-      <a href="#" class="nav-tab">Widgets</a>
-      <a href="#" class="nav-tab">Badges</a>
+      <a href="<?php echo admin_url( 'edit.php?post_type=alog&page=alog_settings' ); ?>" class="nav-tab <?php if ( ! isset( $_GET['tab'] ) || $_GET['tab'] == 'welcome' ) echo 'nav-tab-active'; ?>">Writing</a>
+      <a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'widgets' ), 'edit.php?post_type=alog&page=alog_settings' ) ); ?>" class="nav-tab">Widgets</a>
+      <a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'badges' ), 'edit.php?post_type=alog&page=alog_settings' ) ); ?>" class="nav-tab">Badges</a>
     </h2>
 
     <form method="post" action="admin-post.php">
