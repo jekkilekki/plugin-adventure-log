@@ -151,10 +151,27 @@
      * 1. Request the Tag ID based on the slug or name first
      * 2. Use the (returned) ID to send info back into the REST API
      */
-    if ( $( /* Tag input field */ ).val() != '' ) {
+    var logTags, tagArray, logTagIds;
+    if ( $( '.alog-tag-input' ).val() != '' ) {
+      logTagIds = '';
+      // 0. Trim extra whitespace
+      logTags = $( '.alog-tag-input' ).val().trim();
+      logTags = logTags.replace( /[.\/#!$%\^&\*;:{}=\-_`~()]/g, '' ); // remove all punctuation EXCEPT commas (which split the string into items)
+      console.info( 'Trimmed: ', logTags );
       // 1. explode / split by commas - into array
-      // 2. add underscores between spaced words - to create slugs
+      tagArray = logTags.split( /\s*,\s*/ );
+      console.info( 'Array: ', tagArray );
+      // 2. add hyphens between spaced words and make everything lowercase- to create slugs
+      for( var i = 0; i < tagArray.length; i++ ) {
+        tagArray[i] = tagArray[i].replace( /\s+/g, '-' ).toLowerCase();
+      };
+      console.info( 'Slugs: ', tagArray );
       // 3. if ( slug exists in REST ) use this ID
+      tagArray.forEach( function( item ) {
+        logTagIds = logTagIds + getTagID( item ) + ',';
+      });
+      restData.log_tag = logTagIds.slice( 0, logTagIds.lastIndexOf( ',' ) );
+      console.info( 'Rest data passed: ', restData.log_tag );
       // 4. else create new slug / ID
     }
 
@@ -178,7 +195,7 @@
           $( '.alog-tag-input' ).hide();
 
           // Redirect
-          location.href = geturl();
+          // location.href = geturl();
         }
     }).fail( function( response ) {
       console.log( response );
@@ -188,6 +205,21 @@
   function geturl() {
     var url = window.location.href;
     return url.replace( '/?new=true', '/');
+  }
+
+  function getTagID( $tagId ) {
+    var tagUrl = WP_API_settings.root + 'wp/v2/log_tag?slug=' + $tagId;
+
+    $.ajax({
+      url: tagUrl,
+      // data: restData
+      success: function( response ) {
+      // console.log( response );
+      console.info( 'Log Tag: ', response[0].id );
+        // $POST_ID = response.id;
+        return response[0].id;
+        }
+      });
   }
 
   /**

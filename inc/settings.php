@@ -193,6 +193,9 @@ function alog_process_options() {
 function alog_build_settings_page() {
   // Retrieve plugin options from the DB
   $options = alog_get_options();
+
+  global $alog_settings_active_tab;
+  $alog_settings_active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'welcome';
   ?>
 
   <div id="alog-main-options" class="wrap">
