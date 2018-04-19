@@ -229,6 +229,23 @@ function alog_build_settings_page() {
     </h2>
 
     <form method="post" action="admin-post.php">
+      
+      <?php 
+      if ( $widget_screen ) {
+        settings_fields( 'alog_widget_options' );
+        do_settings_sections( 'alog_widget_settings' );
+        submit_button();
+      } elseif ( $badges_screen ) {
+        settings_fields( 'alog_badges_options' );
+        do_settings_sections( 'alog_badges_settings' );
+        submit_button();
+      } else {
+        settings_fields( 'alog_main_options' );
+        do_settings_sections( 'alog_main_settings' );
+        submit_button();
+      }
+      ?>
+
       <input type="hidden" name="action" value="save_alog_options" />
 
       <!-- Add security through hidden referrer field -->
