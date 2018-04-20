@@ -97,22 +97,32 @@ function adventure_log_cpt_init() {
       'show_ui'            => true,
       'show_in_menu'       => 'edit.php?post_type=alog',
       'query_var'          => true,
-      'rewrite'            => array( 'slug' => 'quests' ),
+      'rewrite'            => array( 'slug' => 'aquest' ),
       'capability_type'    => 'alog',
       'has_archive'        => true,
       // 'taxonomies'         => array( 'post_tag' ),
       'hierarchical'       => false,
       'show_in_rest'       => true,
-      'rest_base'          => 'alog',
+      'rest_base'          => 'aquest',
       'menu_position'      => null,
-      'menu_icon'          => 'dashicons-clipboard',
+      // 'menu_icon'          => 'dashicons-clipboard',
       'supports'           => array( 'title', 'editor', 'thumbnail',  ),
       'delete_with_user'   => true,
       'map_meta_cap'       => true
   );
 
+  register_post_type( 'aquest', $args );
+
 }
 add_action( 'init', 'adventure_log_cpt_init' );
+
+/**
+ * Hide "Add New" from Admin Menu since we have multiple CPTs
+ */
+function alog_hide_add_new() {
+  remove_submenu_page( 'edit.php?post_type=alog', 'post-new.php?post_type=alog' );
+}
+add_action( 'admin_menu', 'alog_hide_add_new' );
 
 /**
  * Create a Tags taxonomy for the post type "Adventure Log".

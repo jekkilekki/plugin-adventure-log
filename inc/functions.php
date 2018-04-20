@@ -592,8 +592,8 @@ function alog_custom_sidebar() {
     'description'   => __( 'Add a variety of Adventurous Widgets to your Adventure Log sidebar. These will not show up on any other page of your site.', 'adventure-log' ),
     'before_widget' => '<aside id="%1$s" class="widget %2$s">',
     'after_widget'  => '</aside>',
-    'before_title'  => '<h1 class="widget-title">',
-    'after_title'   => '</h1>'
+    'before_title'  => '<h2 class="widget-title">',
+    'after_title'   => '</h2>'
   ) );
 }
 add_action( 'widgets_init', 'alog_custom_sidebar' );

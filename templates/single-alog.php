@@ -28,6 +28,7 @@ alog_get_login_form();
 ?>
 
 <div class="wrap">
+  <?php the_widget( 'Alog_Goals_List' ); ?>
 		<header class="page-header alog-header">
       
       <?php alog_nav_header( $date, $today ); ?>  

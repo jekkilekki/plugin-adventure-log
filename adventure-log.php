@@ -41,6 +41,7 @@
 /**
  * Include our functions file.
  */
+require_once plugin_dir_path( __FILE__ ) . 'inc/cmb2-functions.php';
 require_once plugin_dir_path( __FILE__ ) . 'inc/functions.php';
 require_once plugin_dir_path( __FILE__ ) . 'inc/template-tags.php';
 // require_once plugin_dir_path( __FILE__ ) . 'inc/template-functions.php';
@@ -76,12 +77,12 @@ register_deactivation_hook( __FILE__, 'adventure_log_remove_capabilities' );
 /**
  * Add our Widgets.
  */
-if ( is_admin() )  {
+// if ( is_admin() )  {
   require_once plugin_dir_path( __FILE__ ) . 'widgets/widget.todo.php';
   require_once plugin_dir_path( __FILE__ ) . 'widgets/widget.goals.php';
-  require_once plugin_dir_path( __FILE__ ) . 'widgets/widget.habits.php';
+  require_once plugin_dir_path( __FILE__ ) . 'widgets/widget.tracking.php';
   require_once plugin_dir_path( __FILE__ ) . 'widgets/widget.routines.php';
-}
+// }
 
 function adventure_log_scripts() {
 
