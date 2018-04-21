@@ -17,6 +17,11 @@
  * 
  * Requires at least: 4.0
  * Tested up to:    4.9.4
+ * 
+ * Inspiration:
+ * @link http://750words.com
+ * @link WP Front End Editor plugin
+ * @link https://wordpress.org/plugins/frontier-post/
  */
 /**
  * Adventure Log tracks your daily writing and sets a minimum goal.
