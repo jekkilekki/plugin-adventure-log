@@ -186,10 +186,10 @@ function alog_new_log_section() {
         </div>
         <h1 class="alog-entry-title entry-title alog-entry-editable" contenteditable="true"><?php echo get_url_date_string(); ?></h1>
       </header>
-    
-      <!-- <div id="alog-tinymce-prime" class="alog-entry-content entry-content alog-entry-editable" contenteditable="true"></div> -->
 
       <?php alog_wp_editor(); ?>
+      <div id="alog-tinymce-content" class="alog-entry-content entry-content alog-entry-editable alog-hidden" contenteditable="true"></div>
+
       <!-- <hr> -->
       <?php //alog_tinymce_custom(); ?>
 

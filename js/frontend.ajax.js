@@ -170,8 +170,8 @@
       tagArray.forEach( function( item ) {
         logTagIds = logTagIds + getTagID( item ) + ',';
       });
-      restData.log_tag = logTagIds.slice( 0, logTagIds.lastIndexOf( ',' ) );
-      console.info( 'Rest data passed: ', restData.log_tag );
+      // restData.log_tag = logTagIds.slice( 0, logTagIds.lastIndexOf( ',' ) );
+      // console.info( 'Rest data passed: ', restData.log_tag );
       // 4. else create new slug / ID
     }
 
@@ -215,7 +215,7 @@
       // data: restData
       success: function( response ) {
       // console.log( response );
-      console.info( 'Log Tag: ', response[0].id );
+      // console.info( 'Log Tag: ', response[0].id );
         // $POST_ID = response.id;
         return response[0].id;
         }
@@ -241,6 +241,7 @@
     if ( $EDITING ) {
 
       $( '.alog-tag-input, .alog-feature-img-buttons' ).addClass( 'alog-hidden' );
+      $( '#wp-alog_editor-wrap' ).hide();
 
       let $new_title = $POST_TITLE.text();
       if ( $new_title == '' ) {
@@ -252,6 +253,9 @@
       if ( WP_API_settings.new_post == 1 ) {
         $new_content = $( '#alog_editor_ifr' ).contents().find( 'body' ).html();
       } 
+
+      $( '#alog-tinymce-content' ).html( $new_content );
+      $( '#alog-tinymce-content' ).removeClass( 'alog-hidden' );
 
       // Save new data to the database
       runAjaxSave( $new_title, $new_content, false );
@@ -279,6 +283,8 @@
     else {
 
       $( '.alog-tag-input, .alog-feature-img-buttons' ).removeClass( 'alog-hidden' );
+      $( '#alog-tinymce-content' ).addClass( 'alog-hidden' );
+      $( '#wp-alog_editor-wrap' ).show();
 
       // Set Post title box to be editable, and provide some handy CSS to let us know
       $POST_TITLE.prop( 'contenteditable', 'true' );
