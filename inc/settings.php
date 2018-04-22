@@ -196,6 +196,8 @@ function alog_build_settings_page() {
 
   global $alog_settings_screen;
   $alog_settings_screen = isset( $_GET['tab'] ) ? $_GET['tab'] : 'welcome';
+  $widget_screen = ( isset( $_GET['tab'] ) && 'widgets' == $_GET['tab'] );
+  $badges_screen = (isset( $_GET['tab'] ) && 'badges' == $_GET['tab' ] );
   ?>
 
   <div id="alog-main-options" class="wrap">
@@ -240,8 +242,8 @@ function alog_build_settings_page() {
         do_settings_sections( 'alog_badges_settings' );
         submit_button();
       } else {
-        settings_fields( 'alog_main_options' );
-        do_settings_sections( 'alog_main_settings' );
+        settings_fields( 'alog_settings' );
+        do_settings_sections( 'alog_settings_api' );
         submit_button();
       }
       ?>

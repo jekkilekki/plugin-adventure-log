@@ -14,6 +14,7 @@ function alog_settings_api_options() {
 
 add_action( 'admin_init', 'alog_admin_init_settings_api' );
 function alog_admin_init_settings_api() {  
+  alog_get_options();
   // Register a setting group with a validation function so that post data handling is done automatically for us
   register_setting( 'alog_settings',          // $option_group
                     'alog_options',           // $option_name - the options array in the site database

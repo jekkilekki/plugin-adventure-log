@@ -56,7 +56,7 @@ require_once plugin_dir_path( __FILE__ ) . 'inc/template-tags.php';
  */
 // if ( is_admin() ) {
   require_once plugin_dir_path( __FILE__ ) . 'inc/settings.php';
-  // require_once plugin_dir_path( __FILE__ ) . 'inc/settings.api.php';
+  require_once plugin_dir_path( __FILE__ ) . 'inc/settings.api.php';
 // }
 register_activation_hook( __FILE__, 'alog_set_default_options' );
 
