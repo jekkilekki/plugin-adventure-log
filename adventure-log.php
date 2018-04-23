@@ -115,6 +115,10 @@ function adventure_log_scripts() {
       // Enqueue RPG Awesome icon font
       wp_enqueue_style( 'adventure_log_fonts', plugins_url( 'fonts/rpg-awesome.css', __FILE__ ) );
       
+      // Enqueue Autocomplete script
+      wp_enqueue_script( 'adventure_log_autocomplete_script', plugin_dir_url( __FILE__ ) . 'js/jquery.auto-complete.min.js', array( 'jquery' ), '20180424', true );
+      wp_enqueue_style( 'adventure_log_autocomplete_style', plugins_url( 'css/jquery.auto-complete.css', __FILE__ ) );
+
       // Enqueue D3 for our calendar
       // wp_enqueue_script( 'adventure_log_d3', '//d3js.org/d3.v4.min.js' );
       // wp_enqueue_script( 'adventure_log_d3_calendar', plugin_dir_url( __FILE__ ) . 'js/calendar.d3.js', array( 'adventure_log_d3' ), '20180403', true );

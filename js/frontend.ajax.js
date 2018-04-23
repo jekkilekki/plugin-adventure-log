@@ -306,4 +306,18 @@
 
   });
 
+  $( '#alog-tag-input' ).autoComplete({
+    source: function( name, response ) {
+      $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '/wp-admin/admin-ajax.php',
+        data: 'action=get_log_tag&log_tag=' + name,
+        success: function( data ) {
+          response( data );
+        }
+      });
+    }
+  });
+
 })(jQuery);

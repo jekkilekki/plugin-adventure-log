@@ -92,7 +92,7 @@ function alog_post_edit() {
       <small class="alog-log-caption"><?php _e( 'New Log', 'adventure-log' ); ?></small>
     <?php endif; ?>
 
-    <div class="post-thumbnail">
+    <div class="post-thumbnail inactive">
       <input id="alog-img-id" type="hidden" value="" />
       <img id="alog-img-preview" class="wp-post-image" />
     </div>
@@ -194,11 +194,11 @@ function alog_new_log_section() {
       <?php //alog_tinymce_custom(); ?>
 
       <footer class="alog-entry-footer entry-footer">
-        <!-- <input class="alog-tag-input alog-post-edit-meta" type="text" placeholder="<?php // _e( 'Tag it &amp; bag it', 'adventure-log' ); ?>" /> -->
-        <select class="alog-tag-input alog-post-edit-meta">
-          <option><?php _e( 'Planning', 'adventure-log' ); ?></option>
-          <option><?php _e( 'Journaling', 'adventure-log' ); ?></option>
-        </select>
+        <input id="alog-tag-input" class="alog-tag-input alog-post-edit-meta" type="text" placeholder="<?php _e( 'Tag it &amp; bag it', 'adventure-log' ); ?>" />
+        <!-- <select class="alog-tag-input alog-post-edit-meta">
+          <option><?php //_e( 'Planning', 'adventure-log' ); ?></option>
+          <option><?php //_e( 'Journaling', 'adventure-log' ); ?></option>
+        </select> -->
         <span class="edit-link">
           <a class="post-edit-link add-log-button"><?php _e( 'Save', 'adventure-log' ); ?></a>
         </span>

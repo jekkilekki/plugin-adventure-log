@@ -18,6 +18,7 @@
       $( '.single-featured-image-header img' ).attr( 'srcset', '' );
     } else {
       $( '#alog-img-preview' ).attr( 'src', '' );
+      $( '.post-thumbnail' ).addClass( 'inactive' );
     }
     $( '#alog-img-id' ).val( '' ); // https://codex.wordpress.org/Javascript_Reference/wp.media
     // $( '#alog-image-select' ).hide();
@@ -53,6 +54,7 @@
         $( '.single-featured-image-header img' ).attr( 'srcset', attachment.url );
       } else {
         $( '#alog-img-preview' ).attr( 'src', attachment.url );
+        $( '.post-thumbnail' ).removeClass( 'inactive' );
       }
       $( '#alog-img-id' ).val( attachment.id ); // https://codex.wordpress.org/Javascript_Reference/wp.media
       // $( '#alog-image-select' ).hide();

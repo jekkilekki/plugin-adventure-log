@@ -298,6 +298,11 @@ small.log-success {
 /**
  * Post Content
  */
+.alog .post-thumbnail.inactive {
+  height: 0;
+  margin: 0;
+}
+
 .alog .entry-header {
   position: relative;
 }

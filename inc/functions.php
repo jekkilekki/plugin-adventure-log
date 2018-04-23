@@ -597,3 +597,36 @@ function alog_custom_sidebar() {
   ) );
 }
 add_action( 'widgets_init', 'alog_custom_sidebar' );
+
+/**
+ * Ajax Log_Tags Autocomplete
+ * @link https://davidnash.com.au/create-an-auto-complete-field-in-wordpress/
+ */
+add_action( 'wp_ajax_nopriv_get_log_tags', 'alog_ajax_log_tags' );
+add_action( 'wp_ajax_get_log_tags', 'alog_ajax_log_tags' );
+
+function alog_ajax_log_tags() {
+  global $wpdb; 
+
+  // Get names of all log tags
+  $tag = $wpdb->esc_like( stripslashes( $_POST['name'] ) ) . '%'; // escape for use in LIKE statement
+  // @TODO fix this SQL query
+  $sql = "SELECT post_title
+    FROM $wpdb->posts
+    WHERE post_title LIKE %s
+    AND post_type='alog' AND post_status='publish'";
+
+  $sql = $wpdb->prepare( $sql, $tag );
+
+  $results = $wpdb->get_results( $sql );
+
+  // Copy the Tags to a simple array
+  $tags = array();
+  foreach( $results as $result ) {
+    $tags = addslashes( $result->post_title );
+  }
+
+  echo json_encode( $titles ); // encode into JSON format and output 
+
+  die(); // stop "0" from being output
+}
