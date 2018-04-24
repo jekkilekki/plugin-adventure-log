@@ -601,9 +601,15 @@ add_action( 'widgets_init', 'alog_custom_sidebar' );
 /**
  * Ajax Log_Tags Autocomplete
  * @link https://davidnash.com.au/create-an-auto-complete-field-in-wordpress/
+ * 
+ * Also @see this: https://stackoverflow.com/questions/23952336/wordpress-ajax-custom-taxonomy
+ * @see https://wordpress.stackexchange.com/questions/55674/how-to-query-database-for-posts-with-certain-taxonomy-term
+ * Nice design, not super practical in this case I think: https://rudrastyh.com/wordpress/ajax-post-filters.html
+ * @see long: https://www.smashingmagazine.com/2016/03/advanced-wordpress-search-with-wp_query/
+ * 
  */
-add_action( 'wp_ajax_nopriv_get_log_tags', 'alog_ajax_log_tags' );
-add_action( 'wp_ajax_get_log_tags', 'alog_ajax_log_tags' );
+add_action( 'wp_ajax_nopriv_get_log_tag', 'alog_ajax_log_tags' );
+add_action( 'wp_ajax_get_log_tag', 'alog_ajax_log_tags' );
 
 function alog_ajax_log_tags() {
   global $wpdb; 
