@@ -41,13 +41,6 @@ alog_get_login_form();
         echo 'No calendar here.';
       }
       ?>
-
-      <?php if ( is_user_logged_in() ): ?>
-        <!-- <div class="button post-edit-link">
-          <i class="ra ra-quill-ink"></i>
-          <a href="<?php // echo esc_url( home_url() . adventure_log_date_url( $today['year'], $today['monnum'], $today['day'] ) ); ?>">Write New Log</a>
-        </div>   -->
-      <?php endif; ?>   
       
 		</header><!-- .page-header -->
   
@@ -83,12 +76,6 @@ alog_get_login_form();
         // echo "<hr>";
         get_template_part( 'template-parts/post/content' );
         ?>
-        
-        <!-- <footer class="entry-footer">
-        <span class="edit-link">
-          <a class="post-edit-link add-log-button">Edit</a>
-        </span>
-      </footer> -->
 
       <?php
 			endwhile;
