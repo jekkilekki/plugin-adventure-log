@@ -67,9 +67,9 @@ See this page for help:
 * `/alog/2018/` - Year archive - with a one-year calendar
 * `/alog/2018/4/` - Month archive - with a one-month calendar
 * `/alog/2018/4/5/` - Day archive - 
-* `/alog/2018/4/5/a/` - Single Log page - typical WP content
-* `/alog/settings/` - Settings page - Ajax form, posting to REST API
-* `/alog/new/` - New editor page - with today's date
+* `/alog/post-slug/` - Single Log page - typical WP content
+* `/alog?page=settings/` - Settings page - Ajax form, posting to REST API
+* `/alog/2018/4/5?page=new/` - New editor page - with today's date
 
 #### Color Choosing Tools
 
