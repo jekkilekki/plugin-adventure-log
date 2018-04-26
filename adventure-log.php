@@ -114,10 +114,6 @@ function adventure_log_scripts() {
 
       // Enqueue RPG Awesome icon font
       wp_enqueue_style( 'adventure_log_fonts', plugins_url( 'fonts/rpg-awesome.css', __FILE__ ) );
-      
-      // Enqueue Autocomplete script
-      wp_enqueue_script( 'adventure_log_autocomplete_script', plugin_dir_url( __FILE__ ) . 'js/jquery.auto-complete.min.js', array( 'jquery' ), '20180424', true );
-      wp_enqueue_style( 'adventure_log_autocomplete_style', plugins_url( 'css/jquery.auto-complete.css', __FILE__ ) );
 
       // Enqueue D3 for our calendar
       // wp_enqueue_script( 'adventure_log_d3', '//d3js.org/d3.v4.min.js' );
@@ -145,6 +141,10 @@ function alog_ajax_login_init() {
     'redirect_url'  => esc_url( $_SERVER[ 'REQUEST_URI' ] ), // login on whatever page you're on
     'message'       => __( 'Checking user credentials...', 'adventure-log' ),
   ));
+
+  // Enqueue Autocomplete script
+  wp_enqueue_script( 'adventure_log_autocomplete_script', plugin_dir_url( __FILE__ ) . 'js/jquery.auto-complete.min.js', array( 'jquery' ), '20180424' );
+  wp_enqueue_style( 'adventure_log_autocomplete_style', plugins_url( 'css/jquery.auto-complete.css', __FILE__ ) );
 
   // Enable the user with no privileges to run ajax_login() in AJAX
   add_action( 'wp_ajax_nopriv_ajaxlogin', 'alog_ajax_login' );

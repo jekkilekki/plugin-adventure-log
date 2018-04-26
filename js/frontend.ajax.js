@@ -306,15 +306,22 @@
 
   });
 
+  // Strip off /wp-json/ from the REST API root url to reuse it here
+  let ajaxUrl = WP_API_settings.root.slice( 0, -8 ) + 'wp-admin/admin-ajax.php';
+
   $( '#alog-tag-input' ).autoComplete({
     source: function( name, response ) {
       $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: '/wp-admin/admin-ajax.php',
+        url: ajaxUrl,
         data: 'action=get_log_tag&log_tag=' + name,
         success: function( data ) {
           response( data );
+        }, 
+        error: function( data ) {
+          console.info( data );
+          console.info( response( data ) );
         }
       });
     }
